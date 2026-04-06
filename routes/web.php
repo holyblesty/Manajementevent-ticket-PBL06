@@ -8,3 +8,4 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard-pengunjung', [PengunjungController::class, 'dashboard']);
+Route::get('/pendaftaran', [PengunjungController::class, 'pendaftaran']);
