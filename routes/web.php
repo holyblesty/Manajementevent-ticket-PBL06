@@ -14,3 +14,4 @@ Route::get('/pendaftaran', [PengunjungController::class, 'pendaftaran']);
 Route::get('/pembayaran', [PembayaranController::class, 'index']);
 Route::post('/pembayaran/proses', [PembayaranController::class, 'proses']);
 Route::get('/about', [PageController::class, 'about']);
+Route::get('/contact', [PageController::class, 'contact']);
