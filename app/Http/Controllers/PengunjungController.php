@@ -10,4 +10,8 @@ class PengunjungController extends Controller
     {
         return view('dashboard_pengunjung');
     }
+      public function pendaftaran()
+    {
+        return view('pendaftaran');
+    }
 }
