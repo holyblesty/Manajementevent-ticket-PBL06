@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PengunjungController;
 use App\Http\Controllers\PembayaranController;
@@ -10,6 +11,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/home', [HomeController::class, 'index']);
 Route::get('/dashboard-pengunjung', [PengunjungController::class, 'dashboard']);
 Route::get('/pendaftaran', [PengunjungController::class, 'pendaftaran']);
 Route::get('/pembayaran', [PembayaranController::class, 'index']);
