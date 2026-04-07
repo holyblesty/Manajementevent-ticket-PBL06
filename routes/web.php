@@ -6,6 +6,7 @@ use App\Http\Controllers\PengunjungController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AuthController;
 
 Route::get('/', function () {
     return view('welcome');
