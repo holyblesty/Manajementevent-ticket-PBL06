@@ -21,3 +21,4 @@ Route::get('/contact', [PageController::class, 'contact']);
 Route::get('/admin', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 Route::get('/admin/events', [AdminController::class, 'events'])->name('admin.events');
 Route::get('/admin/participants', [AdminController::class, 'participants'])->name('admin.participants');
+Route::get('/login', [AuthController::class, 'login']);
