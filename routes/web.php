@@ -8,6 +8,7 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -23,3 +24,4 @@ Route::get('/admin', [AdminController::class, 'dashboard'])->name('admin.dashboa
 Route::get('/admin/events', [AdminController::class, 'events'])->name('admin.events');
 Route::get('/admin/participants', [AdminController::class, 'participants'])->name('admin.participants');
 Route::get('/login', [AuthController::class, 'login']);
+Route::get('/register', [AuthController::class, 'register']);
