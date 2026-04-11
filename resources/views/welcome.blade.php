@@ -4,8 +4,11 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Event & Ticketing - Laravel Version</title>
-<link rel="stylesheet" href="{{ asset('styles/style_vivian.css') }}">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="{{ asset('styles/style_holy.css') }}">
+<h1>Ini Judul Merah</h1>
+
+<img src="{{ asset('images/gambar1.png') }}" alt="">
+<img src="{{ asset('images/gambar2.png') }}" alt="">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -507,12 +510,12 @@ text-transform: uppercase;
       <div class="gallery-overlay"><h4>Business Forum</h4></div>
     </div>
     <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=600&q=80">
-      <div class="gallery-overlay"><h4>Art Festival</h4></div>
+      <img src= <img src="{ asset('images/poster-lomba-5.png') }" alt="poster nari">>
+      <div class="gallery-overlay"><h4>lomba nari</h4></div>
     </div>
     <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&w=600&q=80">
-      <div class="gallery-overlay"><h4>Drama Theater</h4></div>
+      <img src= <img src="{ asset('images/poster-lomba-6.jpeg') }" alt="poster band">>
+      <div class="gallery-overlay"><h4>lomba band</h4></div>
     </div>
   </div>
 </div>

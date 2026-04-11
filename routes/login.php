@@ -1,1 +1,0 @@
-Route::get('/login', [AuthController::class, 'login']);
