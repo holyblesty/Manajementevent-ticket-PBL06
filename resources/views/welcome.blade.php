@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Event & Ticketing - Fixed Layout</title>
+<title>Event & Ticketing - Laravel Version</title>
+<link rel="stylesheet" href="{{ asset('styles/style_vivian.css') }}">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -330,14 +331,56 @@
   .tag-futsal { background: #f97316; color: white; }
 
   /* ── GALLERY ── */
-  .gallery { padding: 0 60px 80px; }
-  .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-  .gallery-item { border-radius: 16px; overflow: hidden; aspect-ratio: 4/3; position: relative; cursor: pointer; }
-  .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
-  .gallery-item:hover img { transform: scale(1.1); }
-  .gallery-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(123,47,190,0.8), transparent); opacity: 0; display: flex; align-items: flex-end; padding: 20px; transition: 0.3s; }
-  .gallery-item:hover .gallery-overlay { opacity: 1; }
-  .gallery-overlay h4 { color: white; font-family: var(--font-display); font-size: 14px; text-transform: uppercase; }
+/* ── GALLERY ── */
+.gallery { padding: 0 60px 80px; }
+
+.gallery-grid { 
+display: grid; 
+grid-template-columns: repeat(3, 1fr); 
+gap: 20px; 
+}
+
+.gallery-item { 
+border-radius: 16px; 
+overflow: hidden; 
+aspect-ratio: 2/3; 
+position: relative; 
+cursor: pointer; 
+}
+
+.gallery-item img { 
+width: 100%; 
+height: 100%; 
+object-fit: cover; 
+transition: 0.5s; 
+}
+
+.gallery-item:hover img { 
+transform: scale(1.1); 
+}
+
+.gallery-overlay { 
+position: absolute; 
+inset: 0; 
+background: linear-gradient(to top, rgba(123,47,190,0.8), transparent); 
+opacity: 0; 
+display: flex; 
+align-items: flex-end; 
+padding: 20px; 
+transition: 0.3s; 
+}
+
+.gallery-item:hover .gallery-overlay { 
+opacity: 1; 
+}
+
+.gallery-overlay h4 { 
+color: white; 
+font-family: var(--font-display); 
+font-size: 14px; 
+text-transform: uppercase; 
+}
+
 
   /* ── FOOTER & CTA ── */
   .cta-strip { background: var(--gray-50); padding: 50px; text-align: center; border-top: 1px solid var(--gray-200); }
@@ -417,26 +460,9 @@
   </div>
   
   <div class="cards-grid">
-    <div class="event-card card-sport">
-      <div class="card-placeholder">
-        <div class="card-bg-icon">⚽</div>
-        <div class="card-content">
-          <span class="card-tag tag-sport">Olahraga</span>
-          <h3 class="card-name">Sport Event</h3>
-          <p class="card-info">9 Juni • GOR Kampus</p>
-        </div>
-      </div>
-    </div>
-    <div class="event-card card-music">
-      <div class="card-placeholder">
-        <div class="card-bg-icon">🎸</div>
-        <div class="card-content">
-          <span class="card-tag tag-music">Musik</span>
-          <h3 class="card-name">Band Festival</h3>
-          <p class="card-info">15 Okt • GDS Utama</p>
-        </div>
-      </div>
-    </div>
+    <img src="{{ asset('images/gambar1.png') }}" alt="Event 1" style="width: 100%; border-radius: 16px;">
+    <img src="{{ asset('images/gambar2.png') }}" alt="Event 2" style="width: 100%; border-radius: 16px;">
+
     <div class="event-card card-tech">
       <div class="card-placeholder">
         <div class="card-bg-icon">🤖</div>
@@ -461,18 +487,19 @@
 </div>
 
 <div class="gallery">
-  <div class="section-heading"><h2 class="section-title">Dokumentasi Event</h2></div>
+ 
+  <div class="section-heading"><h1 class="section-title" style="color: red; font-family: var(--font-display); margin-bottom: 10px;">Ini Judul Merah</h1></div>
   <div class="gallery-grid">
     <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?auto=format&fit=crop&w=600&q=80">
-      <div class="gallery-overlay"><h4>Concert Night</h4></div>
+  <img src="{{ url('images/poster1.png') }}"alt="poster voli">>
+      <div class="gallery-overlay"><h4>Lomba Voli</h4></div>
     </div>
     <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1475721027785-f74dea327912?auto=format&fit=crop&w=600&q=80">
-      <div class="gallery-overlay"><h4>Tech Seminar</h4></div>
+     <img src="{{ url('images/poster2.png') }}" alt="poster futsal">>
+      <div class="gallery-overlay"><h4>Lomba futsal</h4></div>
     </div>
     <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1504450758481-7338eba7524a?auto=format&fit=crop&w=600&q=80">
+     <img src="{{ asset('images/poster1.jpg') }}" alt="">
       <div class="gallery-overlay"><h4>Football Match</h4></div>
     </div>
     <div class="gallery-item">
