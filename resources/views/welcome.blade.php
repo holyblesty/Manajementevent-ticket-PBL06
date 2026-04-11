@@ -3,8 +3,10 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
 <title>Event & Ticketing - Laravel Version</title>
 <link rel="stylesheet" href="{{ asset('styles/style_vivian.css') }}">
+<script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -507,15 +509,11 @@ text-transform: uppercase;
       <div class="gallery-overlay"><h4>Seminar Keuangan Milenial</h4></div>
     </div>
     <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=600&q=80">
-      <div class="gallery-overlay"><h4>Business Forum</h4></div>
-    </div>
-    <div class="gallery-item">
-      <img src= <img src="{ asset('images/poster-lomba-5.png') }" alt="poster nari">>
+      <img src= "{{ asset('images/poster-lomba-5.png') }}" alt="poster nari">>
       <div class="gallery-overlay"><h4>lomba nari</h4></div>
     </div>
     <div class="gallery-item">
-      <img src= <img src="{ asset('images/poster-lomba-6.jpeg') }" alt="poster band">>
+      <img src="{{ asset('images/poster-lomba-6.jpeg') }}" alt="poster band">>
       <div class="gallery-overlay"><h4>lomba band</h4></div>
     </div>
   </div>
