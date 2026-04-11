@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Event & Ticketing - Laravel Version</title>
-<link rel="stylesheet" href="{{ asset('styles/style_vivian.css') }}">
+<link rel="stylesheet" href="{{ asset('styles/style_lusi.css') }}">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -499,8 +499,12 @@ text-transform: uppercase;
       <div class="gallery-overlay"><h4>Lomba futsal</h4></div>
     </div>
     <div class="gallery-item">
-     <img src="{{ asset('images/poster1.jpg') }}" alt="">
-      <div class="gallery-overlay"><h4>Football Match</h4></div>
+      <img src="{{ asset('images/poster3.png') }}" alt="poster Seminar">>
+      <div class="gallery-overlay"><h4>Seminar Bisnis Digital</h4></div>
+    </div>
+    <div class="gallery-item">
+      <img src="{{ asset('images/poster4.png') }}" alt="poster Seminar Keuangan">>
+      <div class="gallery-overlay"><h4>Seminar Keuangan Milenial</h4></div>
     </div>
     <div class="gallery-item">
       <img src="https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=600&q=80">
