@@ -10,7 +10,7 @@ class AdminController extends Controller
     public function dashboard()
     {
         // nanti bisa kirim data event, tiket, peserta
-        return view('admin.dashboard');
+        return view('dashboard');
     }
 
     // Contoh method: lihat semua event
