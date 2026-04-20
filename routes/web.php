@@ -4,7 +4,7 @@ use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PengunjungController;
 use App\Http\Controllers\PembayaranController;
-use App\Http\Controllers\AboutController;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 
@@ -20,7 +20,7 @@ Route::get('/pembayaran', [PembayaranController::class, 'index']);
 Route::post('/pembayaran/proses', [PembayaranController::class, 'proses']);
 Route::get('/about', [PageController::class, 'about']);
 Route::get('/contact', [PageController::class, 'contact']);
-Route::get('/admin', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
 Route::get('/admin/events', [AdminController::class, 'events'])->name('admin.events');
 Route::get('/admin/participants', [AdminController::class, 'participants'])->name('admin.participants');
 Route::get('/login', [AuthController::class, 'login']);
