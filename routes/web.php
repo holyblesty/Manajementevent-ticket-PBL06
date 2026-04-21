@@ -1,27 +1,24 @@
 <?php
 
-use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PengunjungController;
-use App\Http\Controllers\PembayaranController;
-use App\Http\Controllers\PageController;
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Admin\AcaraController;
 
+/*
+|--------------------------------------------------------------------------
+| Web Routes - Admin
+|--------------------------------------------------------------------------
+*/
 
-Route::get('/', function () {
-    return view('welcome');
+Route::prefix('admin')->name('admin.')->group(function () {
+
+    // Kelola Acara (Resource Routes)
+    Route::resource('acara', AcaraController::class)->names([
+        'index'   => 'acara.index',
+        'create'  => 'acara.create',
+        'store'   => 'acara.store',
+        'edit'    => 'acara.edit',
+        'update'  => 'acara.update',
+        'destroy' => 'acara.destroy',
+    ]);
+
 });
-
-Route::get('/home', [HomeController::class, 'index']);
-Route::get('/dashboard-pengunjung', [PengunjungController::class, 'dashboard']);
-Route::get('/pendaftaran', [PengunjungController::class, 'pendaftaran']);
-Route::get('/pembayaran', [PembayaranController::class, 'index']);
-Route::post('/pembayaran/proses', [PembayaranController::class, 'proses']);
-Route::get('/about', [PageController::class, 'about']);
-Route::get('/contact', [PageController::class, 'contact']);
-Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
-Route::get('/admin/events', [AdminController::class, 'events'])->name('admin.events');
-Route::get('/admin/participants', [AdminController::class, 'participants'])->name('admin.participants');
-Route::get('/login', [AuthController::class, 'login']);
-Route::get('/register', [AuthController::class, 'register']);
