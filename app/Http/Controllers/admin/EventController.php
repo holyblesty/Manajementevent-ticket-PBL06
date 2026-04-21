@@ -56,7 +56,7 @@ class AcaraController extends Controller
         $search     = $request->get('search', '');
         $kategori   = $request->get('kategori', 'Semua Kategori');
 
-        return view('admin.kelola-acara.index', compact('acaraList', 'kategoris', 'search', 'kategori'));
+        return view('admin.kelola_acara.index', compact('acaraList', 'kategoris', 'search', 'kategori'));
     }
 
     /**
@@ -65,7 +65,7 @@ class AcaraController extends Controller
     public function create()
     {
         $kategoris = ['Teknologi', 'Olahraga', 'Seminar', 'Hiburan', 'Seni'];
-        return view('admin.kelola-acara.create', compact('kategoris'));
+        return view('admin.kelola_acara.create', compact('kategoris'));
     }
 
     /**
