@@ -3,6 +3,9 @@
 @import 'flowbite';
 @import 'bootstrap/dist/css/bootstrap.min.css';
 
+/* ── Custom CSS HARUS PALING BAWAH ── */
+@import './style_vivian.css';
+
 /* ── Source untuk PurgeCSS / Laravel Vite ── */
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';

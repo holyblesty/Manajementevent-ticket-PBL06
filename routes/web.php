@@ -1,8 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\AcaraController;
-use App\Http\Controllers\Admin\ParticipantController;
+use App\Http\Controllers\Admin\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -10,28 +9,21 @@ use App\Http\Controllers\Admin\ParticipantController;
 |--------------------------------------------------------------------------
 */
 
+// halaman awal
 Route::get('/', function () {
     return view('welcome');
 });
 
-// GROUP UTAMA ADMIN
-Route::prefix('admin')->name('admin.')->group(function () {
+// ================= ADMIN =================
+// TANPA MIDDLEWARE DULU (biar tidak error login)
+Route::prefix('admin')->group(function () {
 
-    // Fitur Kelola Acara 
-    Route::resource('acara', AcaraController::class)->names([
-        'index'   => 'acara.index',
-        'create'  => 'acara.create',
-        'store'   => 'acara.store',
-        'edit'    => 'acara.edit',
-        'update'  => 'acara.update',
-        'destroy' => 'acara.destroy',
-    ]);
-
-    // Fitur Kelola Peserta
-    Route::prefix('peserta')->name('peserta.')->group(function () {
-        Route::get('/', [ParticipantController::class, 'index'])->name('index');
-        Route::get('/futsal', [ParticipantController::class, 'showTeam'])->name('team');
-        Route::get('/seminar', [ParticipantController::class, 'showIndividual'])->name('individual');
-    });
+    Route::get('/dashboard', [DashboardController::class, 'index'])
+        ->name('admin.dashboard');
 
 });
+
+// OPTIONAL (biar kalau nanti middleware aktif gak error)
+Route::get('/login', function () {
+    return "Halaman Login (belum dibuat)";
+})->name('login');
