@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\AcaraController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -9,21 +11,34 @@ use App\Http\Controllers\Admin\DashboardController;
 |--------------------------------------------------------------------------
 */
 
-// halaman awal
+// Halaman awal langsung ke dashboard
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('admin.dashboard');
 });
 
-// ================= ADMIN =================
-// TANPA MIDDLEWARE DULU (biar tidak error login)
+// ================= ADMIN AREA =================
 Route::prefix('admin')->group(function () {
+    
+    // 1. Dashboard (Daftar Acara)
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
-    Route::get('/dashboard', [DashboardController::class, 'index'])
-        ->name('admin.dashboard');
+    // 2. Tambah Acara
+    Route::get('/acara/tambah', [DashboardController::class, 'create'])->name('admin.acara.create');
+    Route::post('/acara/simpan', [DashboardController::class, 'store'])->name('admin.acara.store');
+
+// Grouping rute admin supaya lebih rapi
+Route::prefix('admin')->name('admin.')->group(function () {
+    
+    // Rute utama Dashboard (Tabel Daftar Acara)
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Rute Resource untuk Acara (Otomatis handle: create, store, edit, update, destroy)
+    Route::resource('acara', AcaraController::class);
 
 });
+});
 
-// OPTIONAL (biar kalau nanti middleware aktif gak error)
+// Placeholder Login
 Route::get('/login', function () {
-    return "Halaman Login (belum dibuat)";
+    return "Halaman Login (Belum dibuat)";
 })->name('login');
