@@ -31,7 +31,7 @@ public function index(Request $request)
         ],
         (object)[
             'id' => 3, 
-            'poster' => 'futsal.png', 
+            'poster' => 'futsal.jpg', 
             'judul' => 'Futsal Kampus Championship', 
             'tanggal' => '09 - 06 - 2026', 
             'lokasi' => 'Sport Hall Politeknik Batam', 
@@ -39,7 +39,7 @@ public function index(Request $request)
         ],
         (object)[
             'id' => 4, 
-            'poster' => 'seminar.png', 
+            'poster' => 'seminar.jpg', 
             'judul' => 'Seminar Nasional: Masa Depan AI', 
             'tanggal' => '15 - 06 - 2026', 
             'lokasi' => 'Auditorium Gd. Utama', 
