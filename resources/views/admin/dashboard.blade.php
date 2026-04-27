@@ -1,9 +1,23 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="w-full bg-gradient-to-r from-[#7a4988] to-[#be93d4] rounded-2xl p-8 mb-8 text-white shadow-sm">
-    <h1 class="text-4xl font-black mb-2 uppercase tracking-tighter">DASHBOARD ADMIN</h1>
-    <p class="bg-white/20 inline-block px-4 py-1 rounded text-xs font-bold uppercase tracking-widest text-white">Kelola Acara</p>
+<div class="w-full bg-gradient-to-r from-[#24112e] to-[#7a4988] rounded-2xl p-8 mb-8 text-white shadow-lg flex justify-between items-center">
+    <div>
+        <h1 class="text-4xl font-black mb-2 uppercase tracking-tighter">DASHBOARD ADMIN</h1>
+        <p class="bg-white/20 inline-block px-4 py-1 rounded text-xs font-bold uppercase tracking-widest text-white">Kelola Acara</p>
+    </div>
+    
+    <a href="{{ route('admin.profile') }}" class="flex items-center gap-3 bg-white/10 hover:bg-white/20 p-2 pr-6 rounded-full transition-all group no-underline border border-white/20">
+        <div class="w-12 h-12 rounded-full border-2 border-white overflow-hidden shadow-md">
+           <img src="{{ asset('images/' . session('admin_foto', 'profile_default.jpg')) }}" 
+     onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode(session('admin_name', 'Vivian')) }}&color=7a4988&background=ffffff';"
+     class="w-full h-full object-cover">
+        </div>
+        <div class="text-left">
+            <p class="text-[10px] font-black uppercase tracking-widest text-[#be93d4] leading-none mb-1">Administrator</p>
+            <p class="text-sm font-bold text-white leading-none group-hover:text-[#be93d4] transition-colors">{{ session('admin_name', 'Vivian Sarah Diva Alisianoi') }}</p>
+        </div>
+    </a>
 </div>
 
 <div class="mb-8">
