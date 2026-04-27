@@ -126,6 +126,23 @@ class AcaraController extends Controller
     return view('admin.edit', compact('event'));
    }
 
+   public function tiket($id)
+{
+    // Mengambil data dummy yang sama dengan sebelumnya
+    $allEvents = [
+        1 => ['id' => 1, 'judul' => 'Turnamen Basket Antar Mahasiswa', 'kapasitas' => 50, 'tiket' => [
+            'early_bird' => (object)['nama' => 'Early Bird', 'harga' => 50000, 'kuota' => 10, 'deskripsi' => 'Harga spesial awal'],
+            'vip' => (object)['nama' => 'VIP', 'harga' => 150000, 'kuota' => 10, 'deskripsi' => 'Akses depan'],
+            'normal' => (object)['nama' => 'Normal', 'harga' => 75000, 'kuota' => 30, 'deskripsi' => 'Tiket reguler'],
+        ]],
+        // ... (sisanya sama dengan data edit sebelumnya)
+    ];
+
+    $data = isset($allEvents[$id]) ? $allEvents[$id] : $allEvents[1];
+    $event = (object) $data;
+
+    return view('admin.tiket', compact('event'));
+}
     /**
      * Memproses pembaruan data (Update)
      */
