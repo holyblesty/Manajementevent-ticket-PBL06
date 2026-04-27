@@ -8,126 +8,131 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <style>
-        /* Kita definisikan keyframes-nya di sini */
         @keyframes swush {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
         .no-underline { text-decoration: none !important; }
+        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
     </style>
 </head>
 <body 
-    style="
-        margin: 0; 
-        min-height: 100vh; 
-        background: linear-gradient(-45deg, #2b1238, #7a4988, #4b1d52, #9e7bb5); 
-        background-size: 400% 400%; 
-        animation: swush 10s ease infinite;
-    "
+    style="margin: 0; min-height: 100vh; background: linear-gradient(-45deg, #2b1238, #7a4988, #4b1d52, #9e7bb5); background-size: 400% 400%; animation: swush 10s ease infinite;"
     class="flex flex-col items-center py-10 font-sans antialiased text-gray-900"
 >
 
-    <div class="w-full max-w-[950px] mb-4 px-4">
-        <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center text-white font-bold text-sm hover:opacity-80 transition no-underline">
+    <div class="w-full max-w-[1100px] mb-4 px-4 text-left text-white">
+        <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center font-bold text-sm hover:opacity-80 transition no-underline text-white">
             <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
             Kembali ke Dashboard
         </a>
     </div>
 
-    <div class="bg-white w-full max-w-[950px] rounded-xl shadow-2xl overflow-hidden mb-10 mx-4 border border-gray-100">
+    <div class="bg-white w-full max-w-[1100px] rounded-[2.5rem] shadow-2xl overflow-hidden mb-10 mx-4 border border-gray-100">
         
-      <div class="bg-[#24112e] p-8 text-white border-b-4 border-[#7a4988]">
-    <h1 class="text-2xl font-black uppercase tracking-tighter">Tambah Event Baru</h1>
-    <p class="text-sm text-[#be93d4] font-bold mt-1 uppercase tracking-widest">Lengkapi detail acara dan pengaturan tiket sekaligus</p>
-</div>
+        <div class="bg-[#24112e] p-8 text-white border-b-4 border-[#7a4988] flex justify-between items-end">
+            <div>
+                <h1 class="text-2xl font-black uppercase tracking-tighter">Tambah Event Baru</h1>
+                <p class="text-[10px] text-[#be93d4] font-bold mt-1 uppercase tracking-[0.3em]">Detail Informasi & Media Acara</p>
+            </div>
+            <div class="hidden md:block bg-[#7a4988]/20 px-4 py-2 rounded-xl border border-[#7a4988]/30">
+                <p class="text-[10px] font-black uppercase tracking-widest text-[#be93d4]">
+                    <span class="text-white text-lg leading-none mr-1">*</span> Wajib diisi
+                </p>
+            </div>
+        </div>
 
-        <form action="{{ route('admin.acara.store') }}" method="POST" enctype="multipart/form-data" class="p-8">
+        <form action="{{ route('admin.acara.store') }}" method="POST" enctype="multipart/form-data" class="p-10">
             @csrf
-            
-            <input type="hidden" name="jenis_tiket" id="input_jenis_tiket" value="{{ old('jenis_tiket', 'gratis') }}">
 
-            <div class="flex flex-row items-start gap-10">
+            <div class="flex flex-row items-start gap-12">
                 
-                <div class="flex-grow space-y-5">
+                <div class="flex-[2.5] space-y-6">
                     <div>
-                        <label class="block mb-1.5 text-xs font-bold text-gray-700 uppercase tracking-wider">Judul Event *</label>
-                        <input type="text" name="judul" value="{{ old('judul') }}" placeholder="Contoh: Seminar Teknologi Kampus 2026" 
-                            class="w-full p-2.5 border border-gray-400 rounded focus:ring-1 focus:ring-[#8b418b] outline-none text-sm font-medium transition text-gray-700">
+                        <label class="block mb-2 text-[10px] font-black uppercase text-[#7a4988] tracking-widest">Judul Event <span class="text-red-500">*</span></label>
+                        <input type="text" name="judul" value="{{ old('judul') }}" placeholder="Masukkan nama event..." 
+                               class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-sm font-bold text-gray-700 focus:border-[#7a4988] outline-none transition-all shadow-sm">
                     </div>
 
                     <div>
-                        <label class="block mb-1.5 text-xs font-bold text-gray-700 uppercase tracking-wider">Deskripsi *</label>
-                        <textarea name="deskripsi" rows="5" placeholder="Ceritakan tentang event ini..." 
-                            class="w-full p-2.5 border border-gray-400 rounded focus:ring-1 focus:ring-[#8b418b] outline-none text-sm leading-relaxed text-gray-700">{{ old('deskripsi') }}</textarea>
+                        <label class="block mb-2 text-[10px] font-black uppercase text-[#7a4988] tracking-widest">Deskripsi <span class="text-red-500">*</span></label>
+                        <textarea name="deskripsi" rows="6" placeholder="Jelaskan detail acaranya..." 
+                                  class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-sm font-medium text-gray-700 focus:border-[#7a4988] outline-none transition-all leading-relaxed shadow-sm">{{ old('deskripsi') }}</textarea>
                     </div>
 
-                    <div class="grid grid-cols-3 gap-4">
+                    <div class="grid grid-cols-2 gap-6">
                         <div>
-                            <label class="block mb-1.5 text-xs font-bold text-gray-700 uppercase tracking-wider">Tanggal *</label>
-                            <input type="date" name="tanggal" value="{{ old('tanggal') }}" class="w-full p-2.5 border border-gray-400 rounded text-xs text-gray-500 outline-none">
+                            <label class="block mb-2 text-[10px] font-black uppercase text-gray-400 tracking-widest">Tanggal <span class="text-red-500">*</span></label>
+                            <input type="date" name="tanggal" value="{{ old('tanggal') }}" 
+                                   class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-xs font-bold text-gray-500 outline-none shadow-sm">
                         </div>
                         <div>
-                            <label class="block mb-1.5 text-xs font-bold text-gray-700 uppercase tracking-wider">Kategori *</label>
-                            <select name="kategori" class="w-full p-2.5 border border-gray-400 rounded text-xs text-gray-500 outline-none font-medium">
+                            <label class="block mb-2 text-[10px] font-black uppercase text-gray-400 tracking-widest">Kategori <span class="text-red-500">*</span></label>
+                            <select name="kategori" class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-xs font-bold text-gray-500 outline-none cursor-pointer shadow-sm">
                                 <option value="">Pilih Kategori</option>
-                                <option @if(old('kategori') == 'Olahraga') selected @endif>Olahraga</option>
-                                <option @if(old('kategori') == 'Seminar') selected @endif>Seminar</option>
-                                <option @if(old('kategori') == 'Hiburan') selected @endif>Hiburan</option>
+                                <option value="Olahraga" {{ old('kategori') == 'Olahraga' ? 'selected' : '' }}>Olahraga</option>
+                                <option value="Seminar" {{ old('kategori') == 'Seminar' ? 'selected' : '' }}>Seminar</option>
+                                <option value="Hiburan" {{ old('kategori') == 'Hiburan' ? 'selected' : '' }}>Hiburan</option>
                             </select>
                         </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-6">
                         <div>
-                            <label class="block mb-1.5 text-xs font-bold text-gray-700 uppercase tracking-wider">Jenis Event *</label>
-                            <div class="flex border border-gray-400 rounded overflow-hidden h-[38px]">
+                            <label class="block mb-2 text-[10px] font-black uppercase text-[#7a4988] tracking-widest">Lokasi <span class="text-red-500">*</span></label>
+                            <input type="text" name="lokasi" value="{{ old('lokasi') }}" placeholder="Tempat acara..." 
+                                   class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-sm font-bold text-gray-700 focus:border-[#7a4988] outline-none shadow-sm">
+                        </div>
+                        <div>
+                            <label class="block mb-2 text-[10px] font-black uppercase text-gray-400 tracking-widest">Jenis Kepesertaan <span class="text-red-500">*</span></label>
+                            <div class="flex border-2 border-gray-100 rounded-2xl overflow-hidden h-[58px] bg-gray-50 shadow-sm">
                                 <label class="flex-1 flex items-center justify-center cursor-pointer">
-                                    <input type="radio" name="jenis" value="tim" class="hidden peer" @if(old('jenis') == 'tim') checked @endif>
-                                    <span class="w-full h-full flex items-center justify-center text-[10px] font-bold peer-checked:bg-gray-200 text-gray-700">Tim</span>
+                                    <input type="radio" name="jenis" value="tim" class="hidden peer" {{ old('jenis') == 'tim' ? 'checked' : '' }}>
+                                    <span class="w-full h-full flex items-center justify-center text-[10px] font-black uppercase peer-checked:bg-[#7a4988] peer-checked:text-white text-gray-400 transition-all">Tim</span>
                                 </label>
-                                <label class="flex-1 flex items-center justify-center cursor-pointer border-l border-gray-400">
-                                    <input type="radio" name="jenis" value="individu" class="hidden peer" @if(old('jenis', 'individu') == 'individu') checked @endif>
-                                    <span class="w-full h-full flex items-center justify-center text-[10px] font-bold peer-checked:bg-gray-200 text-gray-700">Individu</span>
+                                <label class="flex-1 flex items-center justify-center cursor-pointer border-l-2 border-gray-100">
+                                    <input type="radio" name="jenis" value="individu" class="hidden peer" {{ old('jenis', 'individu') == 'individu' ? 'checked' : '' }}>
+                                    <span class="w-full h-full flex items-center justify-center text-[10px] font-black uppercase peer-checked:bg-[#7a4988] peer-checked:text-white text-gray-400 transition-all">Individu</span>
                                 </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block mb-1.5 text-xs font-bold text-gray-700 uppercase tracking-wider">Lokasi *</label>
-                            <input type="text" name="lokasi" value="{{ old('lokasi') }}" placeholder="Contoh: Aula Gedung Utama..." 
-                                class="w-full p-2.5 border border-gray-400 rounded text-sm focus:ring-1 focus:ring-[#8b418b] outline-none font-medium text-gray-700">
-                        </div>
-                        <div>
-                            <label class="block mb-1.5 text-xs font-bold text-gray-700 uppercase tracking-wider">Kapasitas Maksimal *</label>
-                            <div class="relative">
-                                <input type="number" id="total_kapasitas" name="kapasitas" value="{{ old('kapasitas') }}" placeholder="0" 
-                                    class="w-full p-2.5 border border-gray-400 rounded text-sm pr-10 outline-none focus:ring-1 focus:ring-[#8b418b] text-gray-700 font-medium">
-                                <span class="absolute right-3 top-2.5 text-gray-400">
-                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" /></svg>
-                                </span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="w-[250px] flex-shrink-0">
-                    <label class="block mb-2 text-xs font-bold text-gray-700 uppercase tracking-wider">Poster Event *</label>
-                    <div class="bg-gray-200 border border-gray-300 rounded-lg h-[300px] flex flex-col items-center justify-center p-6 relative text-center group shadow-inner overflow-hidden">
-                        <input type="file" name="poster" class="absolute inset-0 opacity-0 cursor-pointer z-20" onchange="previewImage(this)">
-                        <div id="placeholder_view" class="z-10 transition group-hover:scale-105">
-                            <div class="bg-[#8b418b] w-12 h-12 rounded-lg mx-auto flex items-center justify-center text-white mb-4 shadow-md">
-                                <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                <div class="flex-1 min-w-[280px] space-y-6">
+                    <div>
+                        <label class="block mb-2 text-[10px] font-black uppercase text-[#7a4988] tracking-widest text-center">Poster Event <span class="text-red-500">*</span></label>
+                        <div class="bg-gray-50 border-2 border-dashed border-gray-200 rounded-[2rem] h-[400px] flex flex-col items-center justify-center relative text-center group overflow-hidden cursor-pointer hover:border-[#7a4988] transition-all shadow-inner">
+                            <input type="file" name="poster" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-50" onchange="previewImage(this)">
+                            
+                            <div id="placeholder_view" class="z-10 flex flex-col items-center group-hover:scale-110 transition-transform duration-300">
+                                <div class="bg-purple-100 p-5 rounded-2xl mb-4 text-[#7a4988] shadow-sm">
+                                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                </div>
+                                <p class="text-[10px] font-black text-[#24112e] uppercase tracking-widest px-4">Upload Poster</p>
                             </div>
-                            <p class="text-xs font-bold text-gray-800 mb-1">Upload Poster</p>
+
+                            <img id="image_preview" src="#" class="hidden absolute inset-0 w-full h-full object-cover z-30">
                         </div>
-                        <img id="image_preview" src="#" class="hidden absolute inset-0 w-full h-full object-cover rounded-lg z-10">
+                    </div>
+
+                    <div class="bg-purple-50 p-6 rounded-3xl border-2 border-purple-100 shadow-sm text-center">
+                        <label class="block mb-1 text-[9px] font-black uppercase text-purple-300 tracking-widest">Kapasitas</label>
+                        <div class="flex items-baseline justify-center gap-1">
+                            <span class="text-3xl font-black text-[#7a4988]">0</span>
+                            <span class="text-[10px] font-bold text-gray-400 uppercase">Orang</span>
+                        </div>
+                        <p class="text-[8px] text-[#be93d4] mt-2 font-bold uppercase italic leading-tight">* Otomatis terhitung di menu Tiket</p>
                     </div>
                 </div>
+
             </div>
 
-            <div class="mt-10 flex justify-end gap-3 pt-6 border-t border-gray-100">
-                <a href="{{ route('admin.dashboard') }}" class="px-10 py-2.5 bg-gray-100 text-gray-500 rounded font-bold text-sm uppercase tracking-widest border border-gray-200 no-underline">Batal</a>
-                <button type="submit" class="px-10 py-2.5 bg-[#24112e] text-white rounded font-bold text-sm hover:bg-black transition shadow-md uppercase tracking-widest">Simpan Acara</button>
+            <div class="mt-12 flex justify-end gap-3 pt-8 border-t-2 border-gray-50">
+                <a href="{{ route('admin.dashboard') }}" class="px-8 py-4 bg-white text-gray-400 rounded-2xl font-black text-[10px] uppercase tracking-widest border-2 border-gray-100 hover:bg-gray-50 transition no-underline">Batal</a>
+                <button type="submit" class="px-12 py-4 bg-[#24112e] text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-black transition shadow-xl hover:-translate-y-1 border-none">Simpan Acara</button>
             </div>
         </form>
     </div>
