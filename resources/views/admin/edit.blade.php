@@ -5,16 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ubah Event - {{ $event->judul }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <style>
-        body {
-            background: linear-gradient(135deg, #7a4988 0%, #be93d4 100%);
-            min-height: 100vh;
+        /* Definisi gerakan "angin" ungu swush-swush */
+        @keyframes swush {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
+
+        /* Memastikan link tidak punya garis bawah */
+        .no-underline { text-decoration: none !important; }
     </style>
 </head>
-<body class="flex flex-col items-center py-10 font-sans antialiased text-gray-900">
+<body 
+    style="
+        margin: 0; 
+        min-height: 100vh; 
+        background: linear-gradient(-45deg, #2b1238, #7a4988, #4b1d52, #9e7bb5); 
+        background-size: 400% 400%; 
+        animation: swush 10s ease infinite;
+    "
+    class="flex flex-col items-center py-10 font-sans antialiased text-gray-900"
+>
 
-    <div class="w-full max-w-[950px] mb-4 px-4">
+    <div class="w-full max-w-[950px] mb-4 px-4 text-left">
         <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center text-white font-bold text-sm hover:opacity-80 transition no-underline">
             <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
@@ -86,13 +102,18 @@
                         <div>
                             <label class="block mb-1.5 text-xs font-bold text-gray-700 uppercase tracking-wider">Kapasitas Maksimal *</label>
                             <div class="relative">
-                                <input type="number" name="kapasitas" value="{{ $event->kapasitas }}" placeholder="50" 
-                                    class="w-full p-2.5 border border-gray-400 rounded text-sm pr-10 outline-none focus:ring-1 focus:ring-[#8b418b] text-gray-700 font-medium">
+                                <input type="number" 
+                                    id="total_kapasitas" 
+                                    name="kapasitas" 
+                                    value="{{ $event->kapasitas }}" 
+                                    placeholder="0" 
+                                    readonly
+                                    class="w-full p-2.5 border border-gray-300 rounded text-sm pr-10 outline-none bg-gray-100 cursor-not-allowed text-gray-500 font-bold">
                                 <span class="absolute right-3 top-2.5 text-gray-400">
                                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" /></svg>
                                 </span>
                             </div>
-                            <p class="text-[9px] text-red-500 mt-1 font-bold italic">*Mengubah ini wajib mengatur ulang kuota di menu TIKET.</p>
+                            <p class="text-[9px] text-[#7a4988] mt-1 font-bold italic uppercase tracking-tighter">* Otomatis dihitung berdasarkan total kuota tiket</p>
                         </div>
                     </div>
                 </div>
@@ -112,13 +133,6 @@
                                     <p class="text-[10px] font-black uppercase tracking-widest">Ganti Poster</p>
                                 </div>
                             </div>
-                            
-                            <div id="placeholder_view_poster" class="hidden z-10 transition group-hover:scale-105 pointer-events-none">
-                                <div class="bg-[#8b418b] w-12 h-12 rounded-lg mx-auto flex items-center justify-center text-white mb-4 shadow-md text-white">
-                                    <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                                </div>
-                                <p class="text-xs font-bold text-gray-800 mb-1">Klik untuk ganti poster</p>
-                            </div>
                         </div>
                         <p class="mt-2 text-[9px] text-gray-500 font-medium uppercase text-center italic">* Klik poster untuk mengganti gambar</p>
                     </div>
@@ -127,14 +141,12 @@
 
             <div class="mt-10 flex justify-end gap-3 pt-6 border-t border-gray-100">
                 <a href="{{ route('admin.dashboard') }}" 
-                   class="inline-flex items-center justify-center px-10 py-2.5 bg-gray-100 text-gray-500 rounded font-black text-sm hover:bg-gray-200 transition uppercase tracking-widest no-underline border border-gray-200" 
-                   style="text-decoration: none !important; font-size: 0.875rem;">
+                   class="inline-flex items-center justify-center px-10 py-2.5 bg-gray-100 text-gray-500 rounded font-black text-sm hover:bg-gray-200 transition uppercase tracking-widest no-underline border border-gray-200">
                    Batal
                 </a>
                 
                 <button type="submit" 
-                    class="inline-flex items-center justify-center px-10 py-2.5 bg-[#24112e] text-white rounded font-black text-sm hover:bg-black transition shadow-md uppercase tracking-widest border-none"
-                    style="font-size: 0.875rem;">
+                    class="inline-flex items-center justify-center px-10 py-2.5 bg-[#24112e] text-white rounded font-black text-sm hover:bg-black transition shadow-md uppercase tracking-widest border-none">
                     Simpan Perubahan
                 </button>
             </div>
