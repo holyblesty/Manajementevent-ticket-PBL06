@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\File;
 class AcaraController extends Controller
 {
     /**
-     * Data Dummy Global - Saya tambahkan field 'desain_tiket' agar tidak error
+     * Data Dummy Global - Tetap sinkron untuk Event dan Profile
      */
     private function getDummyEvents()
     {
@@ -24,7 +24,7 @@ class AcaraController extends Controller
                 'lokasi' => 'Lapangan Basket Politeknik Batam',
                 'kapasitas' => 50,
                 'poster' => 'basket.png',
-                'desain_tiket' => null, // Tambahkan ini agar tidak undefined
+                'desain_tiket' => null,
                 'tiket' => [
                     'early_bird' => (object)['nama' => 'Early Bird', 'deskripsi' => 'Harga spesial awal', 'harga' => 50000, 'kuota' => 10],
                     'vip'         => (object)['nama' => 'VIP', 'deskripsi' => 'Akses depan', 'harga' => 150000, 'kuota' => 10],
@@ -41,7 +41,7 @@ class AcaraController extends Controller
                 'lokasi' => 'Lapangan Bola Politeknik Batam',
                 'kapasitas' => 500,
                 'poster' => 'musik.png',
-                'desain_tiket' => null, // Tambahkan ini
+                'desain_tiket' => null,
                 'tiket' => [
                     'early_bird' => (object)['nama' => 'Presale 1', 'deskripsi' => 'Tiket murah meriah', 'harga' => 80000, 'kuota' => 100],
                     'vip'         => (object)['nama' => 'VIP Meet & Greet', 'deskripsi' => 'Akses backstage', 'harga' => 350000, 'kuota' => 50],
@@ -58,11 +58,11 @@ class AcaraController extends Controller
                 'lokasi' => 'Sport Hall Politeknik Batam',
                 'kapasitas' => 32,
                 'poster' => 'futsal.jpg',
-                'desain_tiket' => null, // Tambahkan ini
+                'desain_tiket' => null,
                 'tiket' => [
                     'early_bird' => (object)['nama' => 'Promo Mahasiswa', 'deskripsi' => 'Diskon khusus KTM', 'harga' => 25000, 'kuota' => 10],
                     'vip'         => (object)['nama' => 'VIP', 'deskripsi' => 'Kursi pinggir lapangan', 'harga' => 75000, 'kuota' => 2],
-                    'normal'      => (object)['nama' => 'Reguler', 'deskripsi' => 'Tiket masuk harian', 'harga' => 35000, 'kuota' => 20],
+                    'normal'      => (object)['nama' => 'Reguler', 'deskocrat' => 'Tiket masuk harian', 'harga' => 35000, 'kuota' => 20],
                 ]
             ],
             4 => [
@@ -75,7 +75,7 @@ class AcaraController extends Controller
                 'lokasi' => 'Auditorium Gd. Utama',
                 'kapasitas' => 200,
                 'poster' => 'seminar.jpg',
-                'desain_tiket' => null, // Tambahkan ini
+                'desain_tiket' => null,
                 'tiket' => [
                     'early_bird' => (object)['nama' => 'Early Bird', 'deskripsi' => 'Pendaftaran bulan pertama', 'harga' => 50000, 'kuota' => 50],
                     'vip'         => (object)['nama' => 'VIP Bundling', 'deskripsi' => 'Materi VIP + Sertifikat Fisik', 'harga' => 200000, 'kuota' => 50],
@@ -84,6 +84,37 @@ class AcaraController extends Controller
             ],
         ];
     }
+
+    // --- METHOD UNTUK PROFILE ---
+    
+    public function profile()
+    {
+        // Data dummy untuk profile admin
+        $user = (object) [
+            'name' => 'Vivian Sarah Diva Alisianoi',
+            'email' => 'vivian_018@student.polibatam.ac.id',
+            'foto' => 'profile_default.jpg' // Pastikan file ini ada di public/images atau biarkan kosong dulu
+        ];
+
+        return view('admin.profile', compact('user'));
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        if ($request->hasFile('foto')) {
+            $imageName = 'profile_' . time() . '.' . $request->foto->extension();
+            $request->foto->move(public_path('images'), $imageName);
+        }
+
+        return redirect()->back()->with('success', 'Profil berhasil diperbarui!');
+    }
+
+    // --- METHOD UNTUK EVENT ---
 
     public function create()
     {
@@ -150,9 +181,6 @@ class AcaraController extends Controller
         return redirect()->route('admin.dashboard')->with('success', 'Informasi event berhasil diperbarui!');
     }
 
-    /**
-     * Memproses simpan dari halaman Kelola Tiket
-     */
     public function updateTiket(Request $request, $id)
     {
         $request->validate([
@@ -163,7 +191,6 @@ class AcaraController extends Controller
 
         if ($request->hasFile('desain_tiket')) {
             $imageName = 'ticket_' . time() . '.' . $request->desain_tiket->extension();
-            // Simpan ke public/images agar gampang dipanggil asset('images/...')
             $request->desain_tiket->move(public_path('images'), $imageName);
         }
 
