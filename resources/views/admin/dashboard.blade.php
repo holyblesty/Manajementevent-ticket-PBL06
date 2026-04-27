@@ -67,21 +67,27 @@
             </td>
 
             <td class="px-6 py-4">
-                <div style="display: flex; justify-content: center; align-items: center; gap: 12px;"> 
-                    <a href="{{ route('admin.acara.edit', $event->id) }}" 
-                       style="width: 80px; height: 32px; background-color: #24112e; color: white; border-radius: 9999px; font-size: 9px; font-weight: 900; display: flex; align-items: center; justify-content: center; text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em;">
-                       UBAH
-                    </a>
-                    <form action="{{ route('admin.acara.destroy', $event->id) }}" method="POST" onsubmit="return confirm('Yakin?')" style="margin: 0; padding: 0; display: flex;">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" 
-                            style="width: 80px; height: 32px; background-color: #e11d1d; color: white; border-radius: 9999px; font-size: 9px; font-weight: 900; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 0.1em; padding: 0;">
-                            HAPUS
-                        </button>
-                    </form>
-                </div>
-            </td>
+    <div style="display: flex; justify-content: center; align-items: center; gap: 8px;"> 
+        <a href="{{ route('admin.acara.tiket', $event->id) }}" 
+           style="width: 70px; height: 32px; background-color: #be93d4; color: #24112e; border-radius: 9999px; font-size: 9px; font-weight: 900; display: flex; align-items: center; justify-content: center; text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em;">
+           TIKET
+        </a>
+
+        <a href="{{ route('admin.acara.edit', $event->id) }}" 
+           style="width: 70px; height: 32px; background-color: #24112e; color: white; border-radius: 9999px; font-size: 9px; font-weight: 900; display: flex; align-items: center; justify-content: center; text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em;">
+           UBAH
+        </a>
+
+        <form action="{{ route('admin.acara.destroy', $event->id) }}" method="POST" onsubmit="return confirm('Yakin?')" style="margin: 0; padding: 0; display: flex;">
+            @csrf
+            @method('DELETE')
+            <button type="submit" 
+                style="width: 70px; height: 32px; background-color: #e11d1d; color: white; border-radius: 9999px; font-size: 9px; font-weight: 900; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 0.1em;">
+                HAPUS
+            </button>
+        </form>
+    </div>
+</td>
         </tr>
         @endforeach
     </tbody>
