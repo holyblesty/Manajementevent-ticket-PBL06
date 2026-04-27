@@ -41,9 +41,9 @@
 
     <div class="bg-white w-full max-w-[950px] rounded-xl shadow-2xl overflow-hidden mb-10 mx-4 border border-gray-100">
         
-        <div class="bg-[#8b418b] p-6 text-white border-b-4 border-[#732e73]">
-            <h1 class="text-xl font-bold uppercase tracking-tight text-white">Ubah Informasi Event</h1>
-            <p class="text-[11px] opacity-90 font-medium text-white">Pastikan data acara dan media (poster/tiket) sudah benar.</p>
+      <div class="bg-[#24112e] p-8 text-white border-b-4 border-[#7a4988]">
+            <h1 class="text-2xl font-black uppercase tracking-tighter text-white">Ubah Informasi Event</h1>
+            <p class="text-sm text-[#be93d4] font-bold mt-1 uppercase tracking-widest">Pastikan data acara dan media sudah benar</p>
         </div>
 
         <form action="{{ route('admin.acara.update', $event->id) }}" method="POST" enctype="multipart/form-data" class="p-8">
