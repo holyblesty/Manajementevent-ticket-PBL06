@@ -37,10 +37,10 @@
 
     <div class="bg-white w-full max-w-[950px] rounded-xl shadow-2xl overflow-hidden mb-10 mx-4 border border-gray-100">
         
-        <div class="bg-[#8b418b] p-6 text-white border-b-4 border-[#732e73]">
-            <h1 class="text-xl font-bold uppercase tracking-tight text-white">Tambah Event Baru</h1>
-            <p class="text-[11px] opacity-90 font-medium text-white">Lengkapi detail acara dan pengaturan tiket sekaligus</p>
-        </div>
+      <div class="bg-[#24112e] p-8 text-white border-b-4 border-[#7a4988]">
+    <h1 class="text-2xl font-black uppercase tracking-tighter">Tambah Event Baru</h1>
+    <p class="text-sm text-[#be93d4] font-bold mt-1 uppercase tracking-widest">Lengkapi detail acara dan pengaturan tiket sekaligus</p>
+</div>
 
         <form action="{{ route('admin.acara.store') }}" method="POST" enctype="multipart/form-data" class="p-8">
             @csrf
