@@ -30,14 +30,17 @@ Route::prefix('admin')->group(function () {
     Route::get('/admin/acara/{id}/tiket', [AcaraController::class, 'tiket'])->name('admin.acara.tiket');
     Route::put('/admin/acara/{id}/tiket/update', [AcaraController::class, 'updateTiket'])->name('admin.acara.tiket.update');
 
-// Grouping rute admin supaya lebih rapi
-Route::prefix('admin')->name('admin.')->group(function () {
+    // Grouping rute admin supaya lebih rapi
+    Route::prefix('admin')->name('admin.')->group(function () {
     
     // Rute utama Dashboard (Tabel Daftar Acara)
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Rute Resource untuk Acara (Otomatis handle: create, store, edit, update, destroy)
     Route::resource('acara', AcaraController::class);
+    
+    Route::get('/admin/profile', [AcaraController::class, 'profile'])->name('admin.profile');
+    Route::put('/admin/profile', [AcaraController::class, 'updateProfile'])->name('admin.profile.update');
 
 });
 });
