@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\File;
 class AcaraController extends Controller
 {
     /**
-     * Data Dummy Global - Tetap sinkron untuk Event dan Profile
+     * Data Dummy Global
      */
     private function getDummyEvents()
     {
@@ -26,15 +26,15 @@ class AcaraController extends Controller
                 'poster' => 'basket.png',
                 'desain_tiket' => null,
                 'tiket' => [
-                    'early_bird' => (object)['nama' => 'Early Bird', 'deskripsi' => 'Harga spesial awal', 'harga' => 50000, 'kuota' => 10],
-                    'vip'         => (object)['nama' => 'VIP', 'deskripsi' => 'Akses depan', 'harga' => 150000, 'kuota' => 10],
-                    'normal'      => (object)['nama' => 'Normal', 'deskripsi' => 'Tiket reguler', 'harga' => 75000, 'kuota' => 30],
+                    'early_bird' => (object)['nama' => 'Early Bird', 'harga' => 50000, 'kuota' => 10],
+                    'vip'         => (object)['nama' => 'VIP', 'harga' => 150000, 'kuota' => 10],
+                    'normal'      => (object)['nama' => 'Normal', 'harga' => 75000, 'kuota' => 30],
                 ]
             ],
             2 => [
                 'id' => 2,
                 'judul' => 'Festival Musik Kampus 2026',
-                'deskripsi' => 'Konser musik tahunan mahasiswa Politeknik Batam dengan bintang tamu rahasia!',
+                'deskripsi' => 'Konser musik tahunan mahasiswa Politeknik Batam.',
                 'tanggal' => '2026-05-30',
                 'kategori' => 'Hiburan',
                 'jenis' => 'individu',
@@ -43,15 +43,15 @@ class AcaraController extends Controller
                 'poster' => 'musik.png',
                 'desain_tiket' => null,
                 'tiket' => [
-                    'early_bird' => (object)['nama' => 'Presale 1', 'deskripsi' => 'Tiket murah meriah', 'harga' => 80000, 'kuota' => 100],
-                    'vip'         => (object)['nama' => 'VIP Meet & Greet', 'deskripsi' => 'Akses backstage', 'harga' => 350000, 'kuota' => 50],
-                    'normal'      => (object)['nama' => 'Festival', 'deskripsi' => 'Akses area festival', 'harga' => 120000, 'kuota' => 350],
+                    'early_bird' => (object)['nama' => 'Presale 1', 'harga' => 80000, 'kuota' => 100],
+                    'vip'         => (object)['nama' => 'VIP', 'harga' => 350000, 'kuota' => 50],
+                    'normal'      => (object)['nama' => 'Festival', 'harga' => 120000, 'kuota' => 350],
                 ]
             ],
             3 => [
                 'id' => 3,
                 'judul' => 'Futsal Kampus Championship',
-                'deskripsi' => 'Turnamen futsal bergengsi untuk memperebutkan piala Direktur.',
+                'deskripsi' => 'Turnamen futsal bergengsi.',
                 'tanggal' => '2026-06-09',
                 'kategori' => 'Olahraga',
                 'jenis' => 'tim',
@@ -60,15 +60,15 @@ class AcaraController extends Controller
                 'poster' => 'futsal.jpg',
                 'desain_tiket' => null,
                 'tiket' => [
-                    'early_bird' => (object)['nama' => 'Promo Mahasiswa', 'deskripsi' => 'Diskon khusus KTM', 'harga' => 25000, 'kuota' => 10],
-                    'vip'         => (object)['nama' => 'VIP', 'deskripsi' => 'Kursi pinggir lapangan', 'harga' => 75000, 'kuota' => 2],
-                    'normal'      => (object)['nama' => 'Reguler', 'deskocrat' => 'Tiket masuk harian', 'harga' => 35000, 'kuota' => 20],
+                    'early_bird' => (object)['nama' => 'Promo', 'harga' => 25000, 'kuota' => 10],
+                    'vip'         => (object)['nama' => 'VIP', 'harga' => 75000, 'kuota' => 2],
+                    'normal'      => (object)['nama' => 'Reguler', 'harga' => 35000, 'kuota' => 20],
                 ]
             ],
             4 => [
                 'id' => 4,
                 'judul' => 'Seminar Nasional: Masa Depan AI',
-                'deskripsi' => 'Membahas perkembangan teknologi AI di industri masa kini.',
+                'deskripsi' => 'Membahas perkembangan teknologi AI.',
                 'tanggal' => '2026-06-15',
                 'kategori' => 'Seminar',
                 'jenis' => 'individu',
@@ -77,9 +77,9 @@ class AcaraController extends Controller
                 'poster' => 'seminar.jpg',
                 'desain_tiket' => null,
                 'tiket' => [
-                    'early_bird' => (object)['nama' => 'Early Bird', 'deskripsi' => 'Pendaftaran bulan pertama', 'harga' => 50000, 'kuota' => 50],
-                    'vip'         => (object)['nama' => 'VIP Bundling', 'deskripsi' => 'Materi VIP + Sertifikat Fisik', 'harga' => 200000, 'kuota' => 50],
-                    'normal'      => (object)['nama' => 'Normal', 'deskripsi' => 'Akses seminar + E-Sertifikat', 'harga' => 100000, 'kuota' => 100],
+                    'early_bird' => (object)['nama' => 'Early Bird', 'harga' => 50000, 'kuota' => 50],
+                    'vip'         => (object)['nama' => 'VIP', 'harga' => 200000, 'kuota' => 50],
+                    'normal'      => (object)['nama' => 'Normal', 'harga' => 100000, 'kuota' => 100],
                 ]
             ],
         ];
@@ -89,11 +89,11 @@ class AcaraController extends Controller
     
     public function profile()
     {
-        // Data dummy untuk profile admin
+        // Logika Session: Ambil dari session jika ada, kalau tidak pakai default
         $user = (object) [
-            'name' => 'Vivian Sarah Diva Alisianoi',
+            'name' => session('admin_name', 'Vivian Sarah Diva Alisianoi'),
             'email' => 'vivian_018@student.polibatam.ac.id',
-            'foto' => 'profile_default.jpg' // Pastikan file ini ada di public/images atau biarkan kosong dulu
+            'foto' => session('admin_foto', 'profile_default.jpg')
         ];
 
         return view('admin.profile', compact('user'));
@@ -106,9 +106,14 @@ class AcaraController extends Controller
             'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
+        // Simpan nama ke Session agar tidak hilang saat refresh
+        session(['admin_name' => $request->name]);
+
         if ($request->hasFile('foto')) {
             $imageName = 'profile_' . time() . '.' . $request->foto->extension();
             $request->foto->move(public_path('images'), $imageName);
+            // Simpan nama file foto ke Session
+            session(['admin_foto' => $imageName]);
         }
 
         return redirect()->back()->with('success', 'Profil berhasil diperbarui!');
