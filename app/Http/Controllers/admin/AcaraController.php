@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\File;
 class AcaraController extends Controller
 {
     /**
-     * Data Dummy Global agar sinkron di semua method
+     * Data Dummy Global - Saya tambahkan field 'desain_tiket' agar tidak error
      */
     private function getDummyEvents()
     {
@@ -24,10 +24,11 @@ class AcaraController extends Controller
                 'lokasi' => 'Lapangan Basket Politeknik Batam',
                 'kapasitas' => 50,
                 'poster' => 'basket.png',
+                'desain_tiket' => null, // Tambahkan ini agar tidak undefined
                 'tiket' => [
                     'early_bird' => (object)['nama' => 'Early Bird', 'deskripsi' => 'Harga spesial awal', 'harga' => 50000, 'kuota' => 10],
-                    'vip'        => (object)['nama' => 'VIP', 'deskripsi' => 'Akses depan', 'harga' => 150000, 'kuota' => 10],
-                    'normal'     => (object)['nama' => 'Normal', 'deskripsi' => 'Tiket reguler', 'harga' => 75000, 'kuota' => 30],
+                    'vip'         => (object)['nama' => 'VIP', 'deskripsi' => 'Akses depan', 'harga' => 150000, 'kuota' => 10],
+                    'normal'      => (object)['nama' => 'Normal', 'deskripsi' => 'Tiket reguler', 'harga' => 75000, 'kuota' => 30],
                 ]
             ],
             2 => [
@@ -40,10 +41,11 @@ class AcaraController extends Controller
                 'lokasi' => 'Lapangan Bola Politeknik Batam',
                 'kapasitas' => 500,
                 'poster' => 'musik.png',
+                'desain_tiket' => null, // Tambahkan ini
                 'tiket' => [
                     'early_bird' => (object)['nama' => 'Presale 1', 'deskripsi' => 'Tiket murah meriah', 'harga' => 80000, 'kuota' => 100],
-                    'vip'        => (object)['nama' => 'VIP Meet & Greet', 'deskripsi' => 'Akses backstage', 'harga' => 350000, 'kuota' => 50],
-                    'normal'     => (object)['nama' => 'Festival', 'deskripsi' => 'Akses area festival', 'harga' => 120000, 'kuota' => 350],
+                    'vip'         => (object)['nama' => 'VIP Meet & Greet', 'deskripsi' => 'Akses backstage', 'harga' => 350000, 'kuota' => 50],
+                    'normal'      => (object)['nama' => 'Festival', 'deskripsi' => 'Akses area festival', 'harga' => 120000, 'kuota' => 350],
                 ]
             ],
             3 => [
@@ -56,10 +58,11 @@ class AcaraController extends Controller
                 'lokasi' => 'Sport Hall Politeknik Batam',
                 'kapasitas' => 32,
                 'poster' => 'futsal.jpg',
+                'desain_tiket' => null, // Tambahkan ini
                 'tiket' => [
                     'early_bird' => (object)['nama' => 'Promo Mahasiswa', 'deskripsi' => 'Diskon khusus KTM', 'harga' => 25000, 'kuota' => 10],
-                    'vip'        => (object)['nama' => 'VIP', 'deskripsi' => 'Kursi pinggir lapangan', 'harga' => 75000, 'kuota' => 2],
-                    'normal'     => (object)['nama' => 'Reguler', 'deskripsi' => 'Tiket masuk harian', 'harga' => 35000, 'kuota' => 20],
+                    'vip'         => (object)['nama' => 'VIP', 'deskripsi' => 'Kursi pinggir lapangan', 'harga' => 75000, 'kuota' => 2],
+                    'normal'      => (object)['nama' => 'Reguler', 'deskripsi' => 'Tiket masuk harian', 'harga' => 35000, 'kuota' => 20],
                 ]
             ],
             4 => [
@@ -72,10 +75,11 @@ class AcaraController extends Controller
                 'lokasi' => 'Auditorium Gd. Utama',
                 'kapasitas' => 200,
                 'poster' => 'seminar.jpg',
+                'desain_tiket' => null, // Tambahkan ini
                 'tiket' => [
                     'early_bird' => (object)['nama' => 'Early Bird', 'deskripsi' => 'Pendaftaran bulan pertama', 'harga' => 50000, 'kuota' => 50],
-                    'vip'        => (object)['nama' => 'VIP Bundling', 'deskripsi' => 'Materi VIP + Sertifikat Fisik', 'harga' => 200000, 'kuota' => 50],
-                    'normal'     => (object)['nama' => 'Normal', 'deskripsi' => 'Akses seminar + E-Sertifikat', 'harga' => 100000, 'kuota' => 100],
+                    'vip'         => (object)['nama' => 'VIP Bundling', 'deskripsi' => 'Materi VIP + Sertifikat Fisik', 'harga' => 200000, 'kuota' => 50],
+                    'normal'      => (object)['nama' => 'Normal', 'deskripsi' => 'Akses seminar + E-Sertifikat', 'harga' => 100000, 'kuota' => 100],
                 ]
             ],
         ];
@@ -151,16 +155,15 @@ class AcaraController extends Controller
      */
     public function updateTiket(Request $request, $id)
     {
-        // Validasi input tiket dan gambar desain
         $request->validate([
             'kapasitas'    => 'required|integer',
             'tiket'        => 'nullable|array',
             'desain_tiket' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        // Simulasi upload desain tiket
         if ($request->hasFile('desain_tiket')) {
             $imageName = 'ticket_' . time() . '.' . $request->desain_tiket->extension();
+            // Simpan ke public/images agar gampang dipanggil asset('images/...')
             $request->desain_tiket->move(public_path('images'), $imageName);
         }
 
