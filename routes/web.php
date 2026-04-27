@@ -26,6 +26,10 @@ Route::prefix('admin')->group(function () {
     Route::get('/acara/tambah', [DashboardController::class, 'create'])->name('admin.acara.create');
     Route::post('/acara/simpan', [DashboardController::class, 'store'])->name('admin.acara.store');
 
+    // Tambahkan ini di dalam group admin kamu
+    Route::get('/admin/acara/{id}/tiket', [AcaraController::class, 'tiket'])->name('admin.acara.tiket');
+    Route::put('/admin/acara/{id}/tiket/update', [AcaraController::class, 'updateTiket'])->name('admin.acara.tiket.update');
+
 // Grouping rute admin supaya lebih rapi
 Route::prefix('admin')->name('admin.')->group(function () {
     
