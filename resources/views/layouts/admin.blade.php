@@ -12,7 +12,7 @@
     <header class="fixed top-0 z-50 w-full shadow-md">
         <nav class="w-full bg-white h-16 flex items-center justify-between px-6">
             <div class="flex items-center">
-                <img src="{{ asset('images/logo.jpeg') }}" alt="Logo" class="h-10">
+                <img src="{{ asset('images/logo.jpeg') }}" alt="Logo" class="h-16">
             </div>
             <div class="flex items-center space-x-6 text-sm font-medium">
                 <a href="#" class="text-gray-600 hover:text-[#7a4988] no-underline">Beranda</a>
