@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\AcaraController;
 
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,32 +16,24 @@ Route::get('/', function () {
 });
 
 // ================= ADMIN AREA =================
-Route::prefix('admin')->group(function () {
+Route::prefix('admin')->name('admin.')->group(function () {
     
-    // 1. Dashboard (Daftar Acara)
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
-
-    // 2. Tambah Acara
-    Route::get('/acara/tambah', [DashboardController::class, 'create'])->name('admin.acara.create');
-    Route::post('/acara/simpan', [DashboardController::class, 'store'])->name('admin.acara.store');
-
-    // Tambahkan ini di dalam group admin kamu
-    Route::get('/admin/acara/{id}/tiket', [AcaraController::class, 'tiket'])->name('admin.acara.tiket');
-    Route::put('/admin/acara/{id}/tiket/update', [AcaraController::class, 'updateTiket'])->name('admin.acara.tiket.update');
-
-    // Grouping rute admin supaya lebih rapi
-    Route::prefix('admin')->name('admin.')->group(function () {
-    
-    // Rute utama Dashboard (Tabel Daftar Acara)
+    // 1. Dashboard Utama
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Rute Resource untuk Acara (Otomatis handle: create, store, edit, update, destroy)
+    // 2. Resource Acara (Handle: index, create, store, edit, update, destroy)
+    // URL: admin/acara, admin/acara/create, dsb.
     Route::resource('acara', AcaraController::class);
-    
-    Route::get('/admin/profile', [AcaraController::class, 'profile'])->name('admin.profile');
-    Route::put('/admin/profile', [AcaraController::class, 'updateProfile'])->name('admin.profile.update');
 
-});
+    // 3. Custom Route untuk Tiket (Karena tidak ada di resource default)
+    Route::get('/acara/{id}/tiket', [AcaraController::class, 'tiket'])->name('acara.tiket');
+    Route::put('/acara/{id}/tiket/update', [AcaraController::class, 'updateTiket'])->name('acara.tiket.update');
+
+    // 4. Route Profile Admin
+    // URL: admin/profile
+    Route::get('/profile', [AcaraController::class, 'profile'])->name('profile');
+    Route::put('/profile/update', [AcaraController::class, 'updateProfile'])->name('profile.update');
+
 });
 
 // Placeholder Login
