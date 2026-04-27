@@ -9,24 +9,27 @@
 </head>
 <body class="bg-gray-50 font-sans antialiased text-gray-900">
 
-    <nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 h-16 flex items-center justify-between px-6">
-        <div class="flex items-center">
-            <img src="{{ asset('images/logo.jpeg') }}" alt="Logo" class="h-10">
-        </div>
-        <div class="flex items-center space-x-6 text-sm font-medium">
-            <a href="#" class="text-gray-600 hover:text-[#7a4988] no-underline">Beranda</a>
-            <a href="#" class="text-gray-600 hover:text-[#7a4988] no-underline">Acara</a>
-            <a href="#" class="text-gray-600 hover:text-[#7a4988] no-underline">Tentang kami</a>
-            <div class="flex items-center space-x-2">
-                <div class="w-8 h-8 bg-[#be93d4] rounded-full flex items-center justify-center text-[#7a4988]">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"></path></svg>
-                </div>
-                <a href="#" class="bg-[#be93d4] text-[#2b1238] px-4 py-1.5 rounded text-xs font-bold hover:bg-[#9e7bb5] transition uppercase no-underline">Keluar</a>
+    <header class="fixed top-0 z-50 w-full shadow-md">
+        <nav class="w-full bg-white h-16 flex items-center justify-between px-6">
+            <div class="flex items-center">
+                <img src="{{ asset('images/logo.jpeg') }}" alt="Logo" class="h-10">
             </div>
-        </div>
-    </nav>
+            <div class="flex items-center space-x-6 text-sm font-medium">
+                <a href="#" class="text-gray-600 hover:text-[#7a4988] no-underline">Beranda</a>
+                <a href="#" class="text-gray-600 hover:text-[#7a4988] no-underline">Acara</a>
+                <a href="#" class="text-gray-600 hover:text-[#7a4988] no-underline">Tentang kami</a>
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-[#be93d4] rounded-full flex items-center justify-center text-[#7a4988]">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"></path></svg>
+                    </div>
+                    <a href="#" class="bg-[#be93d4] text-[#2b1238] px-4 py-1.5 rounded text-xs font-bold hover:bg-[#9e7bb5] transition uppercase no-underline">Keluar</a>
+                </div>
+            </div>
+        </nav>
+        <div class="w-full bg-[#7a4988] h-4"></div>
+    </header>
 
-    <aside class="fixed top-16 left-0 z-40 w-64 h-screen bg-white border-r border-gray-200">
+    <aside class="fixed top-20 left-0 z-40 w-64 h-screen bg-white border-r border-gray-200">
         <div class="py-8 px-4 flex flex-col items-center">
             <div class="w-24 h-24 rounded-full border-4 border-[#7a4988] p-1 mb-4">
                 <img src="{{ asset('images/admin.jpg') }}" class="w-full h-full rounded-full object-cover shadow-sm">
@@ -40,24 +43,22 @@
                     <svg class="w-4 h-4 mr-3" fill="currentColor" viewBox="0 0 20 20"><path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"></path></svg>
                     KELOLA ACARA
                 </a>
-
                 <a href="#" class="flex items-center p-3 rounded-xl font-bold text-xs transition text-gray-500 hover:bg-gray-50 no-underline">
                     <svg class="w-4 h-4 mr-3" fill="currentColor" viewBox="0 0 20 20"><path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path></svg>
                     KELOLA PESERTA
                 </a>
-
                 <a href="#" class="flex items-center p-3 rounded-xl font-bold text-xs transition text-gray-500 hover:bg-gray-50 no-underline">
                     <svg class="w-4 h-4 mr-3" fill="currentColor" viewBox="0 0 20 20"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"></path></svg>
                     STATISTIK
                 </a>
             </nav>
         </div>
-        <div class="absolute bottom-24 w-full flex justify-center opacity-30">
-            <img src="{{ asset('images/logo1.jpeg') }}" class="h-10">
+        <div class="absolute bottom-24 w-full flex justify-center">
+            <img src="{{ asset('images/logo1.jpeg') }}" class="h-20 object-contain">
         </div>
     </aside>
 
-    <div class="p-8 sm:ml-64 mt-16 min-h-screen bg-gray-50 flex flex-col">
+    <div class="p-8 sm:ml-64 mt-24 min-h-screen bg-gray-50 flex flex-col">
         
         @if(session('success'))
         <div id="alert-success" class="flex items-center p-4 mb-6 text-green-800 rounded-2xl bg-green-50 border border-green-100 shadow-sm transition-all duration-500" role="alert">
@@ -81,7 +82,6 @@
 
         <footer class="mt-12 bg-[#24112e] rounded-3xl p-10 text-white shadow-xl">
             <div class="flex flex-col md:flex-row items-start justify-between gap-8">
-                
                 <div class="md:w-[35%]">
                     <div class="flex items-center gap-5 mb-4">
                         <img src="{{ asset('images/footer.jpg') }}" class="h-32 w-auto object-cover rounded-xl">
@@ -127,25 +127,16 @@
                 </div>
             </div>
 
-            <div class="border-t border-white/5 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="border-t border-white/5 mt-10 pt-6 text-center">
                 <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest">
-                    © 2026 Event Ticketing System | Crafted with Passion
+                    © 2026 Event Ticketing System | All Rights Reserved
                 </p>
-                <div class="flex gap-4">
-                    <div class="h-6 w-6 bg-white/5 rounded flex items-center justify-center hover:bg-[#be93d4] transition pointer-events-auto cursor-pointer">
-                        <span class="text-[10px] font-bold">IG</span>
-                    </div>
-                    <div class="h-6 w-6 bg-white/5 rounded flex items-center justify-center hover:bg-[#be93d4] transition pointer-events-auto cursor-pointer">
-                        <span class="text-[10px] font-bold">FB</span>
-                    </div>
-                </div>
             </div>
         </footer>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
     <script>
-        // Auto-remove alert setelah 5 detik
         setTimeout(() => {
             const alert = document.getElementById('alert-success');
             if(alert) {
