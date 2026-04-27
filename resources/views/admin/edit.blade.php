@@ -97,8 +97,7 @@
                     </div>
                 </div>
 
-                <div class="w-[250px] flex-shrink-0 space-y-6">
-                    
+                <div class="w-[250px] flex-shrink-0">
                     <div>
                         <label class="block mb-2 text-xs font-bold text-gray-700 uppercase tracking-wider">Poster Event *</label>
                         <div class="bg-gray-200 border border-gray-300 rounded-lg h-[300px] flex flex-col items-center justify-center p-6 relative text-center group shadow-inner">
@@ -113,30 +112,10 @@
                                 <p class="text-xs font-bold text-gray-800 mb-1">Klik untuk ganti poster</p>
                             </div>
                         </div>
+                        <p class="mt-2 text-[9px] text-gray-500 font-medium uppercase text-center italic">* Biarkan jika tidak ingin mengganti poster</p>
                     </div>
-
-                    <div>
-                        <label class="block mb-2 text-xs font-bold text-gray-700 uppercase tracking-wider flex items-center justify-between">
-                            Desain E-Ticket
-                            <span class="bg-[#be93d4]/20 text-[#7a4988] px-1.5 py-0.5 rounded text-[8px] font-black tracking-widest">OPSIONAL</span>
-                        </label>
-                        <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg h-[130px] flex flex-col items-center justify-center p-4 relative text-center group hover:bg-gray-200 hover:border-[#8b418b] transition-all duration-300">
-                            <input type="file" name="desain_tiket" class="absolute inset-0 opacity-0 cursor-pointer z-20" onchange="previewImage(this, 'image_preview_tiket', 'placeholder_view_tiket')">
-                            
-                            <img id="image_preview_tiket" src="#" class="hidden absolute inset-0 w-full h-full object-cover rounded-lg z-30">
-                            
-                            <div id="placeholder_view_tiket" class="z-10 transition group-hover:scale-105">
-                                <svg class="w-6 h-6 text-gray-400 group-hover:text-[#8b418b] transition-colors mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                                <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider group-hover:text-[#8b418b]">Upload Desain</p>
-                            </div>
-                        </div>
-                        <p class="mt-2 text-[9px] text-gray-500 font-medium uppercase text-center italic">* Rasio 16:9 (Landscape)</p>
-                    </div>
-
                 </div>
-            </div>
-
-            <div class="mt-10 flex justify-end gap-3 pt-6 border-t border-gray-100">
+            </div> <div class="mt-10 flex justify-end gap-3 pt-6 border-t border-gray-100">
                 <a href="{{ route('admin.dashboard') }}" 
                    class="inline-flex items-center justify-center px-10 py-2.5 bg-gray-100 text-gray-500 rounded font-black text-sm hover:bg-gray-200 transition uppercase tracking-widest no-underline border border-gray-200" 
                    style="text-decoration: none !important; font-size: 0.875rem;">
