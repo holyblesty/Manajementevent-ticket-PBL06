@@ -74,8 +74,9 @@ class AcaraController extends Controller
      * Menampilkan halaman Edit Event
      */
    public function edit($id)
-{
-    // 1. Daftar semua data dummy (Samakan dengan yang ada di DashboardController)
+   {
+    // 1. Daftar semua data dummy beserta rincian tiketnya
+    // Total kuota tiket dipastikan SAMA dengan jumlah kapasitas
     $allEvents = [
         1 => [
             'id' => 1,
@@ -85,8 +86,13 @@ class AcaraController extends Controller
             'kategori' => 'Olahraga',
             'jenis' => 'tim',
             'lokasi' => 'Lapangan Basket Politeknik Batam',
-            'kapasitas' => 100,
-            'poster' => 'basket.png'
+            'kapasitas' => 100, // Total 100
+            'poster' => 'basket.png',
+            'tiket' => [
+                'early_bird' => (object)['nama' => 'Early Bird', 'deskripsi' => 'Harga spesial untuk pendaftar pertama', 'harga' => 50000, 'kuota' => 20],
+                'vip'        => (object)['nama' => 'VIP', 'deskripsi' => 'Area tribun utama', 'harga' => 100000, 'kuota' => 20],
+                'normal'     => (object)['nama' => 'Normal', 'deskripsi' => 'Tiket tribun reguler', 'harga' => 75000, 'kuota' => 60],
+            ]
         ],
         2 => [
             'id' => 2,
@@ -96,8 +102,13 @@ class AcaraController extends Controller
             'kategori' => 'Hiburan',
             'jenis' => 'individu',
             'lokasi' => 'Lapangan Bola Politeknik Batam',
-            'kapasitas' => 500,
-            'poster' => 'musik.png'
+            'kapasitas' => 500, // Total 500
+            'poster' => 'musik.png',
+            'tiket' => [
+                'early_bird' => (object)['nama' => 'Presale 1', 'deskripsi' => 'Tiket murah meriah', 'harga' => 80000, 'kuota' => 100],
+                'vip'        => (object)['nama' => 'VIP Meet & Greet', 'deskripsi' => 'Akses backstage', 'harga' => 350000, 'kuota' => 50],
+                'normal'     => (object)['nama' => 'Festival', 'deskripsi' => 'Akses area festival', 'harga' => 120000, 'kuota' => 350],
+            ]
         ],
         3 => [
             'id' => 3,
@@ -107,8 +118,13 @@ class AcaraController extends Controller
             'kategori' => 'Olahraga',
             'jenis' => 'tim',
             'lokasi' => 'Sport Hall Politeknik Batam',
-            'kapasitas' => 200,
-            'poster' => 'futsal.png'
+            'kapasitas' => 200, // Total 200
+            'poster' => 'futsal.png',
+            'tiket' => [
+                'early_bird' => (object)['nama' => 'Promo Mahasiswa', 'deskripsi' => 'Diskon khusus KTM', 'harga' => 25000, 'kuota' => 50],
+                'vip'        => (object)['nama' => 'VIP', 'deskripsi' => 'Kursi pinggir lapangan', 'harga' => 75000, 'kuota' => 30],
+                'normal'     => (object)['nama' => 'Reguler', 'deskripsi' => 'Tiket masuk harian', 'harga' => 35000, 'kuota' => 120],
+            ]
         ],
         4 => [
             'id' => 4,
@@ -118,8 +134,13 @@ class AcaraController extends Controller
             'kategori' => 'Seminar',
             'jenis' => 'individu',
             'lokasi' => 'Auditorium Gd. Utama',
-            'kapasitas' => 300,
-            'poster' => 'seminar.png'
+            'kapasitas' => 300, // Total 300
+            'poster' => 'seminar.png',
+            'tiket' => [
+                'early_bird' => (object)['nama' => 'Early Bird', 'deskripsi' => 'Pendaftaran bulan pertama', 'harga' => 50000, 'kuota' => 50],
+                'vip'        => (object)['nama' => 'VIP Bundling', 'deskripsi' => 'Materi VIP + Sertifikat Fisik + Lunch', 'harga' => 200000, 'kuota' => 50],
+                'normal'     => (object)['nama' => 'Normal', 'deskripsi' => 'Akses seminar + E-Sertifikat', 'harga' => 100000, 'kuota' => 200],
+            ]
         ],
     ];
 
@@ -127,11 +148,11 @@ class AcaraController extends Controller
     // Jika ID ada di daftar, ambil datanya. Jika tidak, ambil data default (event 1).
     $data = isset($allEvents[$id]) ? $allEvents[$id] : $allEvents[1];
 
-    // 3. Ubah array jadi object agar bisa dibaca $event->judul di Blade
+    // 3. Ubah array jadi object agar bisa dibaca $event->judul dan $event->tiket di Blade
     $event = (object) $data;
 
     return view('admin.edit', compact('event'));
-}
+   }
 
     /**
      * Memproses pembaruan data (Update)

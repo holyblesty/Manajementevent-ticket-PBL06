@@ -86,12 +86,13 @@
                     <div>
                         <label class="block mb-1.5 text-xs font-bold text-gray-700 uppercase tracking-wider">Kapasitas Peserta *</label>
                         <div class="relative max-w-[200px]">
-                            <input type="number" name="kapasitas" value="{{ $event->kapasitas }}" placeholder="50" 
-                                class="w-full p-2.5 border border-gray-400 rounded text-sm pr-10 outline-none text-gray-700 font-medium">
+                            <input type="number" id="total_kapasitas" name="kapasitas" value="{{ $event->kapasitas }}" placeholder="50" 
+                                class="w-full p-2.5 border border-gray-400 rounded text-sm pr-10 outline-none text-gray-700 font-medium transition-all duration-300">
                             <span class="absolute right-3 top-2.5 text-gray-400">
                                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" /></svg>
                             </span>
                         </div>
+                        <p id="kapasitas_hint" class="text-[9px] text-[#7a4988] mt-1 font-bold italic hidden">*Otomatis dihitung dari total tiket</p>
                     </div>
                 </div>
 
@@ -120,44 +121,145 @@
                 </div>
 
                 <div class="flex space-x-3 mb-6">
-                    <button type="button" onclick="toggleTipe(false)" id="btn_gratis" class="px-10 py-2 border border-gray-400 rounded font-bold text-xs bg-gray-300 text-gray-700 transition shadow-sm uppercase tracking-widest">Gratis</button>
-                    <button type="button" onclick="toggleTipe(true)" id="btn_berbayar" class="px-10 py-2 border border-gray-400 rounded font-bold text-xs bg-white text-gray-700 transition shadow-sm uppercase tracking-widest">Berbayar</button>
+                    <button type="button" onclick="toggleTipe(false)" id="btn_gratis" class="px-10 py-2 border border-gray-400 rounded font-bold text-xs bg-white text-gray-700 transition shadow-sm uppercase tracking-widest">Gratis</button>
+                    <button type="button" onclick="toggleTipe(true)" id="btn_berbayar" class="px-10 py-2 border border-gray-400 rounded font-bold text-xs bg-gray-300 text-gray-700 transition shadow-sm uppercase tracking-widest">Berbayar</button>
                 </div>
 
-                <div id="info_gratis" class="border border-gray-300 rounded-lg p-5 bg-white shadow-inner">
+                <div id="info_gratis" class="hidden border border-gray-300 rounded-lg p-5 bg-white shadow-inner">
                     <h3 class="text-[#8b418b] font-bold text-sm mb-1">Tiket gratis</h3>
                     <p class="text-red-700 text-[11px] leading-relaxed font-medium">Peserta dapat mendaftar tanpa biaya. Kuota diatur dari field kapasitas di atas.</p>
                 </div>
 
-                <div id="info_berbayar" class="hidden border border-gray-300 rounded-lg p-5">
-                    <p class="text-xs text-gray-500 italic font-medium font-bold">Menu tiket berbayar sedang dikembangkan.</p>
+                <div id="info_berbayar" class="border border-gray-300 rounded-lg p-6 bg-white shadow-sm">
+                    <div class="grid grid-cols-[40px_1.5fr_2.5fr_1.5fr_80px] gap-4 mb-3 px-2">
+                        <div></div> 
+                        <div class="text-sm font-bold text-gray-800 text-center">Nama tier</div>
+                        <div class="text-sm font-bold text-gray-800 text-center">Deskripsi</div>
+                        <div class="text-sm font-bold text-gray-800 text-center">Harga</div>
+                        <div class="text-sm font-bold text-gray-800 text-center">Kuota</div>
+                    </div>
+
+                    <div class="bg-gray-200 rounded-lg p-3 mb-3 grid grid-cols-[40px_1.5fr_2.5fr_1.5fr_80px] gap-4 items-start border border-gray-300">
+                        <div class="flex justify-center items-center h-10">
+                            <svg class="w-6 h-6 text-black" fill="currentColor" viewBox="0 0 24 24"><path d="M13 2L3 14h7v8l10-12h-7V2z"/></svg>
+                        </div>
+                        <div>
+                            <input type="text" name="tiket[early_bird][nama]" value="{{ $event->tiket['early_bird']->nama ?? 'Early Bird' }}" class="w-full p-2 border border-gray-400 rounded text-sm text-gray-800 focus:ring-1 focus:ring-[#7a4988] outline-none">
+                            <p class="text-[10px] mt-1 text-gray-600 font-medium">Harga special awal</p>
+                        </div>
+                        <div>
+                            <input type="text" name="tiket[early_bird][deskripsi]" value="{{ $event->tiket['early_bird']->deskripsi ?? '' }}" class="w-full p-2 border border-gray-400 rounded text-sm text-gray-500 focus:ring-1 focus:ring-[#7a4988] outline-none placeholder-gray-400">
+                        </div>
+                        <div class="relative">
+                            <span class="absolute left-3 top-2.5 text-sm text-gray-400">Rp</span>
+                            <input type="number" name="tiket[early_bird][harga]" value="{{ $event->tiket['early_bird']->harga ?? '' }}" class="w-full pl-9 pr-2 py-2 border border-gray-400 rounded text-sm text-gray-800 focus:ring-1 focus:ring-[#7a4988] outline-none">
+                        </div>
+                        <div>
+                            <input type="number" name="tiket[early_bird][kuota]" value="{{ $event->tiket['early_bird']->kuota ?? 0 }}" class="kuota-input w-full p-2 border border-gray-400 rounded text-sm text-gray-800 text-center focus:ring-1 focus:ring-[#7a4988] outline-none" oninput="hitungTotalKuota()">
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-200 rounded-lg p-3 mb-3 grid grid-cols-[40px_1.5fr_2.5fr_1.5fr_80px] gap-4 items-start border border-gray-300">
+                        <div class="flex justify-center items-center h-10">
+                            <svg class="w-7 h-7 text-black" fill="currentColor" viewBox="0 0 24 24"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg>
+                        </div>
+                        <div>
+                            <input type="text" name="tiket[vip][nama]" value="{{ $event->tiket['vip']->nama ?? 'VIP' }}" class="w-full p-2 border border-gray-400 rounded text-sm text-gray-800 focus:ring-1 focus:ring-[#7a4988] outline-none">
+                            <p class="text-[10px] mt-1 text-gray-600 font-medium">Akses premium</p>
+                        </div>
+                        <div>
+                            <input type="text" name="tiket[vip][deskripsi]" value="{{ $event->tiket['vip']->deskripsi ?? '' }}" class="w-full p-2 border border-gray-400 rounded text-sm text-gray-500 focus:ring-1 focus:ring-[#7a4988] outline-none placeholder-gray-400">
+                        </div>
+                        <div class="relative">
+                            <span class="absolute left-3 top-2.5 text-sm text-gray-400">Rp</span>
+                            <input type="number" name="tiket[vip][harga]" value="{{ $event->tiket['vip']->harga ?? '' }}" class="w-full pl-9 pr-2 py-2 border border-gray-400 rounded text-sm text-gray-800 focus:ring-1 focus:ring-[#7a4988] outline-none">
+                        </div>
+                        <div>
+                            <input type="number" name="tiket[vip][kuota]" value="{{ $event->tiket['vip']->kuota ?? 0 }}" class="kuota-input w-full p-2 border border-gray-400 rounded text-sm text-gray-800 text-center focus:ring-1 focus:ring-[#7a4988] outline-none" oninput="hitungTotalKuota()">
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-200 rounded-lg p-3 grid grid-cols-[40px_1.5fr_2.5fr_1.5fr_80px] gap-4 items-start border border-gray-300">
+                        <div class="flex justify-center items-center h-10 transform -rotate-45">
+                            <svg class="w-7 h-7 text-black" fill="currentColor" viewBox="0 0 20 20"><path d="M2 6a2 2 0 012-2h12a2 2 0 012 2v2a2 2 0 100 4v2a2 2 0 100-4V6z"/></svg>
+                        </div>
+                        <div>
+                            <input type="text" name="tiket[normal][nama]" value="{{ $event->tiket['normal']->nama ?? 'Normal' }}" class="w-full p-2 border border-gray-400 rounded text-sm text-gray-800 focus:ring-1 focus:ring-[#7a4988] outline-none">
+                            <p class="text-[10px] mt-1 text-gray-600 font-medium">Tiket Reguler</p>
+                        </div>
+                        <div>
+                            <input type="text" name="tiket[normal][deskripsi]" value="{{ $event->tiket['normal']->deskripsi ?? '' }}" class="w-full p-2 border border-gray-400 rounded text-sm text-gray-500 focus:ring-1 focus:ring-[#7a4988] outline-none placeholder-gray-400">
+                        </div>
+                        <div class="relative">
+                            <span class="absolute left-3 top-2.5 text-sm text-gray-400">Rp</span>
+                            <input type="number" name="tiket[normal][harga]" value="{{ $event->tiket['normal']->harga ?? '' }}" class="w-full pl-9 pr-2 py-2 border border-gray-400 rounded text-sm text-gray-800 focus:ring-1 focus:ring-[#7a4988] outline-none">
+                        </div>
+                        <div>
+                            <input type="number" name="tiket[normal][kuota]" value="{{ $event->tiket['normal']->kuota ?? 0 }}" class="kuota-input w-full p-2 border border-gray-400 rounded text-sm text-gray-800 text-center focus:ring-1 focus:ring-[#7a4988] outline-none" oninput="hitungTotalKuota()">
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div class="mt-10 flex justify-end gap-3 pt-6 border-t border-gray-100">
-                <a href="{{ route('admin.dashboard') }}" class="px-10 py-2.5 bg-gray-500 text-white rounded font-bold text-xs hover:bg-gray-600 transition shadow uppercase tracking-widest text-white">Batal</a>
-                <button type="submit" class="px-10 py-2.5 bg-[#8b418b] text-white border border-[#732e73] rounded font-bold text-xs hover:bg-[#732e73] transition shadow uppercase tracking-widest text-white">Simpan Perubahan</button>
+                <a href="{{ route('admin.dashboard') }}" 
+                   class="inline-flex items-center justify-center px-10 py-2.5 bg-gray-100 text-gray-500 rounded font-black text-sm hover:bg-gray-200 transition uppercase tracking-widest no-underline border border-gray-200" 
+                   style="text-decoration: none !important; font-size: 0.875rem;">
+                   Batal
+                </a>
+                
+                <button type="submit" 
+                    class="inline-flex items-center justify-center px-10 py-2.5 bg-[#24112e] text-white rounded font-black text-sm hover:bg-black transition shadow-md uppercase tracking-widest border-none"
+                    style="font-size: 0.875rem;">
+                    Simpan Perubahan
+                </button>
             </div>
         </form>
     </div>
 
     <script>
+        function hitungTotalKuota() {
+            const isBerbayar = !document.getElementById('info_berbayar').classList.contains('hidden');
+            if (!isBerbayar) return;
+
+            const inputs = document.querySelectorAll('.kuota-input');
+            let total = 0;
+            inputs.forEach(input => {
+                total += parseInt(input.value) || 0;
+            });
+
+            document.getElementById('total_kapasitas').value = total;
+        }
+
         function toggleTipe(isPaid) {
             const btnG = document.getElementById('btn_gratis');
             const btnB = document.getElementById('btn_berbayar');
             const infoG = document.getElementById('info_gratis');
             const infoB = document.getElementById('info_berbayar');
+            
+            const inputKapasitas = document.getElementById('total_kapasitas');
+            const hintKapasitas = document.getElementById('kapasitas_hint');
 
             if(isPaid) {
                 btnB.classList.replace('bg-white', 'bg-gray-300');
                 btnG.classList.replace('bg-gray-300', 'bg-white');
                 infoG.classList.add('hidden');
                 infoB.classList.remove('hidden');
+                
+                inputKapasitas.setAttribute('readonly', true);
+                inputKapasitas.classList.add('bg-gray-100', 'cursor-not-allowed');
+                hintKapasitas.classList.remove('hidden');
+                hitungTotalKuota(); 
+                
             } else {
                 btnG.classList.replace('bg-white', 'bg-gray-300');
                 btnB.classList.replace('bg-gray-300', 'bg-white');
                 infoB.classList.add('hidden');
                 infoG.classList.remove('hidden');
+                
+                inputKapasitas.removeAttribute('readonly');
+                inputKapasitas.classList.remove('bg-gray-100', 'cursor-not-allowed');
+                hintKapasitas.classList.add('hidden');
             }
         }
 
@@ -174,6 +276,10 @@
                 reader.readAsDataURL(input.files[0]);
             }
         }
+
+        window.onload = () => {
+            toggleTipe(true);
+        };
     </script>
 </body>
 </html>

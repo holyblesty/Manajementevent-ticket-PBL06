@@ -32,52 +32,60 @@
     </div>
 
     <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse">
-            <thead class="bg-[#7a4988] text-white text-[11px] uppercase tracking-widest font-black">
-                <tr>
-                    <th class="px-6 py-5 text-center">Poster</th>
-                    <th class="px-6 py-4">Judul Acara</th>
-                    <th class="px-6 py-4">Tanggal Acara</th>
-                    <th class="px-6 py-4">Lokasi</th>
-                    <th class="px-6 py-4 text-center">Kategori</th>
-                    <th class="px-6 py-4 text-center">Aksi</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-100">
-                @foreach ($events as $event)
-                <tr class="hover:bg-gray-50/50 transition duration-300">
-                    <td class="px-6 py-4">
-                        <div class="w-20 h-12 bg-gray-100 rounded-lg overflow-hidden mx-auto shadow-inner border border-gray-50">
-                            <img src="{{ asset('images/' . $event->poster) }}" class="w-full h-full object-cover">
-                        </div>
-                    </td>
-                    <td class="px-6 py-4 font-bold text-sm text-gray-700">{{ $event->judul }}</td>
-                    <td class="px-6 py-4 text-xs text-gray-400 font-medium">{{ $event->tanggal }}</td>
-                    <td class="px-6 py-4 text-xs text-gray-400 font-medium">{{ $event->lokasi }}</td>
-                    <td class="px-6 py-4 text-center">
-                        <span class="px-4 py-1 bg-[#be93d4]/20 text-[#7a4988] rounded-full text-[10px] font-black uppercase tracking-wider">{{ $event->kategori }}</span>
-                    </td>
-                    <td class="px-6 py-4">
-                        <div class="flex justify-center items-center gap-3"> 
-                            <a href="{{ route('admin.acara.edit', $event->id) }}" 
-                               class="flex items-center justify-center w-24 h-8 bg-[#24112e] text-white rounded-full text-[9px] font-black hover:bg-black transition shadow-sm uppercase tracking-widest leading-none border-none outline-none">
-                               UBAH
-                            </a>
+       <table class="w-full text-left border-collapse">
+    <thead class="bg-[#7a4988] text-white text-[11px] uppercase tracking-widest font-black">
+        <tr>
+            <th class="px-6 py-5 text-center">Poster</th>
+            <th class="px-6 py-4">Judul Acara</th>
+            <th class="px-6 py-4">Tanggal Acara</th>
+            <th class="px-6 py-4">Lokasi</th>
+            <th class="px-6 py-4 text-center">Kategori</th>
+            <th class="px-6 py-4 text-center">Kapasitas</th>
+            <th class="px-6 py-4 text-center">Aksi</th>
+        </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-100">
+        @foreach ($events as $event)
+        <tr class="hover:bg-gray-50/50 transition duration-300">
+            <td class="px-6 py-4">
+                <div class="w-20 h-12 bg-gray-100 rounded-lg overflow-hidden mx-auto shadow-inner border border-gray-50">
+                    <img src="{{ asset('images/' . $event->poster) }}" class="w-full h-full object-cover">
+                </div>
+            </td>
+            <td class="px-6 py-4 font-bold text-sm text-gray-700">{{ $event->judul }}</td>
+            <td class="px-6 py-4 text-xs text-gray-400 font-medium">{{ $event->tanggal }}</td>
+            <td class="px-6 py-4 text-xs text-gray-400 font-medium">{{ $event->lokasi }}</td>
+            <td class="px-6 py-4 text-center">
+                <span class="px-4 py-1 bg-[#be93d4]/20 text-[#7a4988] rounded-full text-[10px] font-black uppercase tracking-wider">{{ $event->kategori }}</span>
+            </td>
+            
+            <td class="px-6 py-4 text-center">
+                <div class="inline-flex items-center justify-center bg-gray-100 px-3 py-1 rounded-md border border-gray-200">
+                    <svg class="w-3 h-3 text-gray-500 mr-1.5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" /></svg>
+                    <span class="text-xs font-black text-gray-700">{{ $event->kapasitas }} <span class="text-[9px] text-gray-400 font-bold uppercase ml-0.5">Org</span></span>
+                </div>
+            </td>
 
-                            <form action="{{ route('admin.acara.destroy', $event->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus acara ini?')" class="m-0 p-0 inline-flex">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" 
-                                    class="flex items-center justify-center w-24 h-8 bg-red-600 text-white rounded-full text-[9px] font-black hover:bg-red-700 transition shadow-sm uppercase tracking-widest leading-none border-none outline-none p-0 m-0 cursor-pointer">
-                                    HAPUS
-                                </button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+            <td class="px-6 py-4">
+                <div style="display: flex; justify-content: center; align-items: center; gap: 12px;"> 
+                    <a href="{{ route('admin.acara.edit', $event->id) }}" 
+                       style="width: 80px; height: 32px; background-color: #24112e; color: white; border-radius: 9999px; font-size: 9px; font-weight: 900; display: flex; align-items: center; justify-content: center; text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em;">
+                       UBAH
+                    </a>
+                    <form action="{{ route('admin.acara.destroy', $event->id) }}" method="POST" onsubmit="return confirm('Yakin?')" style="margin: 0; padding: 0; display: flex;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" 
+                            style="width: 80px; height: 32px; background-color: #e11d1d; color: white; border-radius: 9999px; font-size: 9px; font-weight: 900; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 0.1em; padding: 0;">
+                            HAPUS
+                        </button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+        @endforeach
+    </tbody>
+</table>
     </div>
 
     <div class="p-8 border-t border-gray-50 flex justify-center">

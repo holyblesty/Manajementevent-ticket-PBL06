@@ -207,15 +207,17 @@
                 </div>
             </div>
 
-            <div class="mt-10 flex justify-end gap-3 pt-6 border-t border-gray-100">
+<div class="mt-10 flex justify-end gap-3 pt-6 border-t border-gray-100">
     <a href="{{ route('admin.dashboard') }}" 
-       class="px-10 py-2.5 bg-gray-100 text-gray-500 rounded font-bold text-xs hover:bg-gray-200 transition uppercase tracking-widest text-center border border-gray-200">
+       class="inline-flex items-center justify-center px-10 py-2.5 bg-gray-100 text-gray-500 rounded font-black text-sm hover:bg-gray-200 transition uppercase tracking-widest no-underline border border-gray-200" 
+       style="text-decoration: none !important; font-size: 0.875rem;">
        Batal
     </a>
     
     <button type="submit" 
-        class="px-10 py-2.5 bg-[#24112e] text-white rounded font-bold text-xs hover:bg-black transition shadow-md uppercase tracking-widest border-none">
-        Simpan
+        class="inline-flex items-center justify-center px-10 py-2.5 bg-[#24112e] text-white rounded font-black text-sm hover:bg-black transition shadow-md uppercase tracking-widest border-none"
+        style="font-size: 0.875rem;">
+        TAMBAH
     </button>
 </div>
         </form>
