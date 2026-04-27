@@ -5,13 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kelola Tiket - {{ $event->judul }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <style>
-        body { background: linear-gradient(135deg, #7a4988 0%, #be93d4 100%); min-height: 100vh; }
+        @keyframes swush {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .no-underline { text-decoration: none !important; }
     </style>
 </head>
-<body class="flex flex-col items-center py-10 font-sans antialiased text-gray-900">
+<body 
+    style="
+        margin: 0; 
+        min-height: 100vh; 
+        background: linear-gradient(-45deg, #2b1238, #7a4988, #4b1d52, #9e7bb5); 
+        background-size: 400% 400%; 
+        animation: swush 10s ease infinite;
+    "
+    class="flex flex-col items-center py-10 font-sans antialiased text-gray-900"
+>
 
-    <div class="w-full max-w-[850px] mb-4 px-4">
+    <div class="w-full max-w-[850px] mb-4 px-4 text-left">
         <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center text-white font-bold text-sm no-underline hover:opacity-80 transition">
             <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
             Kembali ke Dashboard
@@ -19,91 +35,76 @@
     </div>
 
     <div class="bg-white w-full max-w-[850px] rounded-2xl shadow-2xl overflow-hidden mb-10 mx-4 border border-gray-100">
-        <div class="bg-[#24112e] p-8 text-white">
-            <h1 class="text-2xl font-black uppercase tracking-tighter">Kelola Tiket Event</h1>
-            <p class="text-sm text-[#be93d4] font-bold mt-1">{{ $event->judul }}</p>
+        
+        <div class="bg-[#24112e] p-8 text-white border-b-4 border-[#7a4988]">
+            <h1 class="text-2xl font-black uppercase tracking-tighter text-white">Kelola Tiket & Desain</h1>
+            <p class="text-sm text-[#be93d4] font-bold mt-1 uppercase tracking-widest text-[#be93d4]">{{ $event->judul }}</p>
         </div>
 
-        <form action="{{ route('admin.acara.tiket.update', $event->id ?? 1) }}" method="POST" enctype="multipart/form-data" class="p-8">
+        <form action="{{ route('admin.acara.tiket.update', $event->id) }}" method="POST" enctype="multipart/form-data" class="p-8">
             @csrf
             @method('PUT')
 
-            <div class="mb-8 p-4 bg-purple-50 border border-purple-100 rounded-xl flex items-center justify-between shadow-sm">
+            <div class="mb-8 p-6 bg-purple-50 border-2 border-dashed border-purple-200 rounded-2xl flex items-center justify-between shadow-inner">
                 <div>
                     <h3 class="text-[#7a4988] font-black text-xs uppercase tracking-widest">Total Kapasitas Terhitung</h3>
-                    <p class="text-[10px] text-gray-500 font-medium">Otomatis menjumlahkan semua kuota tiket di bawah</p>
+                    <p class="text-[10px] text-gray-500 font-bold uppercase mt-1">Akumulasi otomatis dari 3 tier tiket</p>
                 </div>
-                <div class="text-3xl font-black text-[#24112e]">
-                    <span id="display_total">{{ $event->kapasitas }}</span> <span class="text-xs text-gray-400">Org</span>
+                <div class="text-4xl font-black text-[#24112e]">
+                    <span id="display_total">{{ $event->kapasitas }}</span> <span class="text-xs text-gray-400 font-bold uppercase">Org</span>
                 </div>
                 <input type="hidden" name="kapasitas" id="input_total" value="{{ $event->kapasitas }}">
             </div>
 
-            <div class="mb-10 p-6 bg-white border border-gray-200 rounded-xl shadow-sm">
-                <div class="mb-4">
-                    <h3 class="text-[#24112e] font-black text-sm uppercase tracking-widest mb-1 flex items-center gap-2">
-                        Desain E-Ticket 
-                        <span class="bg-[#be93d4]/20 text-[#7a4988] px-2 py-0.5 rounded text-[9px] tracking-widest font-black">OPSIONAL</span>
-                    </h3>
-                    <p class="text-[11px] text-gray-500 font-medium leading-relaxed">Unggah template dasar tiket untuk event ini. Sistem akan otomatis mencetak nama peserta dan jenis tier tiket di atas gambar ini.</p>
+            <div class="mb-10 p-6 bg-gray-50/50 border border-gray-200 rounded-2xl shadow-sm">
+                <div class="mb-5 text-center">
+                    <h3 class="text-[#24112e] font-black text-sm uppercase tracking-widest mb-1">E-Ticket Design</h3>
+                    <p class="text-[11px] text-gray-500 font-bold uppercase tracking-tighter">Unggah desain berbeda untuk event ini (Rasio 16:9)</p>
                 </div>
                 
-                <div class="w-full bg-purple-50/30 border-2 border-dashed border-[#be93d4] rounded-xl h-[200px] flex flex-col items-center justify-center p-4 relative text-center group hover:bg-purple-50 hover:border-[#7a4988] transition-all duration-300">
+                <div class="w-full bg-white border-2 border-dashed border-gray-300 rounded-xl h-[240px] flex flex-col items-center justify-center p-4 relative text-center group hover:border-[#7a4988] transition-all duration-300 overflow-hidden shadow-inner cursor-pointer">
                     <input type="file" name="desain_tiket" class="absolute inset-0 opacity-0 cursor-pointer z-20" onchange="previewImage(this, 'ticket_preview', 'ticket_placeholder')">
                     
-                    <img id="ticket_preview" src="#" class="hidden absolute inset-0 w-full h-full object-cover rounded-xl z-30 shadow-sm">
+                    <img id="ticket_preview" src="{{ $event->desain_tiket ? asset('storage/'.$event->desain_tiket) : '#' }}" class="{{ $event->desain_tiket ? '' : 'hidden' }} absolute inset-0 w-full h-full object-cover z-30">
                     
-                    <div id="ticket_placeholder" class="z-10 transition group-hover:scale-105 flex flex-col items-center">
-                        <div class="bg-white p-3 rounded-full shadow-sm mb-3 group-hover:shadow-md transition-all">
-                            <svg class="w-7 h-7 text-[#7a4988]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path></svg>
+                    <div id="ticket_placeholder" class="{{ $event->desain_tiket ? 'hidden' : '' }} z-10 flex flex-col items-center group-hover:scale-110 transition-transform">
+                        <div class="bg-purple-100 p-4 rounded-2xl mb-3 text-[#7a4988]">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                         </div>
-                        <p class="text-xs font-black text-[#24112e] uppercase tracking-wider mb-1">Klik atau Drag Desain Tiket</p>
-                        <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Rasio 16:9 (Landscape) • Maks 2MB</p>
+                        <p class="text-xs font-black text-[#24112e] uppercase tracking-wider">Klik untuk Upload Desain Tiket</p>
                     </div>
                 </div>
             </div>
 
             <div class="space-y-4">
-                <div class="flex items-center space-x-4 mb-4">
-                    <span class="text-xs font-bold text-gray-700 uppercase tracking-widest whitespace-nowrap">Tier Tiket Berbayar</span>
-                    <div class="flex-grow border-t border-gray-200"></div>
+                <div class="flex items-center space-x-4 mb-6">
+                    <span class="text-xs font-black text-[#7a4988] uppercase tracking-[0.3em] whitespace-nowrap">Konfigurasi Kuota & Harga</span>
+                    <div class="flex-grow border-t-2 border-gray-100"></div>
                 </div>
 
-                @foreach(['early_bird' => 'Early Bird', 'vip' => 'VIP', 'normal' => 'Normal'] as $key => $label)
-                <div class="bg-white p-5 rounded-xl border border-gray-200 grid grid-cols-1 md:grid-cols-4 gap-4 items-end shadow-sm hover:border-[#be93d4] transition-colors">
-                    <div class="md:col-span-1">
-                        <label class="block text-[10px] font-black uppercase text-[#7a4988] mb-2">{{ $label }}</label>
-                        <input type="text" name="tiket[{{$key}}][nama]" value="{{ $event->tiket[$key]->nama ?? '' }}" class="w-full p-2.5 border border-gray-300 rounded-lg text-sm font-bold text-gray-800 outline-none focus:ring-1 focus:ring-[#7a4988]">
+                @foreach(['early_bird' => 'Early Bird', 'normal' => 'Normal', 'vip' => 'VIP'] as $key => $label)
+                <div class="bg-gray-50/50 p-5 rounded-2xl border-2 border-gray-100 grid grid-cols-1 md:grid-cols-3 gap-6 items-end hover:border-[#be93d4] transition-all">
+                    <div>
+                        <label class="block text-[10px] font-black uppercase text-[#7a4988] mb-2 tracking-widest">Nama Tier (Locked)</label>
+                        <input type="text" value="{{ $label }}" readonly class="w-full p-3 border-2 border-gray-200 rounded-xl text-xs font-black text-gray-400 uppercase bg-gray-100 cursor-not-allowed outline-none">
+                        <input type="hidden" name="tiket[{{$key}}][nama]" value="{{ $label }}">
                     </div>
-                    <div class="md:col-span-1 relative">
-                        <label class="block text-[10px] font-black uppercase text-gray-500 mb-2">Harga (Rp)</label>
-                        <span class="absolute left-3 bottom-3 text-sm text-gray-400 font-bold">Rp</span>
-                        <input type="number" name="tiket[{{$key}}][harga]" value="{{ $event->tiket[$key]->harga ?? '' }}" class="w-full pl-9 pr-2 py-2.5 border border-gray-300 rounded-lg text-sm font-bold text-gray-800 outline-none focus:ring-1 focus:ring-[#7a4988]">
+                    <div class="relative">
+                        <label class="block text-[10px] font-black uppercase text-gray-400 mb-2 tracking-widest">Harga (Rp)</label>
+                        <span class="absolute left-3 bottom-3.5 text-xs text-[#be93d4] font-black">RP</span>
+                        <input type="number" name="tiket[{{$key}}][harga]" value="{{ $event->tiket[$key]->harga ?? 0 }}" class="w-full pl-10 pr-2 py-3 border-2 border-gray-200 rounded-xl text-xs font-black text-gray-800 outline-none focus:border-[#7a4988] bg-white">
                     </div>
-                    <div class="md:col-span-1">
-                        <label class="block text-[10px] font-black uppercase text-gray-500 mb-2">Kuota Peserta</label>
-                        <input type="number" name="tiket[{{$key}}][kuota]" value="{{ $event->tiket[$key]->kuota ?? 0 }}" class="kuota-input w-full p-2.5 border border-gray-400 bg-gray-50 rounded-lg text-sm font-black text-center text-[#24112e] outline-none focus:border-[#7a4988] focus:bg-white transition-colors" oninput="updateTotal()">
-                    </div>
-                    <div class="md:col-span-1">
-                        <label class="block text-[10px] font-black uppercase text-gray-500 mb-2">Deskripsi Ringkas</label>
-                        <input type="text" name="tiket[{{$key}}][deskripsi]" value="{{ $event->tiket[$key]->deskripsi ?? '' }}" class="w-full p-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-600 outline-none focus:ring-1 focus:ring-[#7a4988]">
+                    <div>
+                        <label class="block text-[10px] font-black uppercase text-gray-400 mb-2 tracking-widest">Kuota Peserta</label>
+                        <input type="number" name="tiket[{{$key}}][kuota]" value="{{ $event->tiket[$key]->kuota ?? 0 }}" class="kuota-input w-full p-3 border-2 border-[#7a4988] bg-white rounded-xl text-sm font-black text-center text-[#7a4988] outline-none shadow-sm focus:ring-2 focus:ring-purple-200" oninput="updateTotal()">
                     </div>
                 </div>
                 @endforeach
             </div>
 
-            <div class="mt-10 flex justify-end gap-3 pt-6 border-t border-gray-100">
-                <a href="{{ route('admin.dashboard') }}" 
-                   class="inline-flex items-center justify-center px-10 py-2.5 bg-gray-100 text-gray-500 rounded font-black text-sm hover:bg-gray-200 transition uppercase tracking-widest no-underline border border-gray-200" 
-                   style="text-decoration: none !important; font-size: 0.875rem;">
-                   Batal
-                </a>
-                
-                <button type="submit" 
-                    class="inline-flex items-center justify-center px-10 py-2.5 bg-[#24112e] text-white rounded font-black text-sm hover:bg-black transition shadow-md uppercase tracking-widest border-none"
-                    style="font-size: 0.875rem;">
-                    Simpan Tiket
-                </button>
+            <div class="mt-12 flex justify-end gap-4 pt-8 border-t-2 border-gray-50">
+                <a href="{{ route('admin.dashboard') }}" class="px-10 py-3 bg-white text-gray-400 rounded-xl font-black text-xs uppercase tracking-widest border-2 border-gray-100 hover:bg-gray-50 transition no-underline">Batal</a>
+                <button type="submit" class="px-12 py-3 bg-[#24112e] text-white rounded-xl font-black text-xs uppercase tracking-widest hover:bg-black transition shadow-xl hover:-translate-y-1 transition-all border-none">Simpan Tiket</button>
             </div>
         </form>
     </div>
