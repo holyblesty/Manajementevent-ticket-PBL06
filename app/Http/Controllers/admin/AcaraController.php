@@ -9,11 +9,17 @@ use Illuminate\Support\Facades\File;
 class AcaraController extends Controller
 {
     /**
-     * Data Dummy Global
+     * Data Dummy Global dengan dukungan Session
      */
     private function getDummyEvents()
     {
-        return [
+        // Jika sudah ada data di session, pakai yang itu
+        if (session()->has('custom_events')) {
+            return session('custom_events');
+        }
+
+        // Data awal jika session masih kosong
+        $events = [
             1 => [
                 'id' => 1,
                 'judul' => 'Turnamen Basket Antar Mahasiswa',
@@ -83,122 +89,124 @@ class AcaraController extends Controller
                 ]
             ],
         ];
+
+        session(['custom_events' => $events]);
+        return $events;
     }
 
-    // --- METHOD UNTUK PROFILE ---
-    
-    public function profile()
-    {
-        // Logika Session: Ambil dari session jika ada, kalau tidak pakai default
+    // --- PROFILE ---
+    public function profile() {
         $user = (object) [
             'name' => session('admin_name', 'Vivian Sarah Diva Alisianoi'),
             'email' => 'vivian_018@student.polibatam.ac.id',
             'foto' => session('admin_foto', 'profile_default.jpg')
         ];
-
         return view('admin.profile', compact('user'));
     }
 
-    public function updateProfile(Request $request)
-    {
+    public function updateProfile(Request $request) {
         $request->validate([
             'name' => 'required|string|max:255',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
-
-        // Simpan nama ke Session agar tidak hilang saat refresh
         session(['admin_name' => $request->name]);
-
         if ($request->hasFile('foto')) {
             $imageName = 'profile_' . time() . '.' . $request->foto->extension();
             $request->foto->move(public_path('images'), $imageName);
-            // Simpan nama file foto ke Session
             session(['admin_foto' => $imageName]);
         }
-
         return redirect()->back()->with('success', 'Profil berhasil diperbarui!');
     }
 
-    // --- METHOD UNTUK EVENT ---
-
-    public function create()
-    {
+    // --- EVENT ---
+    public function create() {
         return view('admin.create');
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'judul'     => 'required|string|max:255',
-            'deskripsi' => 'required',
-            'tanggal'   => 'required|date',
-            'kategori'  => 'required',
-            'jenis'     => 'required',
-            'lokasi'    => 'required',
-            'kapasitas' => 'required|integer',
-            'poster'    => 'required|image|mimes:jpeg,png,jpg|max:5120',
-        ]);
+    public function store(Request $request) {
+        $request->validate(['judul' => 'required', 'poster' => 'required|image']);
+        $allEvents = $this->getDummyEvents();
+        $newId = count($allEvents) + 1;
+        
+        $imageName = time() . '.' . $request->poster->extension();
+        $request->poster->move(public_path('images'), $imageName);
 
-        if ($request->hasFile('poster')) {
-            $imageName = time() . '.' . $request->poster->extension();
-            $request->poster->move(public_path('images'), $imageName);
-        }
+        $allEvents[$newId] = [
+            'id' => $newId,
+            'judul' => $request->judul,
+            'deskripsi' => $request->deskripsi,
+            'tanggal' => $request->tanggal,
+            'kategori' => $request->kategori,
+            'jenis' => $request->jenis,
+            'lokasi' => $request->lokasi,
+            'kapasitas' => $request->kapasitas,
+            'poster' => $imageName,
+            'desain_tiket' => null,
+            'tiket' => [
+                'early_bird' => (object)['nama' => 'Early Bird', 'harga' => 0, 'kuota' => 0],
+                'vip' => (object)['nama' => 'VIP', 'harga' => 0, 'kuota' => 0],
+                'normal' => (object)['nama' => 'Normal', 'harga' => 0, 'kuota' => 0],
+            ]
+        ];
 
-        return redirect()->route('admin.dashboard')->with('success', 'Event baru berhasil ditambahkan!');
+        session(['custom_events' => $allEvents]);
+        return redirect()->route('admin.dashboard')->with('success', 'Event baru berhasil ditambah ke Session!');
     }
 
-    public function edit($id)
-    {
+    public function edit($id) {
         $allEvents = $this->getDummyEvents();
-        $data = isset($allEvents[$id]) ? $allEvents[$id] : $allEvents[1];
-        $event = (object) $data;
-
+        $event = (object) ($allEvents[$id] ?? $allEvents[1]);
         return view('admin.edit', compact('event'));
     }
 
-    public function tiket($id)
-    {
+    public function tiket($id) {
         $allEvents = $this->getDummyEvents();
-        $data = isset($allEvents[$id]) ? $allEvents[$id] : $allEvents[1];
-        $event = (object) $data;
-
+        $event = (object) ($allEvents[$id] ?? $allEvents[1]);
         return view('admin.tiket', compact('event'));
     }
 
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'judul'     => 'required|string|max:255',
-            'deskripsi' => 'required',
-            'tanggal'   => 'required|date',
-            'kategori'  => 'required',
-            'jenis'     => 'required',
-            'lokasi'    => 'required',
-            'kapasitas' => 'required|integer',
-            'poster'    => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
-        ]);
-
-        if ($request->hasFile('poster')) {
-            $imageName = time() . '.' . $request->poster->extension();
-            $request->poster->move(public_path('images'), $imageName);
+    public function update(Request $request, $id) {
+        $allEvents = $this->getDummyEvents();
+        if (isset($allEvents[$id])) {
+            $allEvents[$id]['judul'] = $request->judul;
+            $allEvents[$id]['deskripsi'] = $request->deskripsi;
+            $allEvents[$id]['tanggal'] = $request->tanggal;
+            $allEvents[$id]['lokasi'] = $request->lokasi;
+            $allEvents[$id]['kategori'] = $request->kategori;
+            
+            if ($request->hasFile('poster')) {
+                $imageName = time() . '.' . $request->poster->extension();
+                $request->poster->move(public_path('images'), $imageName);
+                $allEvents[$id]['poster'] = $imageName;
+            }
+            session(['custom_events' => $allEvents]);
         }
-
-        return redirect()->route('admin.dashboard')->with('success', 'Informasi event berhasil diperbarui!');
+        return redirect()->route('admin.dashboard')->with('success', 'Perubahan event disimpan ke Session!');
     }
 
-    public function updateTiket(Request $request, $id)
-    {
-        $request->validate([
-            'kapasitas'    => 'required|integer',
-            'tiket'        => 'nullable|array',
-            'desain_tiket' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-        ]);
+    public function updateTiket(Request $request, $id) {
+        $allEvents = $this->getDummyEvents();
+        if (isset($allEvents[$id])) {
+            $allEvents[$id]['kapasitas'] = $request->kapasitas;
+            
+            foreach($request->tiket as $key => $val) {
+                $allEvents[$id]['tiket'][$key] = (object)$val;
+            }
 
-        if ($request->hasFile('desain_tiket')) {
-            $imageName = 'ticket_' . time() . '.' . $request->desain_tiket->extension();
-            $request->desain_tiket->move(public_path('images'), $imageName);
+            if ($request->hasFile('desain_tiket')) {
+                $imageName = 'ticket_' . time() . '.' . $request->desain_tiket->extension();
+                $request->desain_tiket->move(public_path('images'), $imageName);
+                $allEvents[$id]['desain_tiket'] = $imageName;
+            }
+            session(['custom_events' => $allEvents]);
         }
+        return redirect()->route('admin.dashboard')->with('success', 'Data tiket disimpan ke Session!');
+    }
 
-        return redirect()->route('admin.dashboard')->with('success', 'Pengaturan tiket dan desain berhasil disimpan!');
+    public function destroy($id) {
+        $allEvents = $this->getDummyEvents();
+        unset($allEvents[$id]);
+        session(['custom_events' => $allEvents]);
+        return redirect()->route('admin.dashboard')->with('success', 'Event dihapus dari Session!');
     }
 }
