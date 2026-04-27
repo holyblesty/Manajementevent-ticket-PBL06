@@ -9,16 +9,14 @@ use Illuminate\Support\Facades\File;
 class AcaraController extends Controller
 {
     /**
-     * Data Dummy Global dengan dukungan Session
+     * Data Dummy Global
      */
     private function getDummyEvents()
     {
-        // Jika sudah ada data di session, pakai yang itu
         if (session()->has('custom_events')) {
             return session('custom_events');
         }
 
-        // Data awal jika session masih kosong (Pastikan semua field LENGKAP)
         $events = [
             1 => [
                 'id' => 1,
@@ -30,7 +28,7 @@ class AcaraController extends Controller
                 'lokasi' => 'Lapangan Basket Politeknik Batam',
                 'kapasitas' => 50,
                 'poster' => 'basket.png',
-                'desain_tiket' => null, // Tambahkan field ini agar tidak error
+                'desain_tiket' => null,
                 'tiket' => [
                     'early_bird' => (object)['nama' => 'Early Bird', 'harga' => 50000, 'kuota' => 10],
                     'vip'         => (object)['nama' => 'VIP', 'harga' => 150000, 'kuota' => 10],
@@ -96,10 +94,11 @@ class AcaraController extends Controller
 
     // --- PROFILE ---
     public function profile() {
+        // PERBAIKAN: Selalu prioritaskan session untuk tampilan profil
         $user = (object) [
-            'name' => session('admin_name', 'Vivian Sarah Diva Alisianoi'),
+            'name'  => session('admin_name', 'Vivian Sarah Diva Alisianoi'),
             'email' => 'vivian_018@student.polibatam.ac.id',
-            'foto' => session('admin_foto', 'profile_default.jpg')
+            'foto'  => session('admin_foto', 'profile_default.jpg')
         ];
         return view('admin.profile', compact('user'));
     }
@@ -107,15 +106,35 @@ class AcaraController extends Controller
     public function updateProfile(Request $request) {
         $request->validate([
             'name' => 'required|string|max:255',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
+
+        // 1. Simpan Nama
         session(['admin_name' => $request->name]);
+
+        // 2. Logic Foto
         if ($request->hasFile('foto')) {
+            // Hapus foto lama dari storage jika ada (biar gak numpuk sampah file)
+            $oldFoto = session('admin_foto');
+            if ($oldFoto && $oldFoto !== 'profile_default.jpg') {
+                $oldPath = public_path('images/' . $oldFoto);
+                if (File::exists($oldPath)) {
+                    File::delete($oldPath);
+                }
+            }
+
+            // Upload foto baru
             $imageName = 'profile_' . time() . '.' . $request->foto->extension();
             $request->foto->move(public_path('images'), $imageName);
+            
+            // Simpan nama file baru ke Session
             session(['admin_foto' => $imageName]);
         }
-        return redirect()->back()->with('success', 'Profil berhasil diperbarui!');
+
+        // 3. PAKSA SIMPAN SESSION
+        session()->save();
+
+        return redirect()->back()->with('success', 'Profil kamu berhasil diperbarui!');
     }
 
     // --- EVENT ---
@@ -159,13 +178,15 @@ class AcaraController extends Controller
 
     public function edit($id) {
         $allEvents = $this->getDummyEvents();
-        $event = (object) ($allEvents[$id] ?? abort(404));
+        if (!isset($allEvents[$id])) abort(404);
+        $event = (object) $allEvents[$id];
         return view('admin.edit', compact('event'));
     }
 
     public function tiket($id) {
         $allEvents = $this->getDummyEvents();
-        $event = (object) ($allEvents[$id] ?? abort(404));
+        if (!isset($allEvents[$id])) abort(404);
+        $event = (object) $allEvents[$id];
         return view('admin.tiket', compact('event'));
     }
 

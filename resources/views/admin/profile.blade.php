@@ -8,7 +8,6 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <style>
-        /* Animasi "Angin" Ungu Swush-swush */
         @keyframes swush {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
@@ -37,8 +36,8 @@
                 <div class="relative group">
                     <div class="w-32 h-32 rounded-full border-4 border-white shadow-xl overflow-hidden bg-gray-200">
                         <img id="profile_preview" 
-                             src="{{ asset('images/' . $user->foto) }}" 
-                             onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&color=7F9CF5&background=EBF4FF';"
+                             src="{{ asset('images/' . (session('admin_foto') ?? 'profile_default.jpg')) }}" 
+                             onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode(session('admin_name') ?? $user->name) }}&color=7a4988&background=EBF4FF';"
                              class="w-full h-full object-cover">
                     </div>
                     
@@ -56,7 +55,7 @@
             <div class="space-y-5">
                 <div>
                     <label class="block mb-1 text-[10px] font-black uppercase text-[#7a4988] tracking-widest">Nama Lengkap</label>
-                    <input type="text" name="name" value="{{ $user->name }}" 
+                    <input type="text" name="name" value="{{ session('admin_name') ?? $user->name }}" 
                         class="w-full p-3 bg-gray-50 border-2 border-gray-100 rounded-xl text-sm font-bold text-gray-700 focus:border-[#7a4988] outline-none transition-all">
                 </div>
 
@@ -79,7 +78,6 @@
     </div>
 
     <script>
-        // Preview foto profil secara instan
         function previewProfile(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
@@ -90,7 +88,6 @@
             }
         }
 
-        // Tampilkan SweetAlert jika ada session success dari controller
         @if(session('success'))
             Swal.fire({
                 icon: 'success',
