@@ -31,8 +31,11 @@
 
     <aside class="fixed top-20 left-0 z-40 w-64 h-screen bg-white border-r border-gray-200">
         <div class="py-8 px-4 flex flex-col items-center">
-            <div class="w-24 h-24 rounded-full border-4 border-[#7a4988] p-1 mb-4">
-                <img src="{{ asset('images/admin.jpg') }}" class="w-full h-full rounded-full object-cover shadow-sm">
+               <div class="w-24 h-24 rounded-full border-4 border-[#7a4988] overflow-hidden mx-auto mb-4 shadow-lg">
+    <img src="{{ asset('images/' . session('admin_foto', 'profile_default.jpg')) }}" 
+         onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode(session('admin_name', 'Vivian')) }}&color=ffffff&background=7a4988';"
+         class="w-full h-full object-cover">
+</div>
             </div>
       <h2 class="text-[#7a4988] font-black text-[10px] tracking-[0.2em] mb-10 uppercase text-center w-full">
         Welcome Admin
