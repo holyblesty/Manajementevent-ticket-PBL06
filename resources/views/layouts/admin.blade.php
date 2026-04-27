@@ -34,7 +34,9 @@
             <div class="w-24 h-24 rounded-full border-4 border-[#7a4988] p-1 mb-4">
                 <img src="{{ asset('images/admin.jpg') }}" class="w-full h-full rounded-full object-cover shadow-sm">
             </div>
-            <h2 class="text-[#7a4988] font-black text-[10px] tracking-[0.2em] mb-10 uppercase">Welcome Admin</h2>
+      <h2 class="text-[#7a4988] font-black text-[10px] tracking-[0.2em] mb-10 uppercase text-center w-full">
+        Welcome Admin
+     </h2>>
             
             <nav class="w-full space-y-2">
                 <a href="{{ route('admin.dashboard') }}" 
@@ -54,7 +56,7 @@
             </nav>
         </div>
         <div class="absolute bottom-24 w-full flex justify-center">
-            <img src="{{ asset('images/logo1.jpeg') }}" class="h-20 object-contain">
+            <img src="{{ asset('images/logo1.jpeg') }}" class="h-35 object-contain">
         </div>
     </aside>
 
