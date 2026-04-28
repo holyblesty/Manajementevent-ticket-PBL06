@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\AcaraController;
+use App\Http\Controllers\Admin\PesertaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +34,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // URL: admin/profile
     Route::get('/profile', [AcaraController::class, 'profile'])->name('profile');
     Route::put('/profile/update', [AcaraController::class, 'updateProfile'])->name('profile.update');
+
+    // 5. Route Kelola Peserta & Check-In
+    // URL: admin/peserta
+    Route::get('/peserta', [PesertaController::class, 'index'])->name('peserta.index');
+    Route::post('/peserta/checkin/{id}', [PesertaController::class, 'checkIn'])->name('peserta.checkin');
 
 });
 

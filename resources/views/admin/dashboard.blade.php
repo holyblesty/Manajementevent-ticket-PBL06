@@ -1,6 +1,16 @@
 @extends('layouts.admin')
 
 @section('content')
+<div id="imageModal" class="fixed inset-0 z-[999] hidden flex items-center justify-center bg-black/90 backdrop-blur-sm p-4">
+    <button onclick="closeModal()" class="absolute top-6 right-6 text-white hover:text-red-500 transition-colors">
+        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+    </button>
+    <div class="max-w-4xl w-full flex flex-col items-center">
+        <img id="modalImg" src="" class="max-h-[80vh] rounded-2xl shadow-2xl border-4 border-white/10 object-contain">
+        <p id="modalCaption" class="mt-4 text-white font-black uppercase tracking-[0.3em] text-xs bg-[#7a4988] px-6 py-2 rounded-full"></p>
+    </div>
+</div>
+
 <div class="w-full bg-gradient-to-r from-[#24112e] to-[#7a4988] rounded-2xl p-8 mb-8 text-white shadow-lg flex justify-between items-center">
     <div>
         <h1 class="text-4xl font-black mb-2 uppercase tracking-tighter">DASHBOARD ADMIN</h1>
@@ -9,9 +19,9 @@
     
     <a href="{{ route('admin.profile') }}" class="flex items-center gap-3 bg-white/10 hover:bg-white/20 p-2 pr-6 rounded-full transition-all group no-underline border border-white/20">
         <div class="w-12 h-12 rounded-full border-2 border-white overflow-hidden shadow-md">
-           <img src="{{ asset('images/' . session('admin_foto', 'profile_default.jpg')) }}" 
-     onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode(session('admin_name', 'Vivian')) }}&color=7a4988&background=ffffff';"
-     class="w-full h-full object-cover">
+           <img src="{{ asset('images/' . session('admin_foto', 'profile_default.jpg')) }}?v={{ time() }}" 
+                onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode(session('admin_name', 'Vivian')) }}&color=7a4988&background=ffffff';"
+                class="w-full h-full object-cover">
         </div>
         <div class="text-left">
             <p class="text-[10px] font-black uppercase tracking-widest text-[#be93d4] leading-none mb-1">Administrator</p>
@@ -35,7 +45,7 @@
             <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
             </span>
-            <input type="text" placeholder="Cari otomatis nama event" class="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:ring-1 focus:ring-[#7a4988] outline-none transition">
+            <input type="text" id="searchInput" placeholder="Cari otomatis nama event" class="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:ring-1 focus:ring-[#7a4988] outline-none transition">
         </div>
         <select id="filterKategori" class="bg-gray-50 border border-gray-200 text-gray-500 text-sm rounded-lg px-4 py-2 outline-none focus:ring-1 focus:ring-[#7a4988] cursor-pointer font-bold">
             <option value="">Semua Kategori</option>
@@ -50,9 +60,9 @@
             <thead class="bg-[#7a4988] text-white text-[11px] uppercase tracking-widest font-black">
                 <tr>
                     <th class="px-6 py-5 text-center">Poster</th>
+                    <th class="px-6 py-4 text-center">E-Ticket</th>
                     <th class="px-6 py-4">Judul Acara</th>
                     <th class="px-6 py-4">Tanggal Acara</th>
-                    <th class="px-6 py-4">Lokasi</th>
                     <th class="px-6 py-4 text-center">Kategori</th>
                     <th class="px-6 py-4 text-center">Kapasitas</th>
                     <th class="px-6 py-4 text-center">Aksi</th>
@@ -62,15 +72,23 @@
                 @foreach ($events as $event)
                 <tr class="hover:bg-gray-50/50 transition duration-300">
                     <td class="px-6 py-4">
-                        <div class="w-20 h-12 bg-gray-100 rounded-lg overflow-hidden mx-auto shadow-inner border border-gray-50">
+                        <div onclick="openModal('{{ asset('images/' . $event->poster) }}', 'Poster: {{ $event->judul }}')" class="w-20 h-12 bg-gray-100 rounded-lg overflow-hidden mx-auto shadow-inner border border-gray-50 cursor-pointer hover:ring-2 hover:ring-[#7a4988] transition-all">
                             <img src="{{ asset('images/' . $event->poster) }}" class="w-full h-full object-cover">
                         </div>
                     </td>
-                    <td class="px-6 py-4 font-bold text-sm text-gray-700">{{ $event->judul }}</td>
-                    <td class="px-6 py-4 text-xs text-gray-400 font-medium">{{ $event->tanggal }}</td>
-                    <td class="px-6 py-4 text-xs text-gray-400 font-medium">{{ $event->lokasi }}</td>
                     <td class="px-6 py-4 text-center">
-                        <span class="px-4 py-1 bg-[#be93d4]/20 text-[#7a4988] rounded-full text-[10px] font-black uppercase tracking-wider">{{ $event->kategori }}</span>
+                        @if($event->desain_tiket)
+                            <div onclick="openModal('{{ asset('images/' . $event->desain_tiket) }}', 'E-Ticket: {{ $event->judul }}')" class="w-12 h-8 bg-gray-100 rounded border border-gray-200 overflow-hidden shadow-sm mx-auto cursor-pointer hover:ring-2 hover:ring-[#7a4988] transition-all">
+                                <img src="{{ asset('images/' . $event->desain_tiket) }}" class="w-full h-full object-cover">
+                            </div>
+                        @else
+                            <span class="text-[8px] font-black text-gray-300 uppercase italic tracking-widest">Belum Ada</span>
+                        @endif
+                    </td>
+                    <td class="px-6 py-4 font-bold text-sm text-gray-700 judul-acara">{{ $event->judul }}</td>
+                    <td class="px-6 py-4 text-xs text-gray-400 font-medium">{{ $event->tanggal }}</td>
+                    <td class="px-6 py-4 text-center">
+                        <span class="px-4 py-1 bg-[#be93d4]/20 text-[#7a4988] rounded-full text-[10px] font-black uppercase tracking-wider kategori-label">{{ $event->kategori }}</span>
                     </td>
                     <td class="px-6 py-4 text-center">
                         <div class="inline-flex items-center justify-center bg-gray-100 px-3 py-1 rounded-md border border-gray-200">
@@ -80,23 +98,12 @@
                     </td>
                     <td class="px-6 py-4">
                         <div class="flex justify-center items-center gap-2"> 
-                            <a href="{{ route('admin.acara.tiket', $event->id) }}" 
-                               style="width: 70px; height: 32px; background-color: #be93d4; color: #24112e; border-radius: 9999px; font-size: 9px; font-weight: 900; display: flex; align-items: center; justify-content: center; text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em;">
-                               TIKET
-                            </a>
-
-                            <a href="{{ route('admin.acara.edit', $event->id) }}" 
-                               style="width: 70px; height: 32px; background-color: #24112e; color: white; border-radius: 9999px; font-size: 9px; font-weight: 900; display: flex; align-items: center; justify-content: center; text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em;">
-                               UBAH
-                            </a>
-
+                            <a href="{{ route('admin.acara.tiket', $event->id) }}" class="no-underline" style="width: 70px; height: 32px; background-color: #be93d4; color: #24112e; border-radius: 9999px; font-size: 9px; font-weight: 900; display: flex; align-items: center; justify-content: center; text-transform: uppercase; letter-spacing: 0.1em;">TIKET</a>
+                            <a href="{{ route('admin.acara.edit', $event->id) }}" class="no-underline" style="width: 70px; height: 32px; background-color: #24112e; color: white; border-radius: 9999px; font-size: 9px; font-weight: 900; display: flex; align-items: center; justify-content: center; text-transform: uppercase; letter-spacing: 0.1em;">UBAH</a>
                             <form action="{{ route('admin.acara.destroy', $event->id) }}" method="POST" class="form-delete" style="margin: 0; padding: 0;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="button" onclick="confirmDelete(this)"
-                                    style="width: 70px; height: 32px; background-color: #e11d1d; color: white; border-radius: 9999px; font-size: 9px; font-weight: 900; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 0.1em;">
-                                    HAPUS
-                                </button>
+                                <button type="button" onclick="confirmDelete(this)" style="width: 70px; height: 32px; background-color: #e11d1d; color: white; border-radius: 9999px; font-size: 9px; font-weight: 900; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 0.1em;">HAPUS</button>
                             </form>
                         </div>
                     </td>
@@ -105,19 +112,27 @@
             </tbody>
         </table>
     </div>
-
-    <div class="p-8 border-t border-gray-50 flex justify-center">
-        <nav class="flex items-center space-x-2">
-            <button class="p-2 text-gray-300 hover:text-[#7a4988] transition"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg></button>
-            <button class="w-9 h-9 rounded-xl bg-[#be93d4] text-[#7a4988] font-black text-xs shadow-sm">1</button>
-            <button class="w-9 h-9 rounded-xl text-gray-400 hover:bg-gray-50 font-bold text-xs transition">2</button>
-            <button class="w-9 h-9 rounded-xl text-gray-400 hover:bg-gray-50 font-bold text-xs transition">3</button>
-            <button class="p-2 text-gray-300 hover:text-[#7a4988] transition"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button>
-        </nav>
-    </div>
 </div>
 
 <script>
+    // FUNGSI MODAL PREVIEW
+    function openModal(imgSrc, caption) {
+        document.getElementById('modalImg').src = imgSrc;
+        document.getElementById('modalCaption').innerText = caption;
+        document.getElementById('imageModal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden'; // Stop scroll
+    }
+
+    function closeModal() {
+        document.getElementById('imageModal').classList.add('hidden');
+        document.body.style.overflow = 'auto'; // Re-enable scroll
+    }
+
+    // Close modal kalo klik area gelap
+    document.getElementById('imageModal').addEventListener('click', function(e) {
+        if(e.target === this) closeModal();
+    });
+
     // FUNGSI SWEETALERT UNTUK HAPUS
     function confirmDelete(button) {
         const form = button.closest('.form-delete');
@@ -136,35 +151,29 @@
                 title: 'font-black text-sm uppercase tracking-tighter',
             }
         }).then((result) => {
-            if (result.isConfirmed) {
-                form.submit();
-            }
+            if (result.isConfirmed) { form.submit(); }
         })
     }
 
-    // FUNGSI FILTER KATEGORI
-    document.getElementById('filterKategori').addEventListener('change', function() {
-        const selected = this.value.toLowerCase();
-        const tbody = document.querySelector('tbody');
-        const rows = Array.from(tbody.querySelectorAll('tr'));
+    // FILTER KATEGORI & SEARCH
+    const searchInput = document.getElementById('searchInput');
+    const filterKategori = document.getElementById('filterKategori');
 
-        const match = [];
-        const noMatch = [];
+    function applyFilters() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const categoryTerm = filterKategori.value.toLowerCase();
+        const rows = document.querySelectorAll('tbody tr');
 
         rows.forEach(row => {
-            const kategori = row.querySelector('td:nth-child(5)').innerText.toLowerCase();
-            if (selected === "" || kategori.includes(selected)) {
-                match.push(row);
-                row.classList.toggle('bg-purple-50/50', selected !== "");
-            } else {
-                noMatch.push(row);
-                row.classList.remove('bg-purple-50/50');
-            }
+            const judul = row.querySelector('.judul-acara').innerText.toLowerCase();
+            const kategori = row.querySelector('.kategori-label').innerText.toLowerCase();
+            const matchSearch = judul.includes(searchTerm);
+            const matchCategory = categoryTerm === "" || kategori.includes(categoryTerm);
+            row.style.display = (matchSearch && matchCategory) ? "" : "none";
         });
+    }
 
-        const sortedRows = [...match, ...noMatch];
-        tbody.innerHTML = '';
-        sortedRows.forEach(row => tbody.appendChild(row));
-    });
+    searchInput.addEventListener('keyup', applyFilters);
+    filterKategori.addEventListener('change', applyFilters);
 </script>
 @endsection

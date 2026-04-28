@@ -31,33 +31,37 @@
 
     <aside class="fixed top-20 left-0 z-40 w-64 h-screen bg-white border-r border-gray-200">
         <div class="py-8 px-4 flex flex-col items-center">
-               <div class="w-24 h-24 rounded-full border-4 border-[#7a4988] overflow-hidden mx-auto mb-4 shadow-lg">
-    <img src="{{ asset('images/' . session('admin_foto', 'profile_default.jpg')) }}" 
-         onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode(session('admin_name', 'Vivian')) }}&color=ffffff&background=7a4988';"
-         class="w-full h-full object-cover">
-</div>
+            <div class="w-24 h-24 rounded-full border-4 border-[#7a4988] overflow-hidden mx-auto mb-4 shadow-lg">
+                <img src="{{ asset('images/' . session('admin_foto', 'profile_default.jpg')) }}" 
+                     onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode(session('admin_name', 'Vivian')) }}&color=ffffff&background=7a4988';"
+                     class="w-full h-full object-cover">
             </div>
-      <h2 class="text-[#7a4988] font-black text-[10px] tracking-[0.2em] mb-10 uppercase text-center w-full">
-        Welcome Admin
-     </h2>>
-            
-            <nav class="w-full space-y-2">
-                <a href="{{ route('admin.dashboard') }}" 
-                   class="flex items-center p-3 rounded-xl font-bold text-xs transition no-underline
-                   {{ request()->routeIs('admin.dashboard') ? 'bg-[#7a4988] text-white shadow-md' : 'text-gray-500 hover:bg-gray-50' }}">
-                    <svg class="w-4 h-4 mr-3" fill="currentColor" viewBox="0 0 20 20"><path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"></path></svg>
-                    KELOLA ACARA
-                </a>
-                <a href="#" class="flex items-center p-3 rounded-xl font-bold text-xs transition text-gray-500 hover:bg-gray-50 no-underline">
-                    <svg class="w-4 h-4 mr-3" fill="currentColor" viewBox="0 0 20 20"><path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path></svg>
-                    KELOLA PESERTA
-                </a>
-                <a href="#" class="flex items-center p-3 rounded-xl font-bold text-xs transition text-gray-500 hover:bg-gray-50 no-underline">
-                    <svg class="w-4 h-4 mr-3" fill="currentColor" viewBox="0 0 20 20"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"></path></svg>
-                    STATISTIK
-                </a>
-            </nav>
         </div>
+        <h2 class="text-[#7a4988] font-black text-[10px] tracking-[0.2em] mb-10 uppercase text-center w-full">
+            Welcome Admin
+        </h2>
+            
+        <nav class="w-full space-y-2 px-4">
+            <a href="{{ route('admin.dashboard') }}" 
+               class="flex items-center p-3 rounded-xl font-bold text-xs transition no-underline
+               {{ request()->routeIs('admin.dashboard') || request()->routeIs('admin.acara.*') ? 'bg-[#7a4988] text-white shadow-md' : 'text-gray-500 hover:bg-gray-50' }}">
+                <svg class="w-4 h-4 mr-3" fill="currentColor" viewBox="0 0 20 20"><path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"></path></svg>
+                KELOLA ACARA
+            </a>
+
+            <a href="{{ route('admin.peserta.index') }}" 
+               class="flex items-center p-3 rounded-xl font-bold text-xs transition no-underline
+               {{ request()->routeIs('admin.peserta.*') ? 'bg-[#7a4988] text-white shadow-md' : 'text-gray-500 hover:bg-gray-50' }}">
+                <svg class="w-4 h-4 mr-3" fill="currentColor" viewBox="0 0 20 20"><path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path></svg>
+                KELOLA PESERTA
+            </a>
+
+            <a href="#" class="flex items-center p-3 rounded-xl font-bold text-xs transition text-gray-500 hover:bg-gray-50 no-underline">
+                <svg class="w-4 h-4 mr-3" fill="currentColor" viewBox="0 0 20 20"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"></path></svg>
+                STATISTIK
+            </a>
+        </nav>
+        
         <div class="absolute bottom-24 w-full flex justify-center">
             <img src="{{ asset('images/logo1.jpeg') }}" class="h-35 object-contain">
         </div>
