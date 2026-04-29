@@ -57,7 +57,7 @@
 
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
-            <thead class="bg-[#7a4988] text-white text-[11px] uppercase tracking-widest font-black">
+            <thead class="bg-[#7a4988] text-white text-sm uppercase tracking-wider font-bold">
                 <tr>
                     <th class="px-6 py-5 text-center">Poster</th>
                     <th class="px-6 py-4 text-center">E-Ticket</th>
@@ -72,38 +72,42 @@
                 @foreach ($events as $event)
                 <tr class="hover:bg-gray-50/50 transition duration-300">
                     <td class="px-6 py-4">
-                        <div onclick="openModal('{{ asset('images/' . $event->poster) }}', 'Poster: {{ $event->judul }}')" class="w-20 h-12 bg-gray-100 rounded-lg overflow-hidden mx-auto shadow-inner border border-gray-50 cursor-pointer hover:ring-2 hover:ring-[#7a4988] transition-all">
+                        <div onclick="openModal('{{ asset('images/' . $event->poster) }}', 'Poster: {{ $event->judul }}')" class="w-24 h-16 bg-gray-100 rounded-lg overflow-hidden mx-auto shadow-inner border border-gray-50 cursor-pointer hover:ring-2 hover:ring-[#7a4988] transition-all">
                             <img src="{{ asset('images/' . $event->poster) }}" class="w-full h-full object-cover">
                         </div>
                     </td>
                     <td class="px-6 py-4 text-center">
                         @if($event->desain_tiket)
-                            <div onclick="openModal('{{ asset('images/' . $event->desain_tiket) }}', 'E-Ticket: {{ $event->judul }}')" class="w-12 h-8 bg-gray-100 rounded border border-gray-200 overflow-hidden shadow-sm mx-auto cursor-pointer hover:ring-2 hover:ring-[#7a4988] transition-all">
+                            <div onclick="openModal('{{ asset('images/' . $event->desain_tiket) }}', 'E-Ticket: {{ $event->judul }}')" class="w-16 h-10 bg-gray-100 rounded border border-gray-200 overflow-hidden shadow-sm mx-auto cursor-pointer hover:ring-2 hover:ring-[#7a4988] transition-all">
                                 <img src="{{ asset('images/' . $event->desain_tiket) }}" class="w-full h-full object-cover">
                             </div>
                         @else
-                            <span class="text-[8px] font-black text-gray-300 uppercase italic tracking-widest">Belum Ada</span>
+                            <span class="text-xs font-bold text-gray-300 uppercase italic tracking-widest">Belum Ada</span>
                         @endif
                     </td>
-                    <td class="px-6 py-4 font-bold text-sm text-gray-700 judul-acara">{{ $event->judul }}</td>
-                    <td class="px-6 py-4 text-xs text-gray-400 font-medium">{{ $event->tanggal }}</td>
+                    <td class="px-6 py-4 font-bold text-base text-gray-800 judul-acara">{{ $event->judul }}</td>
+                    
+                    <td class="px-6 py-4 text-sm text-gray-500 font-medium">{{ $event->tanggal }}</td>
+                    
                     <td class="px-6 py-4 text-center">
-                        <span class="px-4 py-1 bg-[#be93d4]/20 text-[#7a4988] rounded-full text-[10px] font-black uppercase tracking-wider kategori-label">{{ $event->kategori }}</span>
+                        <span class="px-4 py-1 bg-[#be93d4]/20 text-[#7a4988] rounded-full text-xs font-bold uppercase tracking-wider kategori-label">{{ $event->kategori }}</span>
                     </td>
+                    
                     <td class="px-6 py-4 text-center">
-                        <div class="inline-flex items-center justify-center bg-gray-100 px-3 py-1 rounded-md border border-gray-200">
-                            <svg class="w-3 h-3 text-gray-500 mr-1.5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" /></svg>
-                            <span class="text-xs font-black text-gray-700">{{ $event->kapasitas }} <span class="text-[9px] text-gray-400 font-bold uppercase ml-0.5">Org</span></span>
+                        <div class="inline-flex items-center justify-center bg-gray-100 px-4 py-2 rounded-md border border-gray-200">
+                            <svg class="w-4 h-4 text-gray-500 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" /></svg>
+                            <span class="text-sm font-bold text-gray-700">{{ $event->kapasitas }} <span class="text-xs text-gray-400 font-bold uppercase ml-0.5">Org</span></span>
                         </div>
                     </td>
+                    
                     <td class="px-6 py-4">
                         <div class="flex justify-center items-center gap-2"> 
-                            <a href="{{ route('admin.acara.tiket', $event->id) }}" class="no-underline" style="width: 70px; height: 32px; background-color: #be93d4; color: #24112e; border-radius: 9999px; font-size: 9px; font-weight: 900; display: flex; align-items: center; justify-content: center; text-transform: uppercase; letter-spacing: 0.1em;">TIKET</a>
-                            <a href="{{ route('admin.acara.edit', $event->id) }}" class="no-underline" style="width: 70px; height: 32px; background-color: #24112e; color: white; border-radius: 9999px; font-size: 9px; font-weight: 900; display: flex; align-items: center; justify-content: center; text-transform: uppercase; letter-spacing: 0.1em;">UBAH</a>
+                            <a href="{{ route('admin.acara.tiket', $event->id) }}" class="no-underline" style="width: 80px; height: 36px; background-color: #be93d4; color: #24112e; border-radius: 8px; font-size: 10px; font-weight: 900; display: flex; align-items: center; justify-content: center; text-transform: uppercase; letter-spacing: 0.05em;">TIKET</a>
+                            <a href="{{ route('admin.acara.edit', $event->id) }}" class="no-underline" style="width: 80px; height: 36px; background-color: #24112e; color: white; border-radius: 8px; font-size: 10px; font-weight: 900; display: flex; align-items: center; justify-content: center; text-transform: uppercase; letter-spacing: 0.05em;">UBAH</a>
                             <form action="{{ route('admin.acara.destroy', $event->id) }}" method="POST" class="form-delete" style="margin: 0; padding: 0;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="button" onclick="confirmDelete(this)" style="width: 70px; height: 32px; background-color: #e11d1d; color: white; border-radius: 9999px; font-size: 9px; font-weight: 900; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 0.1em;">HAPUS</button>
+                                <button type="button" onclick="confirmDelete(this)" style="width: 80px; height: 36px; background-color: #e11d1d; color: white; border-radius: 8px; font-size: 10px; font-weight: 900; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 0.05em;">HAPUS</button>
                             </form>
                         </div>
                     </td>

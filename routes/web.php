@@ -23,22 +23,26 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // 2. Resource Acara (Handle: index, create, store, edit, update, destroy)
-    // URL: admin/acara, admin/acara/create, dsb.
     Route::resource('acara', AcaraController::class);
 
-    // 3. Custom Route untuk Tiket (Karena tidak ada di resource default)
+    // 3. Custom Route untuk Tiket
     Route::get('/acara/{id}/tiket', [AcaraController::class, 'tiket'])->name('acara.tiket');
     Route::put('/acara/{id}/tiket/update', [AcaraController::class, 'updateTiket'])->name('acara.tiket.update');
 
     // 4. Route Profile Admin
-    // URL: admin/profile
     Route::get('/profile', [AcaraController::class, 'profile'])->name('profile');
     Route::put('/profile/update', [AcaraController::class, 'updateProfile'])->name('profile.update');
 
-    // 5. Route Kelola Peserta & Check-In
-    // URL: admin/peserta
-    Route::get('/peserta', [PesertaController::class, 'index'])->name('peserta.index');
-    Route::post('/peserta/checkin/{id}', [PesertaController::class, 'checkIn'])->name('peserta.checkin');
+    // 5. Route Kelola Peserta & Check-In (VERSI FIXED)
+    Route::prefix('peserta')->name('peserta.')->group(function () {
+        Route::get('/', [PesertaController::class, 'index'])->name('index');
+        
+        // Route untuk Check-in Individu
+        Route::post('/checkin-individu/{eventId}/{regId}', [PesertaController::class, 'checkInIndividu'])->name('checkin_individu');
+        
+        // Route untuk Check-in Anggota Tim (Accordion)
+        Route::post('/checkin-anggota/{eventId}/{regId}/{memberIndex}', [PesertaController::class, 'checkInAnggota'])->name('checkin_anggota');
+    });
 
 });
 
