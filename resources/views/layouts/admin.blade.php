@@ -56,7 +56,9 @@
                 KELOLA PESERTA
             </a>
 
-            <a href="#" class="flex items-center p-3 rounded-xl font-bold text-xs transition text-gray-500 hover:bg-gray-50 no-underline">
+            <a href="{{ route('admin.statistik') }}" 
+               class="flex items-center p-3 rounded-xl font-bold text-xs transition no-underline
+               {{ request()->routeIs('admin.statistik') ? 'bg-[#7a4988] text-white shadow-md' : 'text-gray-500 hover:bg-gray-50' }}">
                 <svg class="w-4 h-4 mr-3" fill="currentColor" viewBox="0 0 20 20"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"></path></svg>
                 STATISTIK
             </a>

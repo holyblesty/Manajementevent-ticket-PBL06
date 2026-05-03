@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\AcaraController;
 use App\Http\Controllers\Admin\PesertaController;
+use App\Http\Controllers\Admin\StatistikController; // 1. Tambahkan ini
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +27,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // ================= DASHBOARD =================
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
+
+    // ================= STATISTIK =================
+    // 2. Tambahkan route statistik di sini
+    Route::get('/statistik', [StatistikController::class, 'index'])
+        ->name('statistik');
 
     // ================= RESOURCE ACARA =================
     Route::resource('acara', AcaraController::class);
@@ -57,11 +63,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/detail/{id}', [PesertaController::class, 'detail'])
             ->name('detail');
 
-        // CHECK IN INDIVIDU (Disamakan dengan Blade: checkin_individu)
+        // CHECK IN INDIVIDU
         Route::match(['get', 'post'], '/checkin-individu/{eventId}/{regId}', [PesertaController::class, 'checkInIndividu'])
             ->name('checkin_individu');
 
-        // CHECK IN ANGGOTA TIM (Disamakan dengan Blade: checkin_anggota)
+        // CHECK IN ANGGOTA TIM
         Route::match(['get', 'post'], '/checkin-anggota/{eventId}/{regId}/{memberIndex}', [PesertaController::class, 'checkInAnggota'])
             ->name('checkin_anggota');
     });

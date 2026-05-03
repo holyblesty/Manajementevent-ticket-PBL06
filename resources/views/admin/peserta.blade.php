@@ -4,7 +4,8 @@
 
 {{-- HEADER UTAMA --}}
 <div class="w-full bg-gradient-to-r from-[#24112e] to-[#7a4988] rounded-2xl p-8 mb-8 text-white shadow-lg">
-    <h1 class="text-4xl font-black uppercase tracking-tighter">KELOLA PESERTA</h1>
+    <h1 class="text-4xl font-black uppercase tracking-tighter">DASHBOARD ADMIN</h1>
+<p class="bg-white/20 inline-block px-4 py-1 rounded text-xs font-bold uppercase tracking-widest text-white">Kelola Peserta</p>
 </div>
 
 <div class="max-w-6xl mx-auto bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
