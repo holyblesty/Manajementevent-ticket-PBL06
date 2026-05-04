@@ -137,7 +137,13 @@ class PesertaController extends Controller
         $data = $this->getDataRegistrasi();
         if (isset($data[$eventId]['pendaftar'][$regId])) {
             $data[$eventId]['pendaftar'][$regId]['hadir'] = !$data[$eventId]['pendaftar'][$regId]['hadir'];
+            
+            $statusBaru = $data[$eventId]['pendaftar'][$regId]['hadir'];
+            $pesan = $statusBaru ? 'Peserta berhasil di-check in.' : 'Check-in peserta dibatalkan.';
+            $status = $statusBaru ? 'success' : 'warning';
+            
             session(['data_peserta_final_v15' => $data]);
+            return redirect()->back()->with(['message' => $pesan, 'status' => $status]);
         }
         return redirect()->back();
     }
@@ -146,7 +152,13 @@ class PesertaController extends Controller
         $data = $this->getDataRegistrasi();
         if (isset($data[$eventId]['pendaftar'][$regId]['anggota'][$memberIndex])) {
             $data[$eventId]['pendaftar'][$regId]['anggota'][$memberIndex]['hadir'] = !$data[$eventId]['pendaftar'][$regId]['anggota'][$memberIndex]['hadir'];
+            
+            $statusBaru = $data[$eventId]['pendaftar'][$regId]['anggota'][$memberIndex]['hadir'];
+            $pesan = $statusBaru ? 'Anggota berhasil di-check in.' : 'Check-in anggota dibatalkan.';
+            $status = $statusBaru ? 'success' : 'warning';
+            
             session(['data_peserta_final_v15' => $data]);
+            return redirect()->back()->with(['message' => $pesan, 'status' => $status]);
         }
         return redirect()->back();
     }
