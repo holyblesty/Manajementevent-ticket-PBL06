@@ -41,13 +41,12 @@
                     @php $colors = ['bg-green-600', 'bg-blue-800', 'bg-red-900', 'bg-orange-600']; @endphp
                     @forelse($laporanEvent as $index => $ev)
                     <div class="group relative w-16 flex flex-col items-center justify-end h-full">
-                        {{-- Tooltip --}}
-                        <div class="absolute bottom-full mb-3 w-44 bg-gray-800 text-white p-3 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity z-50 pointer-events-none text-[10px] shadow-lg text-center">
-                            <p class="font-black uppercase truncate">{{ $ev['judul'] }}</p>
-                            <p class="mt-1">Tiket: <strong>{{ $ev['terjual'] }}</strong></p>
-                            <p>Rp {{ number_format($ev['pendapatan'], 0, ',', '.') }}</p>
-                        </div>
-                        {{-- Batang --}}
+{{-- TOOLTIP (Pasti muncul karena z-[9999]) --}}
+    <div class="absolute bottom-full mb-3 w-40 bg-gray-900 text-white p-3 rounded shadow-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-[9999] pointer-events-none text-[10px] text-center transform -translate-x-1/2 left-1/2 whitespace-nowrap">
+        <p class="font-black uppercase truncate">{{ $ev['judul'] }} !</p>
+        <p>Tiket: <strong>{{ $ev['terjual'] }}</strong></p>
+        <p>Rp {{ number_format($ev['pendapatan'], 0, ',', '.') }}</p>
+    </div>            {{-- Batang --}}
                         <div class="{{ $colors[$index % 4] }} w-30 transition-all duration-500 hover:opacity-80" 
                              style="height: {{ max(($ev['terjual'] / 125) * 100, 15) }}%;">
                         </div>
@@ -89,7 +88,7 @@
 
     {{-- TABEL --}}
   {{-- TABEL (Versi Font Jumbo) --}}
-    <div class="mt-8 bg-white rounded-2xl shadow border border-gray-100 overflow-hidden w-full">
+    <div class="mt-8 bg-white rounded-2xl shadow border border-gray-100 w-full">
         <div class="p-8 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
             <h3 class="font-black text-lg uppercase text-gray-800">Laporan Ringkasan Per Event</h3>
             <input type="text" id="searchTable" placeholder="Cari nama event..." class="pl-5 py-3 border border-gray-300 rounded-xl text-base w-80 outline-none">
