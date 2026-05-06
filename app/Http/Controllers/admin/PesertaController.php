@@ -7,130 +7,159 @@ use Illuminate\Http\Request;
 
 class PesertaController extends Controller
 {
-    /**
-     * Ambil data registrasi (4 Event Lengkap)
-     * Dengan fitur Auto-Sync jika data di session tidak sesuai.
-     */
     private function getDataRegistrasi()
     {
-        if (session()->has('data_registrasi_lengkap')) {
-            $currentData = session('data_registrasi_lengkap');
-            // Jika data session ada, kita pakai data tersebut
-            if (count($currentData) >= 4) {
-                return $currentData;
+        // Session key v15 agar data ter-refresh
+        if (!session()->has('data_peserta_final_v15')) {
+            
+            $daftarNama = [
+                'Budi', 'Andi', 'Cahyo', 'Dedi', 'Eko', 'Fajar', 'Gani', 'Hadi', 'Indra', 'Joko', 'Kiki',
+                'Lutfi', 'Mamat', 'Novan', 'Oki', 'Putra', 'Qori', 'Rian', 'Soni', 'Tono', 'Umar',
+                'Viko', 'Wawan', 'Xavi', 'Yogi', 'Zaki', 'Aris', 'Bagas', 'Candra', 'Dika', 'Erik',
+                'Faisal', 'Gerry', 'Hasan', 'Ilham', 'Joni', 'Kevin', 'Lian', 'Miko', 'Nanda', 'Opik',
+                'Pandu', 'Qadafi', 'Reza', 'Samsul', 'Tegar', 'Ucup', 'Vino', 'Wendi', 'Xander', 'Yuda',
+                'Zaid', 'Ahmad', 'Bambang', 'Cepi', 'Dimas', 'Eris', 'Farhan', 'Gilang', 'Hilman', 'Iqbal',
+                'Juna', 'Kurnia', 'Lukas', 'Maulana', 'Naufal', 'Obet', 'Panca', 'Qomar', 'Raka', 'Satria',
+                'Taufik', 'Udin', 'Vian', 'Wahyu', 'Xena', 'Yanto', 'Zulfikar', 'Agus', 'Baron'
+            ];
+
+            $generateAnggota = function($prefix, $count) use ($daftarNama) {
+                $anggota = [];
+                for ($i = 0; $i < $count; $i++) {
+                    $anggota[] = [
+                        'nama' => $daftarNama[array_rand($daftarNama)] . ' ' . chr(65 + $i), 
+                        'kode' => $prefix . '-' . ($i + 1), 
+                        'hadir' => false
+                    ];
+                }
+                return $anggota;
+            };
+
+            // Data Futsal
+            $futsalTeams = ['SHAOLIN SOCCER' => 'FTSL-01', 'TENDANGAN SI MADUN' => 'FTSL-02', 'CAPTAIN TSUBASA' => 'FTSL-03', 'REAL MADRID' => 'FTSL-04', 'DURIAN RUNTUH' => 'FTSL-05'];
+            $futsalPendaftar = [];
+            $id = 301;
+            foreach ($futsalTeams as $nama => $prefix) {
+                $futsalPendaftar[$id++] = ['nama_tim' => $nama, 'kontak' => '0812345678', 'hadir' => false, 'anggota' => $generateAnggota($prefix, 11)];
+            }
+
+            // Data Basket
+            $basketPendaftar = [];
+            $basketTeams = ['Slam Dunk', 'Haikyuu', 'Kuroko no Basket', 'Blue Lock', 'Ahiru no Sora'];
+            foreach ($basketTeams as $nama) {
+                $basketPendaftar[$id++] = ['nama_tim' => $nama, 'kontak' => '0812345', 'hadir' => false, 'anggota' => $generateAnggota('BSKT', 5)];
+            }
+
+            // Data Festival Musik
+            $musikPendaftar = [];
+            for ($i = 0; $i < 10; $i++) {
+                $musikPendaftar[201 + $i] = [
+                    'nama' => $daftarNama[array_rand($daftarNama)],
+                    'kode' => 'MSK-' . ($i + 1),
+                    'kontak' => '0812' . rand(111111, 999999),
+                    'hadir' => false
+                ];
+            }
+
+            // Data Seminar AI
+            $seminarPendaftar = [];
+            for ($i = 0; $i < 20; $i++) {
+                $seminarPendaftar[401 + $i] = [
+                    'nama' => $daftarNama[array_rand($daftarNama)],
+                    'kode' => 'AI-' . ($i + 1),
+                    'kontak' => '0812' . rand(111111, 999999),
+                    'hadir' => (bool)rand(0, 1)
+                ];
+            }
+
+            $data = [
+                1 => ['judul' => 'Turnamen Basket Antar Mahasiswa', 'tipe' => 'tim', 'kategori' => 'Olahraga', 'tanggal' => '20 Mei 2026', 'kuota' => 5, 'poster' => 'basket.png', 'pendaftar' => $basketPendaftar],
+                2 => ['judul' => 'Festival Musik Kampus 2026', 'tipe' => 'individu', 'kategori' => 'Hiburan', 'tanggal' => '25 Mei 2026', 'kuota' => 500, 'poster' => 'musik.png', 'pendaftar' => $musikPendaftar],
+                3 => ['judul' => 'Turnamen Futsal Antar Mahasiswa', 'tipe' => 'tim', 'kategori' => 'Olahraga', 'tanggal' => '01 Juni 2026', 'kuota' => 32, 'poster' => 'futsal.jpg', 'pendaftar' => $futsalPendaftar],
+                4 => ['judul' => 'Seminar Nasional AI: Transformasi Digital', 'tipe' => 'individu', 'kategori' => 'Seminar', 'tanggal' => '10 Juni 2026', 'kuota' => 200, 'poster' => 'seminar.jpg', 'pendaftar' => $seminarPendaftar],
+            ];
+            session(['data_peserta_final_v15' => $data]);
+        }
+        return session('data_peserta_final_v15');
+    }
+
+    private function getCalculatedStats($item)
+    {
+        $totalTeams = count($item['pendaftar']); 
+        $totalMembers = 0;
+        $hadir = 0;
+
+        foreach ($item['pendaftar'] as $p) {
+            if ($item['tipe'] == 'tim') {
+                $totalMembers += count($p['anggota']);
+                foreach ($p['anggota'] as $a) if ($a['hadir']) $hadir++;
+            } else {
+                $totalMembers++;
+                if ($p['hadir']) $hadir++;
             }
         }
-
-        // Data 4 Event Master (Pastikan semua key 'kategori' tersedia)
-        $data = [
-            1 => [
-                'judul' => 'Turnamen Basket Antar Mahasiswa',
-                'tipe' => 'tim',
-                'kategori' => 'Olahraga',
-                'tanggal' => '20 Mei 2026',
-                'pendaftar' => [
-                    'TKT-BSKT-001' => [
-                        'nama_tim' => 'SLAM DUNK TEAM',
-                        'kontak' => '0812-9988-7766',
-                        'status_bayar' => 'Lunas',
-                        'hadir' => false,
-                        'anggota' => [
-                            ['nama' => 'Hanamichi Sakuragi', 'kode' => 'BSKT-001', 'hadir' => false],
-                            ['nama' => 'Kaede Rukawa', 'kode' => 'BSKT-002', 'hadir' => false],
-                        ]
-                    ],
-                ]
-            ],
-            2 => [
-                'judul' => 'Festival Musik Kampus 2026',
-                'tipe' => 'individu',
-                'kategori' => 'Hiburan',
-                'tanggal' => '25 Mei 2026',
-                'pendaftar' => [
-                    'TKT-MSK-001' => ['nama' => 'Ariana Grande', 'kode' => 'MSK-001', 'kontak' => '0811-2233-4455', 'status_bayar' => 'Lunas', 'hadir' => false],
-                ]
-            ],
-            3 => [
-                'judul' => 'Turnamen Futsal Antar Mahasiswa',
-                'tipe' => 'tim',
-                'kategori' => 'Olahraga',
-                'tanggal' => '01 Juni 2026',
-                'pendaftar' => [
-                    'TKT-FTSL-001' => [
-                        'nama_tim' => 'SHAOLIN SOCCER',
-                        'kontak' => '0812-3344-5566',
-                        'status_bayar' => 'Lunas',
-                        'hadir' => false,
-                        'anggota' => [
-                            ['nama' => 'James Arthur', 'kode' => 'FTSL-001', 'hadir' => true],
-                            ['nama' => 'Benson Boone', 'kode' => 'FTSL-002', 'hadir' => false],
-                        ]
-                    ],
-                ]
-            ],
-            4 => [
-                'judul' => 'Seminar Nasional AI: Transformasi Digital',
-                'tipe' => 'individu',
-                'kategori' => 'Seminar',
-                'tanggal' => '10 Juni 2026',
-                'pendaftar' => [
-                    'TKT-AI-001' => ['nama' => 'Charlie Puth', 'kode' => 'AI-001', 'kontak' => '0877-1122-3344', 'status_bayar' => 'Lunas', 'hadir' => true],
-                    'TKT-AI-002' => ['nama' => 'Sam Smith', 'kode' => 'AI-002', 'kontak' => '0877-5566-7788', 'status_bayar' => 'Lunas', 'hadir' => false],
-                ]
-            ],
-        ];
-
-        session(['data_registrasi_lengkap' => $data]);
-        return $data;
-    }
-
-    public function index(Request $request)
-    {
-        $dataRegistrasi = $this->getDataRegistrasi();
         
-        // Perbaikan mapping: Tambahkan null coalescing (??) untuk jaga-jaga
-        $events = collect($dataRegistrasi)->map(function($item, $key) {
-            return (object) [
-                'id'       => $key,
-                'judul'    => $item['judul'] ?? 'Untitled Event',
-                'kategori' => $item['kategori'] ?? 'Umum',
-                'tanggal'  => $item['tanggal'] ?? 'TBA',
-                'poster'   => ($key == 1) ? 'basket.png' : (($key == 2) ? 'musik.png' : (($key == 3) ? 'futsal.jpg' : 'seminar.jpg')),
-                'kapasitas' => 100,
-                'desain_tiket' => null
-            ];
-        });
-
-        $eventId = $request->query('event_id');
-        $selectedEvent = null;
-        if ($eventId && isset($dataRegistrasi[$eventId])) {
-            $selectedEvent = $dataRegistrasi[$eventId];
-        }
-
-        return view('admin.peserta', compact('dataRegistrasi', 'selectedEvent', 'events'));
+        return [
+            'total_pendaftar' => ($item['tipe'] == 'tim') ? $totalTeams : $totalMembers,
+            'total_teams'     => $totalTeams,
+            'total_members'   => $totalMembers,
+            'kuota'           => $item['kuota'],
+            'is_full'         => $totalTeams >= $item['kuota'],
+            'total_hadir'     => $hadir,
+            'label'           => ($item['tipe'] == 'tim') ? 'Tim' : 'Peserta',
+        ];
     }
 
-    public function checkInIndividu($eventId, $regId)
-    {
+    public function index(Request $request) {
+        $dataRegistrasi = $this->getDataRegistrasi();
+        $events = collect($dataRegistrasi)->map(function($item, $key) {
+            $stats = $this->getCalculatedStats($item);
+            return (object) array_merge(['id' => $key, 'judul' => $item['judul'], 'tipe' => $item['tipe'], 'kategori' => $item['kategori'], 'tanggal' => $item['tanggal'], 'poster' => $item['poster']], $stats);
+        });
+        return view('admin.peserta', compact('events'));
+    }
+
+    public function detail($id) {
+        $dataRegistrasi = $this->getDataRegistrasi();
+        if (!isset($dataRegistrasi[$id])) abort(404);
+        $selectedEvent = $dataRegistrasi[$id];
+        $stats = $this->getCalculatedStats($selectedEvent);
+        return view('admin.peserta-detail', [
+            'selectedEvent' => $selectedEvent, 
+            'id' => $id, 
+            'total' => $stats['total_members'], 
+            'hadir' => $stats['total_hadir'], 
+            'belumHadir' => ($stats['total_members'] - $stats['total_hadir'])
+        ]);
+    }
+
+    public function checkInIndividu($eventId, $regId) {
         $data = $this->getDataRegistrasi();
         if (isset($data[$eventId]['pendaftar'][$regId])) {
-            $statusSekarang = $data[$eventId]['pendaftar'][$regId]['hadir'];
-            $data[$eventId]['pendaftar'][$regId]['hadir'] = !$statusSekarang;
-            session(['data_registrasi_lengkap' => $data]);
-            return redirect()->back()->with('success', 'Status kehadiran diperbarui!');
+            $data[$eventId]['pendaftar'][$regId]['hadir'] = !$data[$eventId]['pendaftar'][$regId]['hadir'];
+            
+            $statusBaru = $data[$eventId]['pendaftar'][$regId]['hadir'];
+            $pesan = $statusBaru ? 'Peserta berhasil di-check in.' : 'Check-in peserta dibatalkan.';
+            $status = $statusBaru ? 'success' : 'warning';
+            
+            session(['data_peserta_final_v15' => $data]);
+            return redirect()->back()->with(['message' => $pesan, 'status' => $status]);
         }
-        return redirect()->back()->with('error', 'Data tidak ditemukan.');
+        return redirect()->back();
     }
 
-    public function checkInAnggota($eventId, $regId, $memberIndex)
-    {
+    public function checkInAnggota($eventId, $regId, $memberIndex) {
         $data = $this->getDataRegistrasi();
         if (isset($data[$eventId]['pendaftar'][$regId]['anggota'][$memberIndex])) {
-            $statusSekarang = $data[$eventId]['pendaftar'][$regId]['anggota'][$memberIndex]['hadir'];
-            $data[$eventId]['pendaftar'][$regId]['anggota'][$memberIndex]['hadir'] = !$statusSekarang;
-            session(['data_registrasi_lengkap' => $data]);
-            return redirect()->back()->with('success', 'Status anggota diperbarui!');
+            $data[$eventId]['pendaftar'][$regId]['anggota'][$memberIndex]['hadir'] = !$data[$eventId]['pendaftar'][$regId]['anggota'][$memberIndex]['hadir'];
+            
+            $statusBaru = $data[$eventId]['pendaftar'][$regId]['anggota'][$memberIndex]['hadir'];
+            $pesan = $statusBaru ? 'Anggota berhasil di-check in.' : 'Check-in anggota dibatalkan.';
+            $status = $statusBaru ? 'success' : 'warning';
+            
+            session(['data_peserta_final_v15' => $data]);
+            return redirect()->back()->with(['message' => $pesan, 'status' => $status]);
         }
-        return redirect()->back()->with('error', 'Anggota tidak ditemukan.');
+        return redirect()->back();
     }
 }

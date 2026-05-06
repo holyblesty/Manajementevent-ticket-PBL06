@@ -118,6 +118,7 @@
     </div>
 </div>
 
+        @include('components.pagination')
 <script>
     // FUNGSI MODAL PREVIEW
     function openModal(imgSrc, caption) {
