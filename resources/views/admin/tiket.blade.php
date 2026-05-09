@@ -44,12 +44,6 @@
     class="flex flex-col items-center py-10 font-sans antialiased text-gray-900"
 >
 
-    <div class="w-full max-w-[850px] mb-4 px-4 text-left">
-        <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center text-white font-bold text-sm no-underline hover:opacity-80 transition">
-            <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-            Kembali ke Dashboard
-        </a>
-    </div>
 
     <div class="bg-white w-full max-w-[850px] rounded-3xl shadow-2xl overflow-hidden mb-10 mx-4 border border-gray-100">
         
