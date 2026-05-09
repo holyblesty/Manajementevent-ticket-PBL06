@@ -175,5 +175,69 @@
             @include('components.pagination')
         </div>
     </div>
+{{-- SCRIPT PENCARIAN DINAMIS --}}
+    <script>
+        document.getElementById('searchInput').addEventListener('keyup', function() {
+            let filter = this.value.toLowerCase();
+            let isTeamEvent = @json($selectedEvent['tipe'] === 'tim');
+
+            if (isTeamEvent) {
+                // --- PENCARIAN UNTUK TIPE TIM ---
+                let teamBlocks = document.querySelectorAll('#participantList > div');
+
+                teamBlocks.forEach(block => {
+                    let teamName = block.querySelector('summary span').textContent.toLowerCase();
+                    let members = block.querySelectorAll('tbody tr');
+                    let teamHasMatch = false;
+
+                    // Cek nama tim terlebih dahulu
+                    if (teamName.includes(filter)) {
+                        teamHasMatch = true;
+                    }
+
+                    // Cek tiap anggota di dalam tim
+                    members.forEach(row => {
+                        let memberName = row.cells[0].textContent.toLowerCase();
+                        let memberCode = row.cells[1].textContent.toLowerCase();
+
+                        if (memberName.includes(filter) || memberCode.includes(filter)) {
+                            row.style.display = ""; // Tampilkan baris anggota yang cocok
+                            teamHasMatch = true;
+                        } else {
+                            row.style.display = "none"; // Sembunyikan baris anggota yang tidak cocok
+                        }
+                    });
+
+                    // Tampilkan atau sembunyikan seluruh blok Tim berdasarkan hasil pencarian
+                    if (teamHasMatch) {
+                        block.style.display = "";
+                        // Otomatis buka accordion details jika filter sedang aktif agar terlihat anggotanya
+                        if (filter !== "") {
+                            block.querySelector('details').setAttribute('open', 'true');
+                        } else {
+                            block.querySelector('details').removeAttribute('open');
+                        }
+                    } else {
+                        block.style.display = "none";
+                    }
+                });
+            } else {
+                // --- PENCARIAN UNTUK TIPE INDIVIDU ---
+                let rows = document.querySelectorAll('#participantList tbody tr');
+
+                rows.forEach(row => {
+                    let nameAndProfile = row.cells[0].textContent.toLowerCase();
+                    let code = row.cells[1].textContent.toLowerCase();
+                    let phone = row.cells[2] ? row.cells[2].textContent.toLowerCase() : '';
+
+                    if (nameAndProfile.includes(filter) || code.includes(filter) || phone.includes(filter)) {
+                        row.style.display = ""; // Tampilkan baris yang cocok
+                    } else {
+                        row.style.display = "none"; // Sembunyikan yang tidak cocok
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
