@@ -12,19 +12,45 @@
     {{-- Wrapper Utama Menggunakan Flex --}}
     <div class="flex min-h-screen w-full !overflow-visible">
 
-        {{-- TOP NAVIGATION HEADER --}}
+      {{-- TOP NAVIGATION HEADER (DIPAKSA WARNA ELEGAN BEBAS BIRU) --}}
         <header class="fixed top-0 z-50 w-full shadow-sm">
             <nav class="w-full bg-white h-16 flex items-center justify-between px-6">
                 <div class="flex items-center">
                     <img src="{{ asset('images/logo.jpeg') }}" alt="Logo" class="h-12 w-auto">
                 </div>
                 <div class="flex items-center space-x-6 text-sm font-semibold">
-                    <a href="#" class="text-gray-600 hover:text-[#7a4988] no-underline transition-colors">Beranda</a>
-                    <a href="#" class="text-gray-600 hover:text-[#7a4988] no-underline transition-colors">Acara</a>
-                    <a href="#" class="text-gray-600 hover:text-[#7a4988] no-underline transition-colors">Tentang kami</a>
+                    {{-- BERANDA --}}
+                    <a href="#" class="transition-colors"
+                       style="text-decoration: none !important; color: #4b5563 !important;"
+                       onmouseover="this.style.color='#7a4988'"
+                       onmouseout="this.style.color='#4b5563'">
+                       Beranda
+                    </a>
+
+                    {{-- ACARA --}}
+                    <a href="#" class="transition-colors"
+                       style="text-decoration: none !important; color: #4b5563 !important;"
+                       onmouseover="this.style.color='#7a4988'"
+                       onmouseout="this.style.color='#4b5563'">
+                       Acara
+                    </a>
+
+                    {{-- TENTANG KAMU --}}
+                    <a href="#" class="transition-colors"
+                       style="text-decoration: none !important; color: #4b5563 !important;"
+                       onmouseover="this.style.color='#7a4988'"
+                       onmouseout="this.style.color='#4b5563'">
+                       Tentang kami
+                    </a>
+
                     {{-- AREA TOMBOL KELUAR SAJA --}}
                     <div class="flex items-center space-x-3 border-l border-gray-200 pl-6">
-                        <a href="#" class="bg-[#be93d4] text-[#2b1238] px-5 py-2 rounded-lg text-xs font-black hover:bg-[#9e7bb5] transition uppercase no-underline shadow-sm">Keluar</a>
+                        <a href="#" class="bg-[#be93d4] px-5 py-2 rounded-lg text-xs font-black transition uppercase shadow-sm"
+                           style="text-decoration: none !important; color: #2b1238 !important; background-color: #be93d4 !important;"
+                           onmouseover="this.style.backgroundColor='#9e7bb5'"
+                           onmouseout="this.style.backgroundColor='#be93d4'">
+                           Keluar
+                        </a>
                     </div>
                 </div>
             </nav>
@@ -49,35 +75,47 @@
                     <span class="text-[#24112e] text-xs tracking-normal block mt-1">{{ session('admin_name', 'Admin') }}</span>
                 </h2>
                 
-{{-- NAVIGASI SIDEBAR --}}
+{{-- NAVIGASI SIDEBAR (DIPAKSA WARNA UNGU DENGAN CSS INLINE) --}}
     <nav class="w-full space-y-2 px-4">
+        {{-- KELOLA ACARA --}}
         <a href="{{ route('admin.dashboard') }}" 
-           class="flex items-center px-4 py-3.5 rounded-xl font-bold text-sm transition no-underline
-           {{ request()->routeIs('admin.dashboard') || request()->routeIs('admin.acara.*') ? 'bg-[#7a4988] text-white shadow-md' : 'text-gray-500 hover:bg-gray-50' }}">
+           class="flex items-center px-4 py-3.5 rounded-xl font-bold text-sm transition"
+           style="text-decoration: none !important; 
+                  {{ request()->routeIs('admin.dashboard') || request()->routeIs('admin.acara.*') ? 'background-color: #7a4988; color: #ffffff !important; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);' : 'color: #4b5563 !important;' }}"
+           onmouseover="this.style.color='#7a4988'; this.style.backgroundColor='#f9fafb'"
+           onmouseout="this.style.color='{{ request()->routeIs('admin.dashboard') || request()->routeIs('admin.acara.*') ? '#ffffff' : '#4b5563' }}'; this.style.backgroundColor='{{ request()->routeIs('admin.dashboard') || request()->routeIs('admin.acara.*') ? '#7a4988' : 'transparent' }}'">
             <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"></path>
             </svg>
-            KELOLA ACARA
+            <span style="text-decoration: none !important;">KELOLA ACARA</span>
         </a>
 
+        {{-- KELOLA PESERTA --}}
         <a href="{{ route('admin.peserta.index') }}" 
-           class="flex items-center px-4 py-3.5 rounded-xl font-bold text-sm transition no-underline
-           {{ request()->routeIs('admin.peserta.*') ? 'bg-[#7a4988] text-white shadow-md' : 'text-gray-500 hover:bg-gray-50' }}">
+           class="flex items-center px-4 py-3.5 rounded-xl font-bold text-sm transition"
+           style="text-decoration: none !important; 
+                  {{ request()->routeIs('admin.peserta.*') ? 'background-color: #7a4988; color: #ffffff !important; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);' : 'color: #4b5563 !important;' }}"
+           onmouseover="this.style.color='#7a4988'; this.style.backgroundColor='#f9fafb'"
+           onmouseout="this.style.color='{{ request()->routeIs('admin.peserta.*') ? '#ffffff' : '#4b5563' }}'; this.style.backgroundColor='{{ request()->routeIs('admin.peserta.*') ? '#7a4988' : 'transparent' }}'">
             <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path>
             </svg>
-            KELOLA PESERTA
+            <span style="text-decoration: none !important;">KELOLA PESERTA</span>
         </a>
 
+        {{-- STATISTIK --}}
         <a href="{{ route('admin.statistik') }}" 
-           class="flex items-center px-4 py-3.5 rounded-xl font-bold text-sm transition no-underline
-           {{ request()->routeIs('admin.statistik') ? 'bg-[#7a4988] text-white shadow-md' : 'text-gray-500 hover:bg-gray-50' }}">
+           class="flex items-center px-4 py-3.5 rounded-xl font-bold text-sm transition"
+           style="text-decoration: none !important; 
+                  {{ request()->routeIs('admin.statistik') ? 'background-color: #7a4988; color: #ffffff !important; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);' : 'color: #4b5563 !important;' }}"
+           onmouseover="this.style.color='#7a4988'; this.style.backgroundColor='#f9fafb'"
+           onmouseout="this.style.color='{{ request()->routeIs('admin.statistik') ? '#ffffff' : '#4b5563' }}'; this.style.backgroundColor='{{ request()->routeIs('admin.statistik') ? '#7a4988' : 'transparent' }}'">
             <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"></path>
             </svg>
-            STATISTIK
+            <span style="text-decoration: none !important;">STATISTIK</span>
         </a>
-                </nav>
+    </nav>
             </div>
             
             {{-- LOGO BAWAH SIDEBAR --}}
