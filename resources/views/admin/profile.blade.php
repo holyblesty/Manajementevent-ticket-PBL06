@@ -61,7 +61,7 @@
                         class="w-full p-3 bg-gray-50 border-2 border-gray-100 rounded-xl text-sm font-bold text-gray-700 focus:border-[#7a4988] outline-none transition-all">
                 </div>
 
-                {{-- EMAIL (SEKARANG BISA DIEDIT) --}}
+                {{-- EMAIL --}}
                 <div>
                     <label class="block mb-1 text-[10px] font-black uppercase text-[#7a4988] tracking-widest">Email Admin</label>
                     <input type="email" name="email" value="{{ session('admin_email') ?? 'admin@event.com' }}" 
@@ -70,18 +70,49 @@
 
                 <hr class="border-gray-100 my-4">
 
+                {{-- PASSWORD LAMA (UDAH DI-SET VALUE DUMMY "admin123" BIAR GAK KOSONG) --}}
+                <div>
+                    <label class="block mb-1 text-[10px] font-black uppercase text-[#7a4988] tracking-widest">Password Lama</label>
+                    <div class="relative">
+                        <input type="password" id="password_lama" name="password_lama" value="admin123" placeholder="Wajib diisi jika ingin ganti password" 
+                            class="w-full p-3 pr-12 bg-gray-50 border-2 border-gray-100 rounded-xl text-sm font-bold text-gray-700 focus:border-[#7a4988] outline-none transition-all">
+                        <button type="button" onclick="togglePassword('password_lama', this)" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#7a4988] focus:outline-none">
+                            <svg class="w-5 h-5 eye-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
                 {{-- PASSWORD BARU --}}
                 <div>
                     <label class="block mb-1 text-[10px] font-black uppercase text-[#7a4988] tracking-widest">Password Baru <span class="text-gray-400 font-normal lowercase tracking-normal">(Opsional)</span></label>
-                    <input type="password" name="password_baru" placeholder="Kosongkan jika tidak diubah" 
-                        class="w-full p-3 bg-gray-50 border-2 border-gray-100 rounded-xl text-sm font-bold text-gray-700 focus:border-[#7a4988] outline-none transition-all">
+                    <div class="relative">
+                        <input type="password" id="password_baru" name="password_baru" placeholder="Kosongkan jika tidak diubah" 
+                            class="w-full p-3 pr-12 bg-gray-50 border-2 border-gray-100 rounded-xl text-sm font-bold text-gray-700 focus:border-[#7a4988] outline-none transition-all">
+                        <button type="button" onclick="togglePassword('password_baru', this)" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#7a4988] focus:outline-none">
+                            <svg class="w-5 h-5 eye-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
 
                 {{-- KONFIRMASI PASSWORD --}}
                 <div>
                     <label class="block mb-1 text-[10px] font-black uppercase text-[#7a4988] tracking-widest">Konfirmasi Password Baru</label>
-                    <input type="password" name="password_baru_confirmation" placeholder="Ketik ulang password..." 
-                        class="w-full p-3 bg-gray-50 border-2 border-gray-100 rounded-xl text-sm font-bold text-gray-700 focus:border-[#7a4988] outline-none transition-all">
+                    <div class="relative">
+                        <input type="password" id="password_baru_confirmation" name="password_baru_confirmation" placeholder="Ketik ulang password..." 
+                            class="w-full p-3 pr-12 bg-gray-50 border-2 border-gray-100 rounded-xl text-sm font-bold text-gray-700 focus:border-[#7a4988] outline-none transition-all">
+                        <button type="button" onclick="togglePassword('password_baru_confirmation', this)" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#7a4988] focus:outline-none">
+                            <svg class="w-5 h-5 eye-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -106,6 +137,63 @@
                 reader.readAsDataURL(input.files[0]);
             }
         }
+
+        // FUNGSI SHOW / HIDE PASSWORD
+        function togglePassword(inputId, button) {
+            const passwordInput = document.getElementById(inputId);
+            const eyeIcon = button.querySelector('.eye-icon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.innerHTML = `
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"></path>
+                `;
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.innerHTML = `
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                `;
+            }
+        }
+
+        // VALIDASI DUMMY PASSWORD LAMA SEBELUM SUBMIT FORM
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function(e) {
+            const passwordLamaInput = document.getElementById('password_lama').value;
+            const passwordBaruInput = document.getElementById('password_baru').value;
+            const passwordKonfirmasiInput = document.getElementById('password_baru_confirmation').value;
+            
+            // Password lama dummy yang disepakati
+            const DUMMY_PASSWORD_LAMA = 'admin123';
+
+            // Validasi dijalankan HANYA jika kolom password baru diisi oleh admin
+            if (passwordBaruInput.trim() !== '') {
+                // 1. Verifikasi kecocokan password lama dummy
+                if (passwordLamaInput !== DUMMY_PASSWORD_LAMA) {
+                    e.preventDefault(); // Gagalkan submit form
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Password Lama Salah!',
+                        text: 'Silakan masukkan password lama yang benar (Hint: admin123).',
+                        confirmButtonColor: '#24112e'
+                    });
+                    return;
+                }
+
+                // 2. Verifikasi kecocokan password baru dan konfirmasinya
+                if (passwordBaruInput !== passwordKonfirmasiInput) {
+                    e.preventDefault(); // Gagalkan submit form
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Password Tidak Cocok!',
+                        text: 'Konfirmasi password baru tidak sesuai dengan password baru.',
+                        confirmButtonColor: '#24112e'
+                    });
+                    return;
+                }
+            }
+        });
 
         @if(session('success'))
             Swal.fire({

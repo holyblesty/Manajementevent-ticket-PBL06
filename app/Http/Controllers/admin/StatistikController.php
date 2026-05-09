@@ -30,13 +30,28 @@ class StatistikController extends Controller
                     'tanggal' => '20 Mei 2026',
                     'kuota' => 5, // jumlah tim
                     'tipe' => 'tim',
-                    'pendaftar' => array_fill(
-                        0,
-                        5,
-                        [
+                    'pendaftar' => [
+                        301 => [
+                            'nama_tim' => 'Slam Dunk',
                             'anggota' => [1,2,3,4,5]
-                        ]
-                    )
+                        ],
+                        302 => [
+                            'nama_tim' => 'Haikyuu',
+                            'anggota' => [1,2,3,4,5]
+                        ],
+                        303 => [
+                            'nama_tim' => 'Blue Lock',
+                            'anggota' => [1,2,3,4,5]
+                        ],
+                        304 => [
+                            'nama_tim' => 'Kuroko',
+                            'anggota' => [1,2,3,4,5]
+                        ],
+                        305 => [
+                            'nama_tim' => 'Ahiru',
+                            'anggota' => [1,2,3,4,5]
+                        ],
+                    ]
                 ],
 
                 // Musik
@@ -74,13 +89,28 @@ class StatistikController extends Controller
                     'tanggal' => '01 Juni 2026',
                     'kuota' => 32, // jumlah tim
                     'tipe' => 'tim',
-                    'pendaftar' => array_fill(
-                        0,
-                        8,
-                        [
+                    'pendaftar' => [
+                        401 => [
+                            'nama_tim' => 'Real Madrid',
                             'anggota' => [1,2,3,4,5,6,7,8,9,10,11]
-                        ]
-                    )
+                        ],
+                        402 => [
+                            'nama_tim' => 'Barcelona',
+                            'anggota' => [1,2,3,4,5,6,7,8,9,10,11]
+                        ],
+                        403 => [
+                            'nama_tim' => 'MU',
+                            'anggota' => [1,2,3,4,5,6,7,8,9,10,11]
+                        ],
+                        404 => [
+                            'nama_tim' => 'Chelsea',
+                            'anggota' => [1,2,3,4,5,6,7,8,9,10,11]
+                        ],
+                        405 => [
+                            'nama_tim' => 'Inter',
+                            'anggota' => [1,2,3,4,5,6,7,8,9,10,11]
+                        ],
+                    ]
                 ],
             ];
         }
@@ -134,19 +164,22 @@ class StatistikController extends Controller
 
             if (($item['tipe'] ?? '') == 'tim') {
 
-                // jumlah tim terdaftar
+                // jumlah tim
                 $jumlahTim = count($item['pendaftar']);
 
-                // anggota per tim
+                // default anggota
                 $anggotaPerTim = 0;
 
+                // ambil tim pertama
+                $timPertama = reset($item['pendaftar']);
+
                 if (
-                    isset($item['pendaftar'][0]['anggota']) &&
-                    is_array($item['pendaftar'][0]['anggota'])
+                    isset($timPertama['anggota']) &&
+                    is_array($timPertama['anggota'])
                 ) {
 
                     $anggotaPerTim = count(
-                        $item['pendaftar'][0]['anggota']
+                        $timPertama['anggota']
                     );
                 }
 
@@ -158,10 +191,7 @@ class StatistikController extends Controller
 
             } else {
 
-                // =========================
                 // EVENT INDIVIDU
-                // =========================
-
                 $total = count($item['pendaftar']);
 
                 $kuotaTiket = $item['kuota'];
@@ -217,10 +247,7 @@ class StatistikController extends Controller
                     : 'Tersedia'
             ];
 
-            // =========================
             // TOTAL GLOBAL
-            // =========================
-
             $totalPendapatan += $pendapatan;
 
             $totalTiketTerjual += $total;
