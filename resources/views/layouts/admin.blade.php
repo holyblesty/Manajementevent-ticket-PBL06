@@ -18,11 +18,9 @@
                 <a href="#" class="text-gray-600 hover:text-[#7a4988] no-underline">Beranda</a>
                 <a href="#" class="text-gray-600 hover:text-[#7a4988] no-underline">Acara</a>
                 <a href="#" class="text-gray-600 hover:text-[#7a4988] no-underline">Tentang kami</a>
-                <div class="flex items-center space-x-2">
-                    <div class="w-8 h-8 bg-[#be93d4] rounded-full flex items-center justify-center text-[#7a4988]">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"></path></svg>
-                    </div>
-                    <a href="#" class="bg-[#be93d4] text-[#2b1238] px-4 py-1.5 rounded text-xs font-bold hover:bg-[#9e7bb5] transition uppercase no-underline">Keluar</a>
+          {{-- AREA TOMBOL KELUAR SAJA --}}
+                <div class="flex items-center space-x-3 border-l border-gray-200 pl-6">
+                    <a href="#" class="bg-[#be93d4] text-[#2b1238] px-6 py-2 rounded text-xs font-bold hover:bg-[#9e7bb5] transition uppercase no-underline shadow-sm">Keluar</a>
                 </div>
             </div>
         </nav>
@@ -33,12 +31,15 @@
         <div class="py-8 px-4 flex flex-col items-center">
             <div class="w-24 h-24 rounded-full border-4 border-[#7a4988] overflow-hidden mx-auto mb-4 shadow-lg">
                 <img src="{{ asset('images/' . session('admin_foto', 'profile_default.jpg')) }}" 
-                     onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode(session('admin_name', 'Vivian')) }}&color=ffffff&background=7a4988';"
+                     onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode(session('admin_name', 'Admin')) }}&color=ffffff&background=7a4988';"
                      class="w-full h-full object-cover">
             </div>
         </div>
-        <h2 class="text-[#7a4988] font-black text-[10px] tracking-[0.2em] mb-10 uppercase text-center w-full">
-            Welcome Admin
+        
+        {{-- BAGIAN WELCOME ADMIN YANG DINAMIS & RAPI --}}
+        <h2 class="text-[#7a4988] font-black text-[10px] tracking-[0.2em] mb-10 uppercase text-center w-full px-4 leading-relaxed">
+            WELCOME, <br>
+            <span class="text-[#24112e] text-xs tracking-normal block mt-1">{{ session('admin_name', 'Admin') }}</span>
         </h2>
             
         <nav class="w-full space-y-2 px-4">

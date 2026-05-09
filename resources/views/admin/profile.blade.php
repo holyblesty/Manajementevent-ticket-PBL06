@@ -18,26 +18,27 @@
 </head>
 <body 
     style="margin: 0; min-height: 100vh; background: linear-gradient(-45deg, #2b1238, #7a4988, #4b1d52, #9e7bb5); background-size: 400% 400%; animation: swush 10s ease infinite;"
-    class="flex flex-col items-center py-20 font-sans antialiased text-gray-900"
+    class="flex flex-col items-center py-10 font-sans antialiased text-gray-900"
 >
 
-    <div class="bg-white w-full max-w-[500px] rounded-3xl shadow-2xl overflow-hidden mx-4 border border-gray-100">
+    <div class="bg-white w-full max-w-[500px] rounded-3xl shadow-2xl overflow-hidden mx-4 border border-gray-100 mb-10">
         
         <div class="bg-[#24112e] p-10 text-center text-white border-b-4 border-[#7a4988]">
             <h1 class="text-xl font-black uppercase tracking-tighter">Profil Admin</h1>
-            <p class="text-xs text-[#be93d4] font-bold mt-1 uppercase tracking-widest">Kelola Informasi Akun Anda</p>
+            <p class="text-xs text-[#be93d4] font-bold mt-1 uppercase tracking-widest">Kelola Informasi & Keamanan Akun</p>
         </div>
 
         <form action="{{ route('admin.profile.update') }}" method="POST" enctype="multipart/form-data" class="p-10 -mt-12">
             @csrf
             @method('PUT')
 
+            {{-- FOTO PROFIL --}}
             <div class="flex justify-center mb-8">
                 <div class="relative group">
                     <div class="w-32 h-32 rounded-full border-4 border-white shadow-xl overflow-hidden bg-gray-200">
                         <img id="profile_preview" 
                              src="{{ asset('images/' . (session('admin_foto') ?? 'profile_default.jpg')) }}" 
-                             onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode(session('admin_name') ?? $user->name) }}&color=7a4988&background=EBF4FF';"
+                             onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode(session('admin_name') ?? 'Admin') }}&color=7a4988&background=EBF4FF';"
                              class="w-full h-full object-cover">
                     </div>
                     
@@ -53,16 +54,34 @@
             </div>
 
             <div class="space-y-5">
+                {{-- NAMA LENGKAP --}}
                 <div>
                     <label class="block mb-1 text-[10px] font-black uppercase text-[#7a4988] tracking-widest">Nama Lengkap</label>
-                    <input type="text" name="name" value="{{ session('admin_name') ?? $user->name }}" 
+                    <input type="text" name="name" value="{{ session('admin_name') ?? '' }}" 
                         class="w-full p-3 bg-gray-50 border-2 border-gray-100 rounded-xl text-sm font-bold text-gray-700 focus:border-[#7a4988] outline-none transition-all">
                 </div>
 
+                {{-- EMAIL (SEKARANG BISA DIEDIT) --}}
                 <div>
-                    <label class="block mb-1 text-[10px] font-black uppercase text-gray-400 tracking-widest">Email (Terkunci)</label>
-                    <input type="email" value="{{ $user->email }}" readonly 
-                        class="w-full p-3 bg-gray-100 border-2 border-gray-100 rounded-xl text-sm font-bold text-gray-400 cursor-not-allowed outline-none">
+                    <label class="block mb-1 text-[10px] font-black uppercase text-[#7a4988] tracking-widest">Email Admin</label>
+                    <input type="email" name="email" value="{{ session('admin_email') ?? 'admin@event.com' }}" 
+                        class="w-full p-3 bg-gray-50 border-2 border-gray-100 rounded-xl text-sm font-bold text-gray-700 focus:border-[#7a4988] outline-none transition-all">
+                </div>
+
+                <hr class="border-gray-100 my-4">
+
+                {{-- PASSWORD BARU --}}
+                <div>
+                    <label class="block mb-1 text-[10px] font-black uppercase text-[#7a4988] tracking-widest">Password Baru <span class="text-gray-400 font-normal lowercase tracking-normal">(Opsional)</span></label>
+                    <input type="password" name="password_baru" placeholder="Kosongkan jika tidak diubah" 
+                        class="w-full p-3 bg-gray-50 border-2 border-gray-100 rounded-xl text-sm font-bold text-gray-700 focus:border-[#7a4988] outline-none transition-all">
+                </div>
+
+                {{-- KONFIRMASI PASSWORD --}}
+                <div>
+                    <label class="block mb-1 text-[10px] font-black uppercase text-[#7a4988] tracking-widest">Konfirmasi Password Baru</label>
+                    <input type="password" name="password_baru_confirmation" placeholder="Ketik ulang password..." 
+                        class="w-full p-3 bg-gray-50 border-2 border-gray-100 rounded-xl text-sm font-bold text-gray-700 focus:border-[#7a4988] outline-none transition-all">
                 </div>
             </div>
 
