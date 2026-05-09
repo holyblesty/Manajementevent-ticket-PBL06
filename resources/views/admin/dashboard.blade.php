@@ -45,7 +45,7 @@
             <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
             </span>
-            <input type="text" id="searchInput" placeholder="Cari otomatis nama event" class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-base focus:ring-1 focus:ring-[#7a4988] outline-none transition">
+            <input type="text" id="searchInput" placeholder="Cari event atau lokasi..." class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-base focus:ring-1 focus:ring-[#7a4988] outline-none transition">
         </div>
         <select id="filterKategori" class="bg-gray-50 border border-gray-200 text-gray-500 text-base rounded-lg px-5 py-3 outline-none focus:ring-1 focus:ring-[#7a4988] cursor-pointer font-bold">
             <option value="">Semua Kategori</option>
@@ -63,6 +63,7 @@
                     <th class="px-6 py-5 text-center">E-Ticket</th>
                     <th class="px-6 py-5">Judul Acara</th>
                     <th class="px-6 py-5">Tanggal Acara</th>
+                    <th class="px-6 py-5">Lokasi</th> {{-- TAMBAHAN KOLOM LOKASI --}}
                     <th class="px-6 py-5 text-center">Kategori</th>
                     <th class="px-6 py-5 text-center">Kapasitas</th>
                     <th class="px-6 py-5 text-center">Aksi</th>
@@ -87,7 +88,15 @@
                     </td>
                     <td class="px-6 py-5 font-bold text-xl text-gray-800 judul-acara">{{ $event->judul }}</td>
                     
-                    <td class="px-6 py-5 text-lg text-gray-500 font-medium">{{ $event->tanggal }}</td>
+                    <td class="px-6 py-5 text-lg text-gray-500 font-medium whitespace-nowrap">{{ $event->tanggal }}</td>
+
+                    {{-- TAMBAHAN DATA LOKASI --}}
+                    <td class="px-6 py-5">
+                        <div class="flex items-center gap-2 text-lg text-gray-600 font-medium">
+                            <svg class="w-5 h-5 text-[#be93d4] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.243-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                            <span class="lokasi-acara">{{ $event->lokasi ?? '-' }}</span>
+                        </div>
+                    </td>
                     
                     <td class="px-6 py-5 text-center">
                         <span class="px-5 py-2 bg-[#be93d4]/20 text-[#7a4988] rounded-full text-sm font-bold uppercase tracking-wider kategori-label">{{ $event->kategori }}</span>
@@ -172,9 +181,13 @@
 
         rows.forEach(row => {
             const judul = row.querySelector('.judul-acara').innerText.toLowerCase();
+            const lokasi = row.querySelector('.lokasi-acara').innerText.toLowerCase(); // Ambil data lokasi
             const kategori = row.querySelector('.kategori-label').innerText.toLowerCase();
-            const matchSearch = judul.includes(searchTerm);
+            
+            // Cek apakah ada yang cocok sama judul ATAU lokasi
+            const matchSearch = judul.includes(searchTerm) || lokasi.includes(searchTerm);
             const matchCategory = categoryTerm === "" || kategori.includes(categoryTerm);
+            
             row.style.display = (matchSearch && matchCategory) ? "" : "none";
         });
     }
