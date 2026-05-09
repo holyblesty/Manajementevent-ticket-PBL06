@@ -1,32 +1,42 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="w-full px-8 py-8">
+{{-- DEKLARASI WARNA DI PALING ATAS --}}
+@php
+    $colors = [
+        'bg-[#059669]',
+        'bg-[#1e3a8a]',
+        'bg-[#581c1c]',
+        'bg-[#c2410c]'
+    ];
+@endphp
+
+{{-- Pembungkus Utama: w-full tanpa max-w biar lebar mentok layar, px-8 biar ada nafas dikit di kiri-kanan --}}
+<div class="w-full px-8 py-6 font-sans antialiased">
     
     {{-- 1. HEADER BANNER --}}
-    <div class="relative w-full bg-gradient-to-r from-[#24112e] to-[#7a4988] rounded-3xl p-12 mb-10 text-white shadow-2xl flex items-center overflow-hidden">
+    <div class="relative w-full bg-gradient-to-r from-[#24112e] to-[#7a4988] rounded-3xl p-6 mb-6 text-white shadow-md flex items-center overflow-hidden">
         <div class="flex-grow">
-            <h1 class="text-7xl font-black uppercase tracking-tighter mb-4">DASHBOARD ADMIN</h1>
-            <div class="bg-white/20 inline-block px-5 py-2 rounded-md text-xl font-bold uppercase tracking-widest text-white">
+            <h1 class="text-3xl font-black uppercase tracking-tighter mb-1">DASHBOARD ADMIN</h1>
+            <div class="bg-white/20 inline-block px-3 py-1 rounded text-xs font-bold uppercase tracking-widest text-white">
                 STATISTIK
             </div>
         </div>
     </div>
 
     {{-- 2. GRID UTAMA (Grafik & Cards) --}}
-    {{-- DITAMBAH !overflow-visible BIAR TOOLTIP TIDAK TERGUNTING --}}
-    <div class="grid grid-cols-12 gap-8 items-stretch !overflow-visible">
+    <div class="grid grid-cols-12 gap-6 items-stretch !overflow-visible">
         
         {{-- BAGIAN KIRI: GRAFIK --}}
-        <div class="col-span-12 xl:col-span-8 bg-white rounded-2xl shadow-xl border border-gray-100 p-10 !overflow-visible flex flex-col">
-            <div class="flex justify-between items-center mb-12">
-                <h3 class="text-3xl font-black text-[#24112e] uppercase italic">
+        <div class="col-span-12 xl:col-span-8 bg-white rounded-2xl shadow-xl border border-gray-100 p-6 !overflow-visible flex flex-col">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-sm font-black text-[#24112e] uppercase italic tracking-wider">
                     Grafik Penjualan Tiket Per Bulan
                 </h3>
                 
-                <form action="{{ route('admin.statistik') }}" method="GET" class="flex gap-4">
+                <form action="{{ route('admin.statistik') }}" method="GET" class="flex gap-2">
                     <select name="sort" onchange="this.form.submit()" 
-                        class="border-2 border-gray-200 bg-gray-50 text-base font-bold px-10 py-3 rounded-xl outline-none hover:border-[#7a4988] transition cursor-pointer">
+                        class="border border-gray-300 bg-gray-50 text-xs font-bold px-3 py-1.5 rounded-lg outline-none hover:border-[#7a4988] transition cursor-pointer w-40">
                         <option value="terbanyak" {{ request('sort') == 'terbanyak' ? 'selected' : '' }}>
                             Penjualan terbanyak
                         </option>
@@ -36,7 +46,7 @@
                     </select>
                     
                     <select name="bulan" onchange="this.form.submit()" 
-                        class="bg-gray-200 px-10 py-3 rounded-xl text-base font-bold text-gray-700 outline-none hover:bg-gray-300 transition cursor-pointer border-2 border-transparent">
+                        class="bg-gray-100 border border-gray-200 px-3 py-1.5 rounded-lg text-xs font-bold text-gray-700 outline-none hover:bg-gray-200 transition cursor-pointer w-40">
                         <option value="Mei" {{ request('bulan', 'Mei') == 'Mei' ? 'selected' : '' }}>
                             Pilih Bulan : Mei
                         </option>
@@ -47,175 +57,144 @@
                 </form>
             </div>
 
-            <div class="flex items-end gap-12 flex-grow !overflow-visible">
+            <div class="flex items-end gap-6 flex-grow !overflow-visible">
                 
-                {{-- AREA GRAFIK (Diberi pt-10 agar angka di atas batang tidak mentok/terpotong) --}}
-                <div class="relative h-[400px] w-full border-l-4 border-b-4 border-gray-300 flex items-end justify-start gap-12 pl-14 pt-10 pb-0 !overflow-visible">
+                {{-- AREA GRAFIK --}}
+                <div class="relative h-[250px] w-full border-l-2 border-b-2 border-gray-300 flex items-end justify-start gap-8 pl-10 pt-8 pb-0 !overflow-visible">
                     
                     {{-- Sumbu Y / Garis Panduan --}}
-                    <div class="absolute -left-12 h-full flex flex-col justify-between text-base font-bold text-gray-500 py-0 pr-2 text-right w-12 z-0">
+                    <div class="absolute -left-10 h-full flex flex-col justify-between text-xs font-bold text-gray-400 py-0 pr-2 text-right w-8 z-0">
                         <span>125</span>
                         <span>100</span>
                         <span>75</span>
                         <span>50</span>
                         <span>25</span>
-                        <span class="mb-1">0</span>
+                        <span class="mb-0.5">0</span>
                     </div>
 
                     {{-- Garis Grid Belakang --}}
-                    <div class="absolute w-full border-t-2 border-gray-100 top-0 z-0"></div>
-                    <div class="absolute w-full border-t-2 border-gray-100 top-[20%] z-0"></div>
-                    <div class="absolute w-full border-t-2 border-gray-100 top-[40%] z-0"></div>
-                    <div class="absolute w-full border-t-2 border-gray-100 top-[60%] z-0"></div>
-                    <div class="absolute w-full border-t-2 border-gray-100 top-[80%] z-0"></div>
-                    
-                    @php
-                        $colors = [
-                            'bg-[#059669]',
-                            'bg-[#1e3a8a]',
-                            'bg-[#581c1c]',
-                            'bg-[#c2410c]'
-                        ];
-                    @endphp
+                    <div class="absolute w-full border-t border-gray-100 top-0 z-0"></div>
+                    <div class="absolute w-full border-t border-gray-100 top-[20%] z-0"></div>
+                    <div class="absolute w-full border-t border-gray-100 top-[40%] z-0"></div>
+                    <div class="absolute w-full border-t border-gray-100 top-[60%] z-0"></div>
+                    <div class="absolute w-full border-t border-gray-100 top-[80%] z-0"></div>
 
                     @forelse($laporanEvent as $index => $ev)
-                    {{-- flex-col-reverse untuk membalik urutan: Angka di atas, Batang di bawah --}}
-                    <div class="group relative flex flex-col-reverse items-center gap-2 h-full z-10 !overflow-visible">
+                    <div class="group relative flex flex-col-reverse items-center gap-1.5 h-full z-10 !overflow-visible bar-container cursor-help"
+                         data-judul="{{ $ev['judul'] }}"
+                         data-terjual="{{ $ev['terjual'] }}"
+                         data-pendapatan="Rp {{ number_format($ev['pendapatan'], 0, ',', '.') }}">
 
-                        {{-- BAR (Sesuai skala sumbu Y 0-125) --}}
+                        {{-- BAR (Lebar w-14 biar dapet feel gagahnya pas layar lebar) --}}
                         <div class="{{ $colors[$index % 4] }}
-                                    w-24
+                                    w-14
                                     transition-all
                                     duration-500
                                     hover:brightness-125
-                                    shadow-lg
+                                    shadow
                                     rounded-t-sm"
                             style="height: {{ min(($ev['terjual'] / 125) * 100, 100) }}%;">
                         </div>
 
-                        {{-- ANGKA DI ATAS BATANG (Sekarang dinamis mengikuti tinggi batang tanpa nabrak) --}}
-                        <div class="text-2xl font-black text-[#24112e] whitespace-nowrap select-none">
+                        {{-- ANGKA DI ATAS BATANG --}}
+                        <div class="text-xs font-black text-[#24112e] whitespace-nowrap select-none">
                             {{ $ev['terjual'] }}
-                        </div>
-
-                        {{-- TOOLTIP (Z-index 9999 untuk mencegah tabrakan visual) --}}
-                        <div class="absolute bottom-full mb-8 w-72 bg-gray-900/95 text-white p-5 rounded-2xl shadow-2xl opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none text-base transform -translate-x-1/2 left-1/2 border border-white/20 z-[9999]">
-                            <p class="font-black text-lg uppercase mb-2 border-b border-white/10 pb-2">
-                                {{ $ev['judul'] }}
-                            </p>
-                            <p class="mb-1">
-                                Penjualan :
-                                <strong class="text-[#be93d4]">
-                                    {{ $ev['terjual'] }} tiket
-                                </strong>
-                            </p>
-                            <p>
-                                Pendapatan :
-                                <strong class="text-green-400">
-                                    Rp {{ number_format($ev['pendapatan'], 0, ',', '.') }}
-                                </strong>
-                            </p>
                         </div>
                     </div>
                     @empty
-                    <p class="text-gray-400 font-bold text-xl mb-10 italic z-10">
+                    <p class="text-gray-400 font-bold text-sm mb-6 italic z-10">
                         Belum ada data untuk bulan {{ $selectedMonth }}...
                     </p>
                     @endforelse
                 </div>
 
                 {{-- LEGEND --}}
-                <div class="w-80 space-y-5">
+                <div class="w-64 space-y-3">
                     @foreach($laporanEvent as $index => $ev)
-                    <div class="flex items-center gap-4">
-                        <div class="w-8 h-8 flex-shrink-0 {{ $colors[$index % 4] }} rounded shadow-sm"></div>
-                        <span class="text-base font-black text-gray-800 leading-tight uppercase">
-                            {{ \Illuminate\Support\Str::limit($ev['judul'], 35) }}
+                    <div class="flex items-center gap-3">
+                        <div class="w-5 h-5 flex-shrink-0 {{ $colors[$index % 4] }} rounded shadow-sm"></div>
+                        <span class="text-[10px] font-black text-gray-700 leading-tight uppercase truncate">
+                            {{ \Illuminate\Support\Str::limit($ev['judul'], 25) }}
                         </span>
                     </div>
                     @endforeach
                 </div>
             </div>
 
-            <div class="text-center font-black text-4xl text-[#24112e] mt-12 uppercase italic tracking-widest">
+            <div class="text-center font-black text-lg text-[#24112e] mt-4 uppercase italic tracking-wider">
                 {{ $selectedMonth }}
             </div>
         </div>
 
         {{-- BAGIAN KANAN --}}
-        <div class="col-span-12 xl:col-span-4 flex flex-col gap-6">
-            <div class="grid grid-cols-2 gap-6">
+        <div class="col-span-12 xl:col-span-4 flex flex-col gap-4">
+            <div class="grid grid-cols-2 gap-4">
                 {{-- PENDAPATAN --}}
-                <div class="bg-white p-8 rounded-3xl shadow-sm hover:shadow-xl border border-gray-100 hover:border-[#7a4988] transition-all duration-300 transform hover:-translate-y-1 group">
-                    <div class="bg-[#7a4988]/10 w-16 h-16 flex items-center justify-center rounded-2xl text-[#7a4988] mb-4 group-hover:scale-110 transition-transform">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="bg-white p-5 rounded-2xl shadow border border-gray-100 hover:border-[#7a4988] transition-all duration-300 transform hover:-translate-y-0.5 group">
+                    <div class="bg-[#7a4988]/10 w-12 h-12 flex items-center justify-center rounded-xl text-[#7a4988] mb-3 group-hover:scale-105 transition-transform">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </div>
-                    <p class="text-sm font-black text-gray-400 uppercase tracking-widest mb-2">
+                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">
                         Pendapatan
                     </p>
-                    <h2 class="text-3xl font-black text-[#24112e] break-all leading-tight group-hover:text-[#7a4988]">
+                    <h2 class="text-base font-black text-[#24112e] break-all leading-tight group-hover:text-[#7a4988]">
                         Rp {{ number_format($totalPendapatan, 0, ',', '.') }}
                     </h2>
                 </div>
 
                 {{-- TIKET --}}
-                <div class="bg-white p-8 rounded-3xl shadow-sm hover:shadow-xl border border-gray-100 hover:border-[#9e7bb5] transition-all duration-300 transform hover:-translate-y-1 group">
-                    <div class="bg-[#9e7bb5]/10 w-16 h-16 flex items-center justify-center rounded-2xl text-[#9e7bb5] mb-4 group-hover:scale-110 transition-transform">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="bg-white p-5 rounded-2xl shadow border border-gray-100 hover:border-[#9e7bb5] transition-all duration-300 transform hover:-translate-y-0.5 group">
+                    <div class="bg-[#9e7bb5]/10 w-12 h-12 flex items-center justify-center rounded-xl text-[#9e7bb5] mb-3 group-hover:scale-105 transition-transform">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path>
                         </svg>
                     </div>
-                    <p class="text-sm font-black text-gray-400 uppercase tracking-widest mb-2">
+                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">
                         Terjual
                     </p>
-                    <h2 class="text-4xl font-black text-[#24112e] group-hover:text-[#9e7bb5]">
+                    <h2 class="text-lg font-black text-[#24112e] group-hover:text-[#9e7bb5]">
                         {{ $totalTiketTerjual }}
-                        <span class="text-sm font-medium text-gray-400 uppercase">Tiket</span>
+                        <span class="text-[10px] font-medium text-gray-400 uppercase">Tiket</span>
                     </h2>
                 </div>
             </div>
 
             {{-- EVENT TERLARIS --}}
-            <div class="bg-[#7a4988] p-12 rounded-3xl text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden group flex-grow flex flex-col justify-center items-center border-4 border-white hover:border-[#9e7bb5]">
-                <div class="absolute right-[-5%] top-[-5%] opacity-20 group-hover:scale-150 group-hover:-rotate-12 transition-all duration-1000">
-                    <svg class="w-56 h-56" fill="currentColor" viewBox="0 0 24 24">
+            <div class="bg-[#7a4988] p-6 rounded-2xl text-white shadow hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.5 relative overflow-hidden group flex-grow flex flex-col justify-center items-center border-2 border-white hover:border-[#9e7bb5]">
+                <div class="absolute right-[-10%] top-[-10%] opacity-10 group-hover:scale-110 group-hover:-rotate-12 transition-all duration-1000">
+                    <svg class="w-36 h-36" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
                     </svg>
                 </div>
                 
-                <div class="z-10 text-center flex flex-col items-center">
-                    <p class="text-xl font-bold opacity-80 uppercase tracking-[0.3rem] mb-6 z-10 italic">
+                <div class="z-10 text-center flex flex-col items-center w-full">
+                    <p class="text-xs font-bold opacity-85 uppercase tracking-[0.2rem] mb-2 italic">
                         🏆 EVENT TERLARIS {{ $selectedMonth }}
                     </p>
-                    <h3 class="text-5xl font-black leading-tight group-hover:scale-105 transition-transform duration-500 z-10 uppercase italic mb-4">
+                    <h3 class="text-xl font-black leading-tight uppercase italic truncate max-w-full">
                         {{ $terlaris['judul'] ?? 'Belum Ada Data' }}
                     </h3>
-                    @if($terlaris['judul'])
-                    <p class="text-2xl font-bold opacity-80 tracking-wide z-10 italic mt-3 text-[#be93d4]">
-                        PECAH REKOR PENJUALAN TIKET! 💥💥💥
-                    </p>
-                    @endif
                 </div>
             </div>
         </div>
     </div>
 
     {{-- 3. TABEL --}}
-    <div class="mt-12 bg-white rounded-[2rem] shadow-2xl border border-gray-100 overflow-hidden">
-        <div class="p-10 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
-            <h3 class="font-black text-4xl uppercase italic text-[#24112e]">
+    <div class="mt-8 bg-white rounded-2xl shadow border border-gray-100 overflow-hidden w-full">
+        <div class="p-6 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
+            <h3 class="font-black text-lg uppercase italic text-[#24112e]">
                 Laporan Ringkasan per Event
             </h3>
             <div class="relative">
                 <input type="text" 
                        id="searchTable" 
                        placeholder="Cari otomatis nama event..." 
-                       class="pl-14 pr-6 py-5 border-2 border-gray-200 rounded-2xl text-lg w-[450px] outline-none focus:border-[#7a4988] transition shadow-inner font-bold">
-                <svg class="w-7 h-7 absolute left-5 top-1/2 -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                       class="pl-10 pr-4 py-2 border border-gray-200 rounded-xl text-sm w-72 outline-none focus:border-[#7a4988] transition shadow-inner font-bold">
+                <svg class="w-5 h-5 absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>
@@ -223,57 +202,56 @@
         </div>
         
         <div class="overflow-x-auto">
-            <table class="w-full text-left">
-                <thead class="bg-[#9e7bb5] text-white uppercase text-lg font-black tracking-wider">
+            <table class="w-full text-left text-lg">
+                <thead class="bg-[#9e7bb5] text-white uppercase text-sm font-black tracking-wider">
                     <tr>
-                        <th class="p-8 text-center w-40">Tanggal</th>
-                        <th class="p-8">Nama Event</th>
-                        <th class="p-8 w-48">Kategori</th>
-                        <th class="p-8 text-center w-40">Kapasitas</th>
-                        <th class="p-8 text-center w-48">Tiket Terjual</th>
-                        <th class="p-8 w-64">Pendapatan</th>
-                        <th class="p-8 text-center w-48">Status</th>
+                        <th class="p-4 text-center w-36">Tanggal</th>
+                        <th class="p-4">Nama Event</th>
+                        <th class="p-4 w-40">Kategori</th>
+                        <th class="p-4 text-center w-40">Kapasitas</th>
+                        <th class="p-4 text-center w-40">Tiket Terjual</th>
+                        <th class="p-4 w-48">Pendapatan</th>
+                        <th class="p-4 text-center w-36">Status</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100 italic">
                     @forelse($laporanEvent as $row)
                     <tr class="row-event hover:bg-purple-50/50 transition-colors">
-                        <td class="p-8 text-center font-bold text-gray-600 whitespace-nowrap text-xl">
+                        <td class="p-4 text-center font-bold text-gray-600 whitespace-nowrap text-base">
                             {{ $row['tanggal'] }}
                         </td>
-                        <td class="p-8 font-black text-gray-900 judul-acara uppercase text-2xl">
+                        <td class="p-4 font-black text-gray-900 judul-acara uppercase text-lg">
                             {{ $row['judul'] }}
                         </td>
-                        <td class="p-8 text-gray-600 font-bold text-xl">
+                        <td class="p-4 text-gray-600 font-bold text-base">
                             {{ $row['kategori'] }}
                         </td>
-                        <td class="p-8 text-center">
-                           {{-- KODE BARU --}}
-<div class="font-black text-gray-800 text-2xl">
-    {{ $row['kuota'] }}
-</div>
-<div class="text-sm font-black text-gray-400 uppercase tracking-widest mt-1">
-    {{ $row['tipe'] == 'tim' ? 'TIKET TIM' : 'TIKET INDIVIDU' }}
-</div>
+                        <td class="p-4 text-center">
+                            <div class="font-black text-gray-800 text-lg">
+                                {{ $row['kuota'] }}
+                            </div>
+                            <div class="text-[9px] font-black text-gray-400 uppercase tracking-widest mt-0.5">
+                                {{ $row['tipe'] == 'tim' ? 'TIKET TIM' : 'TIKET INDIVIDU' }}
+                            </div>
                         </td>
-                        <td class="p-8 text-center font-black text-[#7a4988] text-3xl">
+                        <td class="p-4 text-center font-black text-[#7a4988] text-xl">
                             {{ $row['terjual'] }}/
-                            <span class="text-2xl text-gray-500">
+                            <span class="text-base text-gray-500">
                                 {{ $row['kuota'] }}
                             </span>
                         </td>
-                        <td class="p-8 font-black text-green-600 whitespace-nowrap text-2xl">
+                        <td class="p-4 font-black text-green-600 whitespace-nowrap text-lg">
                             Rp {{ number_format($row['pendapatan'], 0, ',', '.') }}
                         </td>
-                        <td class="p-8 text-center">
-                            <span class="{{ $row['status'] == 'Terjual Habis' ? 'bg-red-600' : 'bg-green-600' }} text-white px-6 py-3 rounded-xl text-sm font-black uppercase tracking-widest shadow-md whitespace-nowrap inline-block">
+                        <td class="p-4 text-center">
+                            <span class="{{ $row['status'] == 'Terjual Habis' ? 'bg-red-600' : 'bg-green-600' }} text-white px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider shadow-sm whitespace-nowrap inline-block">
                                 {{ $row['status'] }}
                             </span>
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="7" class="p-16 text-center text-gray-400 font-bold text-2xl not-italic">
+                        <td colspan="7" class="p-10 text-center text-gray-400 font-bold text-lg not-italic">
                             Data tidak ditemukan untuk bulan ini.
                         </td>
                     </tr>
@@ -285,12 +263,63 @@
     @include('components.pagination')
 </div>
 
+{{-- HTML TOOLTIP GLOBAL MELAYANG --}}
+<div id="custom-tooltip" class="fixed bg-white/90 backdrop-blur-md text-gray-900 px-4 py-3 rounded-xl shadow-xl border border-gray-100 pointer-events-none opacity-0 transition-opacity duration-150 z-[9999] text-left hidden">
+    <p id="tooltip-judul" class="font-black text-sm uppercase text-[#24112e] mb-1.5 border-b border-gray-100 pb-1"></p>
+    <p class="text-xs font-bold text-gray-600 mb-0.5">
+        Penjualan tiket : <span id="tooltip-terjual" class="text-[#7a4988] font-black"></span>
+    </p>
+    <p class="text-xs font-bold text-gray-600">
+        Pendapatan : <span id="tooltip-pendapatan" class="text-green-600 font-black"></span>
+    </p>
+</div>
+
 <script>
+    // FILTER PENCARIAN OTOMATIS TABEL
     document.getElementById('searchTable').addEventListener('keyup', function () {
         let filter = this.value.toLowerCase();
         document.querySelectorAll('.row-event').forEach(row => {
             let title = row.querySelector('.judul-acara').innerText.toLowerCase();
             row.style.display = title.includes(filter) ? "" : "none";
+        });
+    });
+
+    // SISTEM MOUSE-TRACKING TOOLTIP GRAFIK
+    document.addEventListener('DOMContentLoaded', function() {
+        const tooltip = document.getElementById('custom-tooltip');
+        const tooltipJudul = document.getElementById('tooltip-judul');
+        const tooltipTerjual = document.getElementById('tooltip-terjual');
+        const tooltipPendapatan = document.getElementById('tooltip-pendapatan');
+        const containers = document.querySelectorAll('.bar-container');
+
+        containers.forEach(container => {
+            container.addEventListener('mouseenter', function() {
+                const judul = this.getAttribute('data-judul');
+                const terjual = this.getAttribute('data-terjual');
+                const pendapatan = this.getAttribute('data-pendapatan');
+
+                tooltipJudul.innerText = judul;
+                tooltipTerjual.innerText = terjual + ' tiket';
+                tooltipPendapatan.innerText = pendapatan;
+
+                tooltip.classList.remove('hidden');
+                setTimeout(() => tooltip.classList.add('opacity-100'), 10);
+            });
+
+            container.addEventListener('mousemove', function(e) {
+                tooltip.style.left = (e.clientX + 15) + 'px';
+                tooltip.style.top = (e.clientY + 15) + 'px';
+            });
+
+            container.addEventListener('mouseleave', function() {
+                tooltip.classList.remove('opacity-100');
+                tooltip.classList.add('opacity-0');
+                setTimeout(() => {
+                    if (tooltip.classList.contains('opacity-0')) {
+                        tooltip.classList.add('hidden');
+                    }
+                }, 150);
+            });
         });
     });
 </script>
