@@ -12,13 +12,13 @@ class AuthController extends Controller
     // Menampilkan halaman Register
     public function showRegister()
     {
-        return view('auth.register'); // Mengarah ke folder resources/views/auth/register.blade.php
+        return view('auth.register');
     }
 
-    // Memproses Registrasi Akun Asli dari Form
+    // Memproses Registrasi Akun Pengunjung (Masuk ke tabel users/pengunjung)
     public function register(Request $request)
     {
-        // Validasi input data dari pengunjung
+        // Validasi input data dari pengunjung (sesuai ERD kamu)
         $request->validate([
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users',
@@ -28,18 +28,18 @@ class AuthController extends Controller
             'alamat' => 'nullable|string',
         ]);
 
-        // Menyimpan data asli ke database MySQL tabel users
+        // Menyimpan data pengunjung ke database MySQL tabel users
         User::create([
             'name' => $request->name,
             'username' => $request->username,
             'email' => $request->email,
-            'password' => Hash::make($request->password), // Password di-enkripsi demi keamanan
+            'password' => Hash::make($request->password),
             'no_hp' => $request->no_hp,
             'alamat' => $request->alamat,
-            'role' => 'pengunjung', // Otomatis mendaftar sebagai pengunjung
+            // Kolom role opsional dipertahankan jika tabel users kamu masih pakai kolom ini
+            'role' => 'pengunjung', 
         ]);
 
-        // Setelah sukses daftar, langsung lempar ke halaman login dengan pesan sukses
         return redirect()->route('login')->with('success', 'Akun berhasil dibuat! Silakan login.');
     }
 
@@ -49,7 +49,7 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-    // Memproses Login
+    // Memproses Login Multi-Table (Admin & Pengunjung)
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -57,28 +57,37 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        // Cek ke database apakah username dan password cocok
-        if (Auth::attempt($credentials)) {
+        // 1. STRATEGI UTAMA: Coba login sebagai ADMIN dulu (Ngecek ke tabel 'admin')
+        if (Auth::guard('admin')->attempt($credentials)) {
             $request->session()->regenerate();
-
-            // Cek role user yang login untuk pengalihan halaman
-            if (Auth::user()->role === 'admin') {
-                return redirect()->route('admin.dashboard'); // Jika admin, ke dashboard admin
-            }
-
-            return redirect()->route('home'); // Jika pengunjung biasa, ke beranda utama
+            return redirect()->route('admin.dashboard'); // Sukses, langsung ke dashboard admin
         }
 
-        // Jika salah username/password, balikkan ke login dengan error
+        // 2. STRATEGI KEDUA: Kalau bukan admin, coba login sebagai PENGUNJUNG (Ngecek ke tabel 'users')
+        if (Auth::guard('web')->attempt($credentials)) {
+            $request->session()->regenerate();
+            
+            // Pengalihan ke dashboard pengunjung atau home sesuai route kamu
+            return redirect()->route('pengunjung.dashboard'); 
+        }
+
+        // 3. Jika di kedua tabel tidak ditemukan data yang cocok
         return back()->withErrors([
             'username' => 'Username atau password yang kamu masukkan salah.',
         ])->onlyInput('username');
     }
 
-    // Memproses Logout
+    // Memproses Logout Multi-Guard
     public function logout(Request $request)
     {
-        Auth::logout();
+        // Logout dari guard admin jika yang login adalah admin
+        if (Auth::guard('admin')->check()) {
+            Auth::guard('admin')->logout();
+        } else {
+            // Logout dari guard web/pengunjung jika yang login pengunjung
+            Auth::guard('web')->logout();
+        }
+
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect()->route('home');

@@ -36,9 +36,16 @@ return [
     */
 
     'guards' => [
+        // Guard default untuk pengunjung (melihat tabel users)
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
+        ],
+
+        // 👈 AKUN ADMIN: Guard baru untuk mendeteksi login admin
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'admins',
         ],
     ],
 
@@ -60,15 +67,17 @@ return [
     */
 
     'providers' => [
+        // Provider default untuk mengambil data dari model User (pengunjung)
         'users' => [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\User::class),
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        // 👈 AKUN ADMIN: Provider baru yang mengarah ke model Admin
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Admin::class,
+        ],
     ],
 
     /*
