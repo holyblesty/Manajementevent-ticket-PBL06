@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\AcaraController;
 use App\Http\Controllers\Admin\PesertaController;
 use App\Http\Controllers\Admin\StatistikController;
@@ -42,8 +41,8 @@ Route::middleware('auth')->group(function () {
 // =====================================================
 Route::prefix('admin')->name('admin.')->group(function () {
     
-    // 1. Dashboard Utama
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    // 1. Dashboard Utama (Ditumpuk langsung ke AcaraController agar data $events langsung tampil otomatis)
+    Route::get('/dashboard', [AcaraController::class, 'index'])->name('dashboard');
 
     // 1b. Statistik
     Route::get('/statistik', [StatistikController::class, 'index'])->name('statistik');

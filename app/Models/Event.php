@@ -11,7 +11,7 @@ class Event extends Model
 
     protected $table = 'events';
     protected $primaryKey = 'id_event';
-    protected $fillable = ['judul', 'deskripsi', 'tanggal', 'jam', 'lokasi', 'poster', 'status_event', 'id_admin', 'id_kategori'];
+    protected $fillable = ['judul', 'deskripsi', 'tanggal', 'jam', 'lokasi', 'kategori', 'poster', 'status_event', 'id_admin', 'id_kategori'];
 
     // Relasi ke Kategori
     public function kategori()

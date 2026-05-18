@@ -63,7 +63,7 @@
                     <th class="px-6 py-5 text-center">E-Ticket</th>
                     <th class="px-6 py-5">Judul Acara</th>
                     <th class="px-6 py-5">Tanggal Acara</th>
-                    <th class="px-6 py-5">Lokasi</th> {{-- TAMBAHAN KOLOM LOKASI --}}
+                    <th class="px-6 py-5">Lokasi</th>
                     <th class="px-6 py-5 text-center">Kategori</th>
                     <th class="px-6 py-5 text-center">Kapasitas</th>
                     <th class="px-6 py-5 text-center">Aksi</th>
@@ -82,15 +82,16 @@
                             <div onclick="openModal('{{ asset('images/' . $event->desain_tiket) }}', 'E-Ticket: {{ $event->judul }}')" class="w-20 h-14 bg-gray-100 rounded border border-gray-200 overflow-hidden shadow-sm mx-auto cursor-pointer hover:ring-2 hover:ring-[#7a4988] transition-all">
                                 <img src="{{ asset('images/' . $event->desain_tiket) }}" class="w-full h-full object-cover">
                             </div>
-                        @else
+                        @ collapse
                             <span class="text-sm font-bold text-gray-300 uppercase italic tracking-widest">Belum Ada</span>
                         @endif
                     </td>
                     <td class="px-6 py-5 font-bold text-xl text-gray-800 judul-acara">{{ $event->judul }}</td>
                     
-                    <td class="px-6 py-5 text-lg text-gray-500 font-medium whitespace-nowrap">{{ $event->tanggal }}</td>
+                    <td class="px-6 py-5 text-lg text-gray-500 font-medium whitespace-nowrap">
+                        {{ date('d-m-y', strtotime($event->tanggal)) }}
+                    </td>
 
-                    {{-- TAMBAHAN DATA LOKASI --}}
                     <td class="px-6 py-5">
                         <div class="flex items-center gap-2 text-lg text-gray-600 font-medium">
                             <svg class="w-5 h-5 text-[#be93d4] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.243-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
@@ -181,10 +182,9 @@
 
         rows.forEach(row => {
             const judul = row.querySelector('.judul-acara').innerText.toLowerCase();
-            const lokasi = row.querySelector('.lokasi-acara').innerText.toLowerCase(); // Ambil data lokasi
+            const lokasi = row.querySelector('.lokasi-acara').innerText.toLowerCase(); 
             const kategori = row.querySelector('.kategori-label').innerText.toLowerCase();
             
-            // Cek apakah ada yang cocok sama judul ATAU lokasi
             const matchSearch = judul.includes(searchTerm) || lokasi.includes(searchTerm);
             const matchCategory = categoryTerm === "" || kategori.includes(categoryTerm);
             
