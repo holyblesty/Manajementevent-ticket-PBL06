@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\AcaraController;
 use App\Http\Controllers\Admin\PesertaController;
@@ -16,18 +17,35 @@ use App\Http\Controllers\Admin\StatistikController;
 // HALAMAN AWAL (Membuka welcome.blade.php Pertama Kali)
 // =====================================================
 Route::get('/', function () {
-    return view('welcome'); // --> DIUBAH DI SINI: Langsung memuat halaman Beranda/Welcome
+    return view('welcome');
+})->name('home');
+
+// =====================================================
+// FITUR AUTENTIKASI NYATA (LOGIN, REGISTER, LOGOUT)
+// =====================================================
+// Rute untuk Pengguna yang BELUM Login (Guest)
+Route::middleware('guest')->group(function () {
+    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+    Route::post('/register', [AuthController::class, 'register']);
+
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'login']);
+});
+
+// Rute Logout (Harus sudah login baru bisa logout)
+Route::middleware('auth')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
 // =====================================================
-// ADMIN AREA
+// ADMIN AREA (Hanya Bisa Diakses Jika Sudah Login)
 // =====================================================
 Route::prefix('admin')->name('admin.')->group(function () {
     
     // 1. Dashboard Utama
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // ---> FIX: ROUTE STATISTIK BIAR GAK ERROR <---
+    // 1b. Statistik
     Route::get('/statistik', [StatistikController::class, 'index'])->name('statistik');
 
     // 2. Resource Acara (Handle: index, create, store, edit, update, destroy)
@@ -47,7 +65,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // Halaman List Event
         Route::get('/', [PesertaController::class, 'index'])->name('index');
 
-        // ---> FIX: ROUTE DETAIL BIAR BISA DIKLIK <---
+        // Detail Peserta
         Route::get('/detail/{id}', [PesertaController::class, 'detail'])->name('detail');
         
         // Route Check-in
@@ -57,19 +75,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 });
 
 // =====================================================
-// AUTENTIKASI PLACEHOLDER (Biar tombol di Welcome aktif)
-// =====================================================
-Route::get('/login', function () {
-    return "Halaman Login (Belum dibuat)";
-})->name('login');
-
-Route::get('/register', function () {
-    return "Halaman Registrasi (Belum dibuat)";
-})->name('register'); // --> DITAMBAHKAN: Mencegah eror saat diakses dari tombol welcome
-
-
-// =====================================================
-// PENGUNJUNG AREA
+// PENGUNJUNG AREA (Akses Halaman Pengunjung)
 // =====================================================
 Route::prefix('pengunjung')->name('pengunjung.')->group(function () {
 
