@@ -276,58 +276,55 @@
         </div>
     </div>
 
-    <div id="registerModal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black/50 backdrop-blur-sm">
-        <div class="bg-white w-[90%] sm:w-[480px] p-8 rounded-xl shadow-2xl relative max-h-[90vh] overflow-y-auto">
+   <div id="registerModal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black/50 backdrop-blur-sm">
+        <div class="bg-white w-[90%] sm:w-[400px] p-7 rounded-xl shadow-2xl relative max-h-[92vh] overflow-y-auto no-scrollbar">
             <button onclick="closeModal('registerModal')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
             
-            <h3 class="text-2xl font-bold text-center text-gray-800 uppercase tracking-wide mb-6">Daftar Akun Baru</h3>
+            <h3 class="text-2xl font-bold text-center text-gray-800 uppercase tracking-wide mb-5">DAFTAR AKUN</h3>
             
             <form action="{{ route('register') }}" method="POST">
                 @csrf
-                <div class="mb-3">
-                    <label class="block text-gray-700 text-sm font-semibold mb-1">Nama Lengkap</label>
-                    <input type="text" name="name" class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-purplePrimary" placeholder="Nama lengkap sesuai identitas" required>
+                
+                <div class="mb-3.5">
+                    <label class="block text-gray-700 text-xs font-semibold mb-1">Nama Lengkap</label>
+                    <input type="text" name="name" class="w-full px-3.5 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:border-purplePrimary" placeholder="Isi nama lengkap anda" required>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
-                    <div>
-                        <label class="block text-gray-700 text-sm font-semibold mb-1">Username</label>
-                        <input type="text" name="username" class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-purplePrimary" placeholder="Username login" required>
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 text-sm font-semibold mb-1">Email</label>
-                        <input type="email" name="email" class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-purplePrimary" placeholder="Alamat email aktif" required>
-                    </div>
+                <div class="mb-3.5">
+                    <label class="block text-gray-700 text-xs font-semibold mb-1">Buat Nama Akun anda</label>
+                    <input type="text" name="username" class="w-full px-3.5 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:border-purplePrimary" placeholder="Isi nama akun anda" required>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
-                    <div>
-                        <label class="block text-gray-700 text-sm font-semibold mb-1">Kata Sandi</label>
-                        <input type="password" name="password" class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-purplePrimary" placeholder="Min. 6 karakter" required>
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 text-sm font-semibold mb-1">Konfirmasi Sandi</label>
-                        <input type="password" name="password_confirmation" class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-purplePrimary" placeholder="Ulangi kata sandi" required>
-                    </div>
+                <div class="mb-3.5">
+                    <label class="block text-gray-700 text-xs font-semibold mb-1">Kata Sandi</label>
+                    <input type="password" name="password" class="w-full px-3.5 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:border-purplePrimary" placeholder="Isi kata sandi anda" required>
+                    <input type="hidden" name="password_confirmation" x-init="$el.value = $el.previousElementSibling.value" x-on:input="$el.value = $el.previousElementSibling.value">
                 </div>
 
-                <div class="mb-3">
-                    <label class="block text-gray-700 text-sm font-semibold mb-1">Nomor HP</label>
-                    <input type="text" name="no_hp" class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-purplePrimary" placeholder="Contoh: 0812xxxxx">
+                <div class="mb-3.5">
+                    <label class="block text-gray-700 text-xs font-semibold mb-1">No.hp</label>
+                    <input type="text" name="no_hp" class="w-full px-3.5 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:border-purplePrimary" placeholder="Isi nomor hp anda">
+                </div>
+
+                <div class="mb-3.5">
+                    <label class="block text-gray-700 text-xs font-semibold mb-1">Alamat</label>
+                    <input type="text" name="alamat" class="w-full px-3.5 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:border-purplePrimary" placeholder="Isi Alamat rumah anda">
                 </div>
 
                 <div class="mb-5">
-                    <label class="block text-gray-700 text-sm font-semibold mb-1">Alamat Rumah</label>
-                    <textarea name="alamat" rows="2" class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-purplePrimary" placeholder="Alamat lengkap tempat tinggal anda"></textarea>
+                    <label class="block text-gray-700 text-xs font-semibold mb-1">Email</label>
+                    <input type="email" name="email" class="w-full px-3.5 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:border-purplePrimary" placeholder="Isi email anda" required>
                 </div>
                 
-                <button type="submit" class="w-full py-2.5 bg-purplePrimary hover:bg-purpleAccent text-white font-medium rounded-lg transition shadow-md shadow-purplePrimary/20">
-                    Daftar Sekarang
-                </button>
+                <div class="text-center">
+                    <button type="submit" class="w-auto min-w-[140px] px-6 py-2 bg-purpleAccent hover:bg-purplePrimary text-white font-medium rounded-full transition shadow-md shadow-purpleAccent/20 text-sm">
+                        Buat Akun
+                    </button>
+                </div>
             </form>
             
-            <p class="text-center text-sm text-gray-500 mt-4">
-                Sudah punya akun? <a href="javascript:void(0)" onclick="switchModal('registerModal', 'loginModal')" class="text-purplePrimary font-semibold hover:underline">Masuk disini!</a>
+            <p class="text-center text-xs text-gray-500 mt-4">
+                Sudah punya akun? <a href="javascript:void(0)" onclick="switchModal('registerModal', 'loginModal')" class="text-blue-600 hover:underline">Masuk disini!</a>
             </p>
         </div>
     </div>
