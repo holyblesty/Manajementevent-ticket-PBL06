@@ -4,408 +4,229 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EventTicket - Discover & Book Now!</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        purplePrimary: '#7a4988',
+                        purpleAccent: '#9e7bb5',
+                        purpleHover: '#be93d4',
+                        purpleDark: '#1a0926',
+                    }
+                }
+            }
+        }
+    </script>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #ffffff;
-            color: #000000;
         }
-        /* Top Navigation Header Bar */
-        .top-search-bar {
-            background-color: #7a4988;
-            padding: 10px 0;
-        }
-        .search-input-container {
-            max-width: 600px;
-            margin: 0 auto;
-            position: relative;
-        }
-        .search-input-container input {
-            border-radius: 20px;
-            padding-left: 35px;
-            font-size: 14px;
-        }
-        .search-input-container i {
-            position: absolute;
-            left: 12px;
-            top: 11px;
-            color: #6c757d;
-        }
-        .nav-links-top .nav-link {
-            color: #000000 !important;
-            font-size: 14px;
-            font-weight: 500;
-        }
-        .nav-links-top .nav-link:hover {
-            color: #7a4988 !important;
-        }
-        .btn-masuk {
-            background-color: #be93d4;
-            color: white;
-            font-size: 13px;
-            font-weight: bold;
-            padding: 4px 20px;
-            border-radius: 4px;
-        }
-        .btn-daftar {
-            background-color: #9e7bb5;
-            color: white;
-            font-size: 13px;
-            font-weight: bold;
-            padding: 4px 20px;
-            border-radius: 4px;
-        }
-        
-        /* Banner Carousel Slider */
-        .carousel-container {
-            position: relative;
-            margin-top: 10px;
-        }
-        .carousel-control-prev, .carousel-control-next {
-            width: 5%;
-        }
-        .carousel-control-prev-icon, .carousel-control-next-icon {
-            background-image: none;
-            color: #000000;
-            font-size: 30px;
-            font-weight: bold;
-        }
-
-        /* Section Heading Customization */
-        .section-title-center {
-            font-size: 16px;
-            font-weight: bold;
-            letter-spacing: 1px;
-            color: #333333;
-            text-transform: uppercase;
-        }
-        .section-title-left {
-            font-size: 28px;
-            font-weight: bold;
-            color: #000000;
-            margin-top: 30px;
-            margin-bottom: 20px;
-        }
-
-        /* Category Circles */
-        .category-circle-wrapper {
-            text-align: center;
-        }
-        .category-circle {
-            width: 110px;
-            height: 110px;
-            border: 2px solid #7a4988;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 10px auto;
-            padding: 15px;
-            transition: transform 0.2s;
-        }
-        .category-circle:hover {
-            transform: scale(1.05);
-        }
-        .category-circle img {
-            width: 100%;
-            height: auto;
-        }
-        .category-text {
-            font-size: 15px;
-            font-weight: 500;
-            color: #333333;
-        }
-
-        /* Event Grid Cards */
-        .event-card {
-            border: none;
-            position: relative;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .event-img {
-            width: 100%;
-            height: 380px;
-            object-fit: cover;
-        }
-        .event-info-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background-color: #000000;
-            color: #ffffff;
-            padding: 12px;
-            text-align: center;
-        }
-        .event-date-time {
-            font-size: 13px;
-            font-weight: bold;
-            color: #ffffff;
-            margin-bottom: 4px;
-            text-transform: uppercase;
-        }
-        .event-location {
-            font-size: 12px;
-            color: #ffffff;
-            margin-bottom: 0;
-            text-transform: uppercase;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        .event-location i {
-            margin-right: 5px;
-            font-size: 11px;
-        }
-
-        /* Center Control Buttons */
-        .btn-action-purple {
-            background-color: #7a4988;
-            color: #ffffff !important;
-            font-size: 14px;
-            padding: 6px 25px;
-            border-radius: 8px;
-            border: none;
-            display: inline-block;
-            text-decoration: none;
-        }
-        .btn-action-purple:hover {
-            background-color: #9e7bb5;
-        }
-        .info-text-contact {
-            font-size: 15px;
-            color: #333333;
-            max-width: 450px;
-            margin: 0 auto;
-            line-height: 1.4;
-        }
-
-        /* Main Master Footer Section */
-        .master-footer {
-            background-color: #1a0926; /* Deep Dark Purple */
-            color: #ffffff;
-            padding: 40px 0 20px 0;
-            font-size: 13px;
-            margin-top: 50px;
-        }
-        .footer-logo-side img {
-            width: 120px;
-            margin-bottom: 15px;
-        }
-        .footer-logo-side p {
-            color: #be93d4;
-            line-height: 1.5;
-            font-size: 12px;
-        }
-        .footer-column-title {
-            font-size: 14px;
-            font-weight: bold;
-            text-transform: uppercase;
-            margin-bottom: 15px;
-            color: #ffffff;
-            letter-spacing: 0.5px;
-        }
-        .footer-links-list {
-            list-style: none;
-            padding-left: 0;
-            margin-bottom: 0;
-        }
-        .footer-links-list li {
-            margin-bottom: 8px;
-        }
-        .footer-links-list a {
-            color: #be93d4;
-            text-decoration: none;
-        }
-        .footer-links-list a:hover {
-            color: #ffffff;
-        }
-        .footer-contact-info p {
-            margin-bottom: 8px;
-            color: #be93d4;
-        }
-        .footer-contact-info i {
-            margin-right: 10px;
-            width: 15px;
-        }
-        .footer-bottom-copyright {
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            margin-top: 30px;
-            padding-top: 15px;
-            font-size: 11px;
-            color: #be93d4;
+        /* Hide scrollbar untuk kebersihan layout jika dibutuhkan */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
         }
     </style>
 </head>
-<body>
+<body class="bg-white text-black antialiased">
 
-    <div class="container py-2">
-        <div class="row align-items-center">
-            <div class="col-6 col-md-3">
-                <img src="https://via.placeholder.com/130x40/7a4988/ffffff?text=EventTicket" alt="Logo EventTicket" class="img-fluid">
+    <header class="container mx-auto px-4 py-4">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center justify-center md:justify-start w-full md:w-auto">
+                <h3 class="text-2xl font-bold text-purplePrimary flex items-center">
+                    <i class="fa-solid fa-ticket-simple me-2"></i>EventTicket
+                </h3>
             </div>
-            <div class="col-6 col-md-9 text-end">
-                <div class="d-flex justify-content-end align-items-center gap-4 nav-links-top">
-                    <a class="nav-link active" href="{{ url('/') }}">Beranda</a>
-                    <a class="nav-link" href="#">Acara</a>
-                    <a class="nav-link" href="#">Tentang kami</a>
-                    <a class="btn btn-masuk text-white" href="{{ route('login') }}">Masuk</a>
-                    <a class="btn btn-daftar text-white" href="{{ route('register') }}">Daftar</a>
-                </div>
+            
+            <nav class="flex flex-wrap items-center justify-center md:justify-end gap-4 md:gap-8 w-full md:w-auto">
+                <a class="text-sm font-medium text-black hover:text-purplePrimary transition-colors" href="{{ url('/') }}">Beranda</a>
+                <a class="text-sm font-medium text-black hover:text-purplePrimary transition-colors" href="#">Acara</a>
+                <a class="text-sm font-medium text-black hover:text-purplePrimary transition-colors" href="#">Tentang kami</a>
+                <a class="bg-purpleHover text-white text-xs font-bold px-5 py-2 rounded shadow hover:bg-purpleAccent transition-colors text-center min-w-[80px]" href="{{ route('login') }}">Masuk</a>
+                <a class="bg-purpleAccent text-white text-xs font-bold px-5 py-2 rounded shadow hover:bg-purplePrimary transition-colors text-center min-w-[80px]" href="{{ route('register') }}">Daftar</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="bg-purplePrimary py-3">
+        <div class="container mx-auto px-4">
+            <div class="max-w-2xl mx-auto relative">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <i class="fa-solid fa-magnifying-glass text-gray-400"></i>
+                </span>
+                <input type="text" class="w-full bg-white text-sm text-black pl-10 pr-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-purpleHover" placeholder="Mencari acara/kegiatan (otomatis)">
             </div>
         </div>
-    </div>
+    </section>
 
-    <div class="top-search-bar">
-        <div class="container">
-            <div class="search-input-container">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" class="form-control" placeholder="Mencari acara/kegiatan (otomatis)">
-            </div>
-        </div>
-    </div>
-
-    <div class="container carousel-container">
-        <div id="bannerSlider" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <img src="https://via.placeholder.com/1200x320/7a4988/ffffff?text=EVENT+%26+TICKETING++|+Discover+%26+Book+Now!" class="d-block w-100 rounded" alt="Promo Banner 1">
+    <section class="container mx-auto px-4 mt-4" x-data="{ activeSlide: 0, slides: [0, 1, 2] }" x-init="setInterval(() => activeSlide = activeSlide === slides.length - 1 ? 0 : activeSlide + 1, 4000)">
+        <div class="relative overflow-hidden rounded-lg shadow-sm bg-gray-100 h-[360px]">
+            
+            <div class="absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out" x-show="activeSlide === 0" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+                <img src="https://via.placeholder.com/1200x400/7a4988/ffffff?text=BASKETBALL+CHAMPIONSHIP+2026" class="w-full h-full object-cover" alt="Turnamen Basket">
+                <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
+                <div class="absolute bottom-12 left-[6%] max-w-lg hidden md:block text-left">
+                    <span class="bg-purpleHover text-purplePrimary text-xs font-bold px-3 py-1.5 rounded mb-3 inline-block">OLAHRAGA</span>
+                    <h2 class="text-3xl font-bold text-white mb-2">Turnamen Basket Polibatam 2026</h2>
+                    <p class="text-gray-300 text-xs mb-4"><i class="fa-regular fa-calendar me-2"></i>09-06-26 | <i class="fa-solid fa-location-dot me-2"></i>Lapangan Politeknik</p>
+                    <a href="#" class="bg-purpleAccent text-white text-xs font-bold px-4 py-2.5 rounded shadow-sm hover:bg-purplePrimary transition-colors inline-block">Pesan Tiket Sekarang <i class="fa-solid fa-arrow-right ms-1"></i></a>
                 </div>
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#bannerSlider" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true">&lt;</span>
+
+            <div class="absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out" x-show="activeSlide === 1" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+                <img src="https://via.placeholder.com/1200x400/9e7bb5/ffffff?text=HARMONI+KAMPUS+MUSIC+FESTIVAL" class="w-full h-full object-cover" alt="Festival Musik">
+                <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
+                <div class="absolute bottom-12 left-[6%] max-w-lg hidden md:block text-left">
+                    <span class="bg-purplePrimary text-white text-xs font-bold px-3 py-1.5 rounded mb-3 inline-block">HIBURAN</span>
+                    <h2 class="text-3xl font-bold text-white mb-2">Harmoni Kampus Music Festival</h2>
+                    <p class="text-gray-300 text-xs mb-4"><i class="fa-regular fa-calendar me-2"></i>15-07-26 | <i class="fa-solid fa-location-dot me-2"></i>Depan Gedung Techno</p>
+                    <a href="#" class="bg-purplePrimary text-white text-xs font-bold px-4 py-2.5 rounded shadow-sm hover:bg-purpleAccent transition-colors inline-block">Pesan Tiket Sekarang <i class="fa-solid fa-arrow-right ms-1"></i></a>
+                </div>
+            </div>
+
+            <div class="absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out" x-show="activeSlide === 2" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+                <img src="https://via.placeholder.com/1200x400/333333/ffffff?text=AI+FUTURE+FORUM+2026" class="w-full h-full object-cover" alt="Seminar AI">
+                <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
+                <div class="absolute bottom-12 left-[6%] max-w-lg hidden md:block text-left">
+                    <span class="bg-purpleHover text-purplePrimary text-xs font-bold px-3 py-1.5 rounded mb-3 inline-block">SEMINAR</span>
+                    <h2 class="text-3xl font-bold text-white mb-2">National AI Forum: Masa Depan Kita</h2>
+                    <p class="text-gray-300 text-xs mb-4"><i class="fa-regular fa-calendar me-2"></i>28-05-26 | <i class="fa-solid fa-location-dot me-2"></i>Auditorium Gedung Utama</p>
+                    <a href="#" class="bg-purpleAccent text-white text-xs font-bold px-4 py-2.5 rounded shadow-sm hover:bg-purplePrimary transition-colors inline-block">Pesan Tiket Sekarang <i class="fa-solid fa-arrow-right ms-1"></i></a>
+                </div>
+            </div>
+
+            <button class="absolute top-0 bottom-0 left-0 z-10 flex items-center justify-center w-[5%] text-purpleHover text-2xl font-bold hover:text-purpleAccent" @click="activeSlide = activeSlide === 0 ? slides.length - 1 : activeSlide - 1">
+                <i class="fa-solid fa-chevron-left"></i>
             </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#bannerSlider" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true">&gt;</span>
+            <button class="absolute top-0 bottom-0 right-0 z-10 flex items-center justify-center w-[5%] text-purpleHover text-2xl font-bold hover:text-purpleAccent" @click="activeSlide = activeSlide === slides.length - 1 ? 0 : activeSlide + 1">
+                <i class="fa-solid fa-chevron-right"></i>
             </button>
-        </div>
-    </div>
 
-    <div class="container text-center my-4">
-        <p class="section-title-center mb-3">KATEGORI ACARA</p>
-        <div class="row justify-content-center g-4">
-            <div class="col-4 col-sm-3 col-md-2 category-circle-wrapper">
-                <div class="category-circle">
-                    <img src="https://img.icons8.com/ios/100/7a4988/basketball-player.png" alt="Olahraga">
-                </div>
-                <div class="category-text">Olahraga</div>
-            </div>
-            <div class="col-4 col-sm-3 col-md-2 category-circle-wrapper">
-                <div class="category-circle">
-                    <img src="https://img.icons8.com/ios/100/7a4988/theatre-mask.png" alt="Hiburan">
-                </div>
-                <div class="category-text">Hiburan</div>
-            </div>
-            <div class="col-4 col-sm-3 col-md-2 category-circle-wrapper">
-                <div class="category-circle">
-                    <img src="https://img.icons8.com/ios/100/7a4988/training.png" alt="Seminar">
-                </div>
-                <div class="category-text">Seminar</div>
+            <div class="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 space-x-2">
+                <template x-for="(slide, index) in slides" :key="index">
+                    <button class="w-3 h-3 rounded-full transition-colors duration-300" :class="activeSlide === index ? 'bg-purplePrimary' : 'bg-gray-400/60'" @click="activeSlide = index"></button>
+                </template>
             </div>
         </div>
-        <hr class="mt-4 bg-secondary opacity-25">
-    </div>
+    </section>
 
-    <div class="container mb-5">
-        <h2 class="section-title-left">ACARA YANG SEDANG BERLANGSUNG</h2>
+    <section class="container mx-auto px-4 text-center my-12">
+        <p class="text-sm font-bold tracking-widest text-gray-700 uppercase mb-6">KATEGORI ACARA</p>
+        <div class="flex flex-wrap justify-center gap-8 md:gap-16">
+            <div class="flex flex-col items-center">
+                <div class="w-28 h-28 border-2 border-purplePrimary rounded-full flex items-center justify-center bg-white shadow-sm hover:scale-105 transition-transform duration-200 cursor-pointer">
+                    <i class="fa-solid fa-basketball text-4xl text-purplePrimary"></i>
+                </div>
+                <span class="text-sm font-medium text-gray-700 mt-3">Olahraga</span>
+            </div>
+            <div class="flex flex-col items-center">
+                <div class="w-28 h-28 border-2 border-purplePrimary rounded-full flex items-center justify-center bg-white shadow-sm hover:scale-105 transition-transform duration-200 cursor-pointer">
+                    <i class="fa-solid fa-masks-theater text-4xl text-purplePrimary"></i>
+                </div>
+                <span class="text-sm font-medium text-gray-700 mt-3">Hiburan</span>
+            </div>
+            <div class="flex flex-col items-center">
+                <div class="w-28 h-28 border-2 border-purplePrimary rounded-full flex items-center justify-center bg-white shadow-sm hover:scale-105 transition-transform duration-200 cursor-pointer">
+                    <i class="fa-solid fa-chalkboard-user text-4xl text-purplePrimary"></i>
+                </div>
+                <span class="text-sm font-medium text-gray-700 mt-3">Seminar</span>
+            </div>
+        </div>
+        <hr class="mt-12 border-gray-200 opacity-60">
+    </section>
+
+    <section class="container mx-auto px-4 mb-16">
+        <h2 class="text-2xl md:text-3xl font-bold text-black mt-10 mb-6">ACARA YANG SEDANG BERLANGSUNG</h2>
         
-        <div class="row g-4">
-            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                <div class="event-card shadow">
-                    <img src="https://via.placeholder.com/300x420/7a4988/ffffff?text=SPORT+EVENT" class="event-img" alt="Sport Event">
-                    <div class="event-info-overlay">
-                        <div class="event-date-time">20 MEI , 16:00</div>
-                        <p class="event-location"><i class="fa-solid fa-location-dot"></i>LAPANGAN POLITEKNIK</p>
-                    </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div class="relative rounded-lg overflow-hidden shadow-md group hover:-translate-y-1 transition-transform duration-300">
+                <img src="https://via.placeholder.com/300x420/7a4988/ffffff?text=SPORT+EVENT" class="w-full h-[380px] object-cover" alt="Sport Event">
+                <div class="absolute bottom-0 left-0 right-0 bg-black text-white p-3 text-center">
+                    <div class="text-xs font-bold uppercase mb-1">20 MEI , 16:00</div>
+                    <p class="text-[11px] uppercase truncate"><i class="fa-solid fa-location-dot me-1"></i>LAPANGAN POLITEKNIK</p>
                 </div>
             </div>
 
-            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                <div class="event-card shadow">
-                    <img src="https://via.placeholder.com/300x420/9e7bb5/ffffff?text=FESTIVAL+BAND" class="event-img" alt="Festival Band">
-                    <div class="event-info-overlay">
-                        <div class="event-date-time">28 MEI , 13:00</div>
-                        <p class="event-location"><i class="fa-solid fa-location-dot"></i>DEPAN TECHNO</p>
-                    </div>
+            <div class="relative rounded-lg overflow-hidden shadow-md group hover:-translate-y-1 transition-transform duration-300">
+                <img src="https://via.placeholder.com/300x420/9e7bb5/ffffff?text=FESTIVAL+BAND" class="w-full h-[380px] object-cover" alt="Festival Band">
+                <div class="absolute bottom-0 left-0 right-0 bg-black text-white p-3 text-center">
+                    <div class="text-xs font-bold uppercase mb-1">28 MEI , 13:00</div>
+                    <p class="text-[11px] uppercase truncate"><i class="fa-solid fa-location-dot me-1"></i>DEPAN TECHNO</p>
                 </div>
             </div>
 
-            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                <div class="event-card shadow">
-                    <img src="https://via.placeholder.com/300x420/333333/ffffff?text=AI+FORUM" class="event-img" alt="AI Forum">
-                    <div class="event-info-overlay">
-                        <div class="event-date-time">28 MEI , 13:00</div>
-                        <p class="event-location"><i class="fa-solid fa-location-dot"></i>GEDUNG UTAMA</p>
-                    </div>
+            <div class="relative rounded-lg overflow-hidden shadow-md group hover:-translate-y-1 transition-transform duration-300">
+                <img src="https://via.placeholder.com/300x420/333333/ffffff?text=AI+FORUM" class="w-full h-[380px] object-cover" alt="AI Forum">
+                <div class="absolute bottom-0 left-0 right-0 bg-black text-white p-3 text-center">
+                    <div class="text-xs font-bold uppercase mb-1">28 MEI , 13:00</div>
+                    <p class="text-[11px] uppercase truncate"><i class="fa-solid fa-location-dot me-1"></i>GEDUNG UTAMA</p>
                 </div>
             </div>
 
-            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                <div class="event-card shadow">
-                    <img src="https://via.placeholder.com/300x420/7a4988/ffffff?text=FUTSAL+CHAMP" class="event-img" alt="Futsal Kampus">
-                    <div class="event-info-overlay">
-                        <div class="event-date-time">30 MEI , 08:00</div>
-                        <p class="event-location"><i class="fa-solid fa-location-dot"></i>LAPANGAN POLITEKNIK</p>
-                    </div>
+            <div class="relative rounded-lg overflow-hidden shadow-md group hover:-translate-y-1 transition-transform duration-300">
+                <img src="https://via.placeholder.com/300x420/7a4988/ffffff?text=FUTSAL+CHAMP" class="w-full h-[380px] object-cover" alt="Futsal Kampus">
+                <div class="absolute bottom-0 left-0 right-0 bg-black text-white p-3 text-center">
+                    <div class="text-xs font-bold uppercase mb-1">30 MEI , 08:00</div>
+                    <p class="text-[11px] uppercase truncate"><i class="fa-solid fa-location-dot me-1"></i>LAPANGAN POLITEKNIK</p>
                 </div>
             </div>
         </div>
 
-        <div class="text-center mt-5">
-            <a href="#" class="btn-action-purple shadow mb-4">Lihat Semua Acara</a>
-            <div class="info-text-contact mt-2 text-muted mb-3">
+        <div class="text-center mt-12">
+            <a href="#" class="bg-purplePrimary text-white text-sm font-bold px-8 py-2.5 rounded-lg shadow hover:bg-purpleAccent transition-colors inline-block mb-4">Lihat Semua Acara</a>
+            <div class="text-sm text-gray-600 max-w-lg mx-auto leading-relaxed mb-3 mt-2">
                 Ingin membuat acara atau kegiatan baru? hubungi admin untuk informasi lebih lanjut melalui kontak kami
             </div>
-            <a href="#" class="btn-action-purple shadow px-4">Kontak kami</a>
+            <a href="#" class="bg-purplePrimary text-white text-sm font-bold px-6 py-2.5 rounded-lg shadow hover:bg-purpleAccent transition-colors inline-block">Kontak kami</a>
         </div>
-    </div>
+    </section>
 
-    <footer class="master-footer">
-        <div class="container">
-            <div class="row g-4">
-                <div class="col-12 col-md-3 footer-logo-side">
-                    <img src="https://via.placeholder.com/130x40/ffffff/7a4988?text=EventTicket" alt="Logo Bottom">
-                    <p>Event&Ticketing adalah platform untuk menemukan dan memesan tiket event terbaik dengan mudah dan cepat.</p>
+    <footer class="bg-purpleDark text-white pt-12 pb-6 text-sm">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="text-center md:text-left">
+                    <h4 class="text-xl font-bold text-white flex items-center justify-center md:justify-start">
+                        <i class="fa-solid fa-ticket-simple me-2"></i>EventTicket
+                    </h4>
+                    <p class="text-purpleHover text-xs leading-relaxed mt-3">
+                        Event&Ticketing adalah platform terbaik untuk menemukan, memantau, dan memesan tiket berbagai kegiatan kampus dengan mudah.
+                    </p>
                 </div>
                 
-                <div class="col-6 col-md-3">
-                    <div class="footer-column-title">NAVIGASI</div>
-                    <ul class="footer-links-list">
-                        <li><a href="#">Beranda</a></li>
-                        <li><a href="#">Acara</a></li>
-                        <li><a href="#">Tentang Kami</a></li>
-                        <li><a href="#">Kontak Kami</a></li>
+                <div class="text-center md:text-left">
+                    <div class="text-sm font-bold tracking-wider text-white uppercase mb-4">NAVIGASI</div>
+                    <ul class="space-y-2 text-purpleHover text-xs">
+                        <li><a href="#" class="hover:text-white transition-colors">Beranda</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Acara</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Tentang Kami</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Kontak Kami</a></li>
                     </ul>
                 </div>
 
-                <div class="col-6 col-md-3">
-                    <div class="footer-column-title">KATEGORI</div>
-                    <ul class="footer-links-list">
-                        <li><a href="#">Hiburan</a></li>
-                        <li><a href="#">Olahraga</a></li>
-                        <li><a href="#">Seminar</a></li>
+                <div class="text-center md:text-left">
+                    <div class="text-sm font-bold tracking-wider text-white uppercase mb-4">KATEGORI</div>
+                    <ul class="space-y-2 text-purpleHover text-xs">
+                        <li><a href="#" class="hover:text-white transition-colors">Hiburan</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Olahraga</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Seminar</a></li>
                     </ul>
                 </div>
 
-                <div class="col-12 col-md-3 footer-contact-info">
-                    <div class="footer-column-title">HUBUNGI KAMI</div>
-                    <p><i class="fa-regular fa-envelope"></i> Jesinaaurora@gmail.com</p>
-                    <p><i class="fa-solid fa-phone"></i> +62 895 3128 7505</p>
+                <div class="text-center md:text-left text-purpleHover text-xs space-y-2">
+                    <div class="text-sm font-bold tracking-wider text-white uppercase mb-4">HUBUNGI KAMI</div>
+                    <p class="flex items-center justify-center md:justify-start"><i class="fa-regular fa-envelope w-5 mr-1"></i> Jesinaaurora@gmail.com</p>
+                    <p class="flex items-center justify-center md:justify-start"><i class="fa-solid fa-phone w-5 mr-1"></i> +62 895 3128 7505</p>
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-12 text-center footer-bottom-copyright">
-                    &copy; 2026 Event Ticketing System | All Rights Reserved
-                </div>
+            <div class="border-t border-white/10 mt-10 pt-5 text-center text-xs text-purpleHover">
+                &copy; 2026 Event Tiketing System | All Rights Reserved
             </div>
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
