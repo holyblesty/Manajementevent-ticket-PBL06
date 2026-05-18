@@ -13,10 +13,10 @@ use App\Http\Controllers\Admin\StatistikController;
 */
 
 // =====================================================
-// HALAMAN AWAL (Diarahkan ke Dashboard Pengunjung)
+// HALAMAN AWAL (Membuka welcome.blade.php Pertama Kali)
 // =====================================================
 Route::get('/', function () {
-    return redirect()->route('pengunjung.dashboard');
+    return view('welcome'); // --> DIUBAH DI SINI: Langsung memuat halaman Beranda/Welcome
 });
 
 // =====================================================
@@ -56,10 +56,16 @@ Route::prefix('admin')->name('admin.')->group(function () {
     });
 });
 
-// Placeholder Login
+// =====================================================
+// AUTENTIKASI PLACEHOLDER (Biar tombol di Welcome aktif)
+// =====================================================
 Route::get('/login', function () {
     return "Halaman Login (Belum dibuat)";
 })->name('login');
+
+Route::get('/register', function () {
+    return "Halaman Registrasi (Belum dibuat)";
+})->name('register'); // --> DITAMBAHKAN: Mencegah eror saat diakses dari tombol welcome
 
 
 // =====================================================
