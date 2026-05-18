@@ -9,6 +9,23 @@ use Illuminate\Support\Facades\File;
 class AcaraController extends Controller
 {
     /**
+     * Menampilkan Dashboard Utama Admin beserta Daftar Event
+     */
+    public function index()
+    {
+        // Ambil semua data event dari dummy session
+        $events = $this->getDummyEvents();
+        
+        // Ubah array data event menjadi object agar mudah diakses di blade menggunakan panah (->)
+        $eventsObject = collect($events)->map(function ($event) {
+            return (object) $event;
+        });
+
+        // Lempar data ke view dashboard admin
+        return view('admin.dashboard', ['events' => $eventsObject]);
+    }
+
+    /**
      * Data Dummy Global
      */
     private function getDummyEvents()
@@ -94,7 +111,6 @@ class AcaraController extends Controller
 
     // --- PROFILE ---
     public function profile() {
-        // PERBAIKAN: Selalu prioritaskan session untuk tampilan profil
         $user = (object) [
             'name'  => session('admin_name', 'Vivian Sarah Diva Alisianoi'),
             'email' => 'vivian_018@student.polibatam.ac.id',
@@ -109,12 +125,9 @@ class AcaraController extends Controller
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
-        // 1. Simpan Nama
         session(['admin_name' => $request->name]);
 
-        // 2. Logic Foto
         if ($request->hasFile('foto')) {
-            // Hapus foto lama dari storage jika ada (biar gak numpuk sampah file)
             $oldFoto = session('admin_foto');
             if ($oldFoto && $oldFoto !== 'profile_default.jpg') {
                 $oldPath = public_path('images/' . $oldFoto);
@@ -123,15 +136,12 @@ class AcaraController extends Controller
                 }
             }
 
-            // Upload foto baru
             $imageName = 'profile_' . time() . '.' . $request->foto->extension();
             $request->foto->move(public_path('images'), $imageName);
             
-            // Simpan nama file baru ke Session
             session(['admin_foto' => $imageName]);
         }
 
-        // 3. PAKSA SIMPAN SESSION
         session()->save();
 
         return redirect()->back()->with('success', 'Profil kamu berhasil diperbarui!');
