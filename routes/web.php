@@ -37,69 +37,84 @@ Route::middleware('auth')->group(function () {
 });
 
 // =====================================================
-// ADMIN AREA (Hanya Bisa Diakses Jika Sudah Login)
+// ADMIN AREA (Hanya Bisa Diakses Jika Sudah Login & Role = Admin)
 // =====================================================
-Route::prefix('admin')->name('admin.')->group(function () {
+// Kunci 1: Wajib Login ('auth')
+Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     
-    // 1. Dashboard Utama (Ditumpuk langsung ke AcaraController agar data $events langsung tampil otomatis)
-    Route::get('/dashboard', [AcaraController::class, 'index'])->name('dashboard');
+    // Kunci 2: Harus punya role admin, kalau bukan dilempar balik
+    Route::middleware(function ($request, $next) {
+        if (auth()->user()->role !== 'admin') {
+            return redirect()->route('home')->with('error', 'Anda tidak memiliki akses ke halaman Admin.');
+        }
+        return $next($request);
+    })->group(function () {
 
-    // 1b. Statistik
-    Route::get('/statistik', [StatistikController::class, 'index'])->name('statistik');
+        // 1. Dashboard Utama
+        Route::get('/dashboard', [AcaraController::class, 'index'])->name('dashboard');
 
-    // 2. Resource Acara (Handle: index, create, store, edit, update, destroy)
-    Route::resource('acara', AcaraController::class);
+        // 1b. Statistik
+        Route::get('/statistik', [StatistikController::class, 'index'])->name('statistik');
 
-    // 3. Custom Route untuk Tiket
-    Route::get('/acara/{id}/tiket', [AcaraController::class, 'tiket'])->name('acara.tiket');
-    Route::put('/acara/{id}/tiket/update', [AcaraController::class, 'updateTiket'])->name('acara.tiket.update');
+        // 2. Resource Acara
+        Route::resource('acara', AcaraController::class);
 
-    // 4. Route Profile Admin
-    Route::get('/profile', [AcaraController::class, 'profile'])->name('profile');
-    Route::put('/profile/update', [AcaraController::class, 'updateProfile'])->name('profile.update');
+        // 3. Custom Route untuk Tiket
+        Route::get('/acara/{id}/tiket', [AcaraController::class, 'tiket'])->name('acara.tiket');
+        Route::put('/acara/{id}/tiket/update', [AcaraController::class, 'updateTiket'])->name('acara.tiket.update');
 
-    // 5. Route Kelola Peserta & Check-In (VERSI MASTER-DETAIL)
-    Route::prefix('peserta')->name('peserta.')->group(function () {
-        
-        // Halaman List Event
-        Route::get('/', [PesertaController::class, 'index'])->name('index');
+        // 4. Route Profile Admin
+        Route::get('/profile', [AcaraController::class, 'profile'])->name('profile');
+        Route::put('/profile/update', [AcaraController::class, 'updateProfile'])->name('profile.update');
 
-        // Detail Peserta
-        Route::get('/detail/{id}', [PesertaController::class, 'detail'])->name('detail');
-        
-        // Route Check-in
-        Route::post('/checkin-individu/{eventId}/{regId}', [PesertaController::class, 'checkInIndividu'])->name('checkin_individu');
-        Route::post('/checkin-anggota/{eventId}/{regId}/{memberIndex}', [PesertaController::class, 'checkInAnggota'])->name('checkin_anggota');
+        // 5. Route Kelola Peserta & Check-In (VERSI MASTER-DETAIL)
+        Route::prefix('peserta')->name('peserta.')->group(function () {
+            Route::get('/', [PesertaController::class, 'index'])->name('index');
+            Route::get('/detail/{id}', [PesertaController::class, 'detail'])->name('detail');
+            Route::post('/checkin-individu/{eventId}/{regId}', [PesertaController::class, 'checkInIndividu'])->name('checkin_individu');
+            Route::post('/checkin-anggota/{eventId}/{regId}/{memberIndex}', [PesertaController::class, 'checkInAnggota'])->name('checkin_anggota');
+        });
+
     });
 });
 
 // =====================================================
-// PENGUNJUNG AREA (Akses Halaman Pengunjung)
+// PENGUNJUNG AREA (Hanya Bisa Diakses Jika Sudah Login & Role = Pengunjung)
 // =====================================================
-Route::prefix('pengunjung')->name('pengunjung.')->group(function () {
+// Kunci 1: Wajib Login ('auth')
+Route::middleware('auth')->prefix('pengunjung')->name('pengunjung.')->group(function () {
 
-    Route::get('/dashboard', function () {
-        return view('Pengunjung.dashboard');
-    })->name('dashboard');
+    // Kunci 2: Harus punya role pengunjung
+    Route::middleware(function ($request, $next) {
+        if (auth()->user()->role !== 'pengunjung') {
+            return redirect()->route('admin.dashboard');
+        }
+        return $next($request);
+    })->group(function () {
 
-    Route::get('/riwayat', function () {
-        return view('Pengunjung.riwayat');
-    })->name('riwayat');
+        Route::get('/dashboard', function () {
+            return view('Pengunjung.dashboard');
+        })->name('dashboard');
 
-    Route::get('/profil', function () {
-        return view('Pengunjung.profil');
-    })->name('profil');
+        Route::get('/riwayat', function () {
+            return view('Pengunjung.riwayat');
+        })->name('riwayat');
 
-    Route::get('/about', function () {
-        return view('Pengunjung.about');
-    })->name('about');
+        Route::get('/profil', function () {
+            return view('Pengunjung.profil');
+        })->name('profil');
 
-    Route::get('/contact', function () {
-        return view('Pengunjung.contact');
-    })->name('contact');
+        Route::get('/about', function () {
+            return view('Pengunjung.about');
+        })->name('about');
 
-    Route::get('/pembelian-tiket', function () {
-        return view('Pengunjung.pembelian-tiket');
-    })->name('pembelian');
+        Route::get('/contact', function () {
+            return view('Pengunjung.contact');
+        })->name('contact');
 
+        Route::get('/pembelian-tiket', function () {
+            return view('Pengunjung.pembelian-tiket');
+        })->name('pembelian');
+
+    });
 });
