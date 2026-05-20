@@ -11,7 +11,18 @@ class Event extends Model
 
     protected $table = 'events';
     protected $primaryKey = 'id_event';
-    protected $fillable = ['judul', 'deskripsi', 'tanggal', 'jam', 'lokasi', 'kategori', 'poster', 'status_event', 'id_admin', 'id_kategori'];
+    protected $fillable = [
+        'judul', 
+        'deskripsi', 
+        'tanggal', 
+        'jam', 
+        'lokasi', 
+        'kategori', 
+        'poster', 
+        'status_event', 
+        'id_admin', 
+        'id_kategori'
+    ];
 
     // Relasi ke Kategori
     public function kategori()
@@ -23,5 +34,14 @@ class Event extends Model
     public function tikets()
     {
         return $this->hasMany(Tiket::class, 'id_event', 'id_event');
+    }
+
+    /**
+     * ADDED: Relasi ke tabel Registrasi Pendaftaran
+     * Satu event bisa memiliki banyak data pendaftaran (baik tim maupun individu)
+     */
+    public function registrations()
+    {
+        return $this->hasMany(Registration::class, 'id_event', 'id_event');
     }
 }
