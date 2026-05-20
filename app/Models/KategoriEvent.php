@@ -1,0 +1,21 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class KategoriEvent extends Model
+{
+    use HasFactory;
+
+    protected $table = 'kategori_events';
+    protected $primaryKey = 'id_kategori';
+    protected $fillable = ['nama_kategori'];
+
+    // Relasi: Satu kategori bisa punya banyak event
+    public function events()
+    {
+        return $this->hasMany(Event::class, 'id_kategori', 'id_kategori');
+    }
+}

@@ -21,12 +21,6 @@
 </head>
 <body style="margin: 0; min-height: 100vh; background: linear-gradient(-45deg, #2b1238, #7a4988, #4b1d52, #9e7bb5); background-size: 400% 400%; animation: swush 10s ease infinite;" class="flex flex-col items-center py-10 font-sans antialiased text-gray-900">
 
-    <div class="w-full max-w-[1200px] mb-4 px-4 text-left">
-        <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center text-white font-bold text-sm hover:opacity-80 transition no-underline">
-            <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-            Kembali ke Dashboard
-        </a>
-    </div>
 
     <div class="bg-white w-full max-w-[1200px] rounded-[2.5rem] shadow-2xl overflow-hidden mb-10 mx-4 border border-gray-100">
         

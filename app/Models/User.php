@@ -19,8 +19,12 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'username',   // Tambahan sesuai ERD kamu
         'email',
         'password',
+        'no_hp',      // Tambahan sesuai ERD kamu
+        'alamat',     // Tambahan sesuai ERD kamu
+        'role',       // Tambahan sesuai ERD kamu (admin / pengunjung)
     ];
 
     /**
@@ -44,5 +48,11 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    // Relasi tambahan: Pengunjung bisa memiliki banyak pesanan
+    public function pesanans()
+    {
+        return $this->hasMany(Pesanan::class, 'id_pengunjung', 'id');
     }
 }

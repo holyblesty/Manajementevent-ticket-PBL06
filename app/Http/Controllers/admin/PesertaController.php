@@ -9,8 +9,8 @@ class PesertaController extends Controller
 {
     private function getDataRegistrasi()
     {
-        // Session key v15 agar data ter-refresh
-        if (!session()->has('data_peserta_final_v15')) {
+        // Dinaikkan ke v27 agar session lama (v26) ter-reset otomatis di browser dan memuat data lokasi baru
+        if (!session()->has('data_peserta_final_v28')) {
             
             $daftarNama = [
                 'Budi', 'Andi', 'Cahyo', 'Dedi', 'Eko', 'Fajar', 'Gani', 'Hadi', 'Indra', 'Joko', 'Kiki',
@@ -18,69 +18,131 @@ class PesertaController extends Controller
                 'Viko', 'Wawan', 'Xavi', 'Yogi', 'Zaki', 'Aris', 'Bagas', 'Candra', 'Dika', 'Erik',
                 'Faisal', 'Gerry', 'Hasan', 'Ilham', 'Joni', 'Kevin', 'Lian', 'Miko', 'Nanda', 'Opik',
                 'Pandu', 'Qadafi', 'Reza', 'Samsul', 'Tegar', 'Ucup', 'Vino', 'Wendi', 'Xander', 'Yuda',
-                'Zaid', 'Ahmad', 'Bambang', 'Cepi', 'Dimas', 'Eris', 'Farhan', 'Gilang', 'Hilman', 'Iqbal',
+                'Zaki', 'Ahmad', 'Bambang', 'Cepi', 'Dimas', 'Eris', 'Farhan', 'Gilang', 'Hilman', 'Iqbal',
                 'Juna', 'Kurnia', 'Lukas', 'Maulana', 'Naufal', 'Obet', 'Panca', 'Qomar', 'Raka', 'Satria',
                 'Taufik', 'Udin', 'Vian', 'Wahyu', 'Xena', 'Yanto', 'Zulfikar', 'Agus', 'Baron'
             ];
 
-            $generateAnggota = function($prefix, $count) use ($daftarNama) {
+            // Generator anggota TIM (Email, Instansi, dan Kontak hanya di-generate untuk Ketua / Indeks 0)
+            $generateAnggota = function($prefix, $count, $kontak = null) use ($daftarNama) {
                 $anggota = [];
                 for ($i = 0; $i < $count; $i++) {
+                    $isKetua = ($i === 0);
+                    $firstName = $daftarNama[array_rand($daftarNama)];
+                    
                     $anggota[] = [
-                        'nama' => $daftarNama[array_rand($daftarNama)] . ' ' . chr(65 + $i), 
+                        'nama' => $firstName . ' ' . chr(65 + $i), 
                         'kode' => $prefix . '-' . ($i + 1), 
-                        'hadir' => false
+                        'hadir' => false,
+                        'email' => $isKetua ? strtolower($firstName) . rand(10, 99) . '@gmail.com' : null,
+                        'instansi' => $isKetua ? 'Politeknik Negeri Batam' : null,
+                        'kontak' => $isKetua ? $kontak : null
                     ];
                 }
                 return $anggota;
             };
 
-            // Data Futsal
+            // Data Futsal (Tipe: Tim)
             $futsalTeams = ['SHAOLIN SOCCER' => 'FTSL-01', 'TENDANGAN SI MADUN' => 'FTSL-02', 'CAPTAIN TSUBASA' => 'FTSL-03', 'REAL MADRID' => 'FTSL-04', 'DURIAN RUNTUH' => 'FTSL-05'];
             $futsalPendaftar = [];
             $id = 301;
             foreach ($futsalTeams as $nama => $prefix) {
-                $futsalPendaftar[$id++] = ['nama_tim' => $nama, 'kontak' => '0812345678', 'hadir' => false, 'anggota' => $generateAnggota($prefix, 11)];
+                $kontakTim = '0812345678' . rand(10, 99);
+                $futsalPendaftar[$id++] = [
+                    'nama_tim' => $nama, 
+                    'kontak' => $kontakTim, 
+                    'hadir' => false, 
+                    'anggota' => $generateAnggota($prefix, 11, $kontakTim)
+                ];
             }
 
-            // Data Basket
+            // Data Basket (Tipe: Tim)
             $basketPendaftar = [];
             $basketTeams = ['Slam Dunk', 'Haikyuu', 'Kuroko no Basket', 'Blue Lock', 'Ahiru no Sora'];
             foreach ($basketTeams as $nama) {
-                $basketPendaftar[$id++] = ['nama_tim' => $nama, 'kontak' => '0812345', 'hadir' => false, 'anggota' => $generateAnggota('BSKT', 5)];
+                $kontakTim = '0812345' . rand(100, 999);
+                $basketPendaftar[$id++] = [
+                    'nama_tim' => $nama, 
+                    'kontak' => $kontakTim, 
+                    'hadir' => false, 
+                    'anggota' => $generateAnggota('BSKT', 5, $kontakTim)
+                ];
             }
 
-            // Data Festival Musik
+            // Data Festival Musik (Tipe: Individu)
             $musikPendaftar = [];
             for ($i = 0; $i < 10; $i++) {
+                $namaPeserta = $daftarNama[array_rand($daftarNama)];
                 $musikPendaftar[201 + $i] = [
-                    'nama' => $daftarNama[array_rand($daftarNama)],
+                    'nama' => $namaPeserta,
                     'kode' => 'MSK-' . ($i + 1),
+                    'email' => strtolower($namaPeserta) . rand(10, 99) . '@gmail.com',
+                    'instansi' => 'Politeknik Negeri Batam',
                     'kontak' => '0812' . rand(111111, 999999),
                     'hadir' => false
                 ];
             }
 
-            // Data Seminar AI
+            // Data Seminar AI (Tipe: Individu)
             $seminarPendaftar = [];
             for ($i = 0; $i < 20; $i++) {
+                $namaPeserta = $daftarNama[array_rand($daftarNama)];
                 $seminarPendaftar[401 + $i] = [
-                    'nama' => $daftarNama[array_rand($daftarNama)],
+                    'nama' => $namaPeserta,
                     'kode' => 'AI-' . ($i + 1),
+                    'email' => strtolower($namaPeserta) . rand(10, 99) . '@gmail.com',
+                    'instansi' => 'Politeknik Negeri Batam',
                     'kontak' => '0812' . rand(111111, 999999),
                     'hadir' => (bool)rand(0, 1)
                 ];
             }
 
+            // DATA EVENT LENGKAP DENGAN 'LOKASI'
             $data = [
-                1 => ['judul' => 'Turnamen Basket Antar Mahasiswa', 'tipe' => 'tim', 'kategori' => 'Olahraga', 'tanggal' => '20 Mei 2026', 'kuota' => 5, 'poster' => 'basket.png', 'pendaftar' => $basketPendaftar],
-                2 => ['judul' => 'Festival Musik Kampus 2026', 'tipe' => 'individu', 'kategori' => 'Hiburan', 'tanggal' => '25 Mei 2026', 'kuota' => 500, 'poster' => 'musik.png', 'pendaftar' => $musikPendaftar],
-                3 => ['judul' => 'Turnamen Futsal Antar Mahasiswa', 'tipe' => 'tim', 'kategori' => 'Olahraga', 'tanggal' => '01 Juni 2026', 'kuota' => 32, 'poster' => 'futsal.jpg', 'pendaftar' => $futsalPendaftar],
-                4 => ['judul' => 'Seminar Nasional AI: Transformasi Digital', 'tipe' => 'individu', 'kategori' => 'Seminar', 'tanggal' => '10 Juni 2026', 'kuota' => 200, 'poster' => 'seminar.jpg', 'pendaftar' => $seminarPendaftar],
+                1 => [
+                    'judul' => 'Turnamen Basket Antar Mahasiswa', 
+                    'tipe' => 'tim', 
+                    'kategori' => 'Olahraga', 
+                    'tanggal' => '20-05-26', 
+                    'lokasi' => 'Lapangan Basket Politeknik Batam',
+                    'kuota' => 5, 
+                    'poster' => 'basket.png', 
+                    'pendaftar' => $basketPendaftar
+                ],
+                2 => [
+                    'judul' => 'Festival Musik Kampus 2026', 
+                    'tipe' => 'individu', 
+                    'kategori' => 'Hiburan', 
+                    'tanggal' => '30-05-26', 
+                    'lokasi' => 'Halaman Gedung Techno',
+                    'kuota' => 500, 
+                    'poster' => 'musik.png', 
+                    'pendaftar' => $musikPendaftar
+                ],
+                3 => [
+                    'judul' => 'Turnamen Futsal Antar Mahasiswa', 
+                    'tipe' => 'tim', 
+                    'kategori' => 'Olahraga', 
+                    'tanggal' => '09-06-26', 
+                    'lokasi' => 'Lapangan Futsal Politeknik Batam',
+                    'kuota' => 32, 
+                    'poster' => 'futsal.jpg', 
+                    'pendaftar' => $futsalPendaftar
+                ],
+                4 => [
+                    'judul' => 'Seminar Nasional AI: Transformasi Digital', 
+                    'tipe' => 'individu', 
+                    'kategori' => 'Seminar', 
+                    'tanggal' => '15-06-26', 
+                    'lokasi' => 'Lantai 2, Gedung Utama',
+                    'kuota' => 200, 
+                    'poster' => 'seminar.jpg', 
+                    'pendaftar' => $seminarPendaftar
+                ],
             ];
-            session(['data_peserta_final_v15' => $data]);
+            session(['data_peserta_final_v27' => $data]);
         }
-        return session('data_peserta_final_v15');
+        return session('data_peserta_final_v27');
     }
 
     private function getCalculatedStats($item)
@@ -142,7 +204,7 @@ class PesertaController extends Controller
             $pesan = $statusBaru ? 'Peserta berhasil di-check in.' : 'Check-in peserta dibatalkan.';
             $status = $statusBaru ? 'success' : 'warning';
             
-            session(['data_peserta_final_v15' => $data]);
+            session(['data_peserta_final_v27' => $data]);
             return redirect()->back()->with(['message' => $pesan, 'status' => $status]);
         }
         return redirect()->back();
@@ -157,7 +219,7 @@ class PesertaController extends Controller
             $pesan = $statusBaru ? 'Anggota berhasil di-check in.' : 'Check-in anggota dibatalkan.';
             $status = $statusBaru ? 'success' : 'warning';
             
-            session(['data_peserta_final_v15' => $data]);
+            session(['data_peserta_final_v27' => $data]);
             return redirect()->back()->with(['message' => $pesan, 'status' => $status]);
         }
         return redirect()->back();

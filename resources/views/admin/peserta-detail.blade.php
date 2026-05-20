@@ -26,10 +26,12 @@
             </div>
         @endif
 
-        {{-- HEADER --}}
+        {{-- HEADER (Sudah Dinamis Tanggal & Lokasi) --}}
         <div class="bg-[#7a4988] p-8 text-white border-b-4 border-[#24112e]">
             <h1 class="text-3xl font-black uppercase">{{ $selectedEvent['judul'] }}</h1>
-            <p class="text-purple-200 mt-2 font-medium">{{ $selectedEvent['tanggal'] }}</p>
+            <p class="text-purple-200 mt-2 font-medium">
+                {{ $selectedEvent['tanggal'] }} &middot; {{ $selectedEvent['lokasi'] ?? 'Politeknik Negeri Batam' }}
+            </p>
         </div>
 
         {{-- STATS BAR --}}
@@ -52,18 +54,63 @@
                         <details class="group">
                             <summary class="flex justify-between items-center p-6 cursor-pointer hover:bg-gray-50">
                                 <span class="font-black text-gray-800 uppercase text-lg">{{ $tim['nama_tim'] }}</span>
-                                <span class="text-sm font-black uppercase">Lihat Anggota ▼</span>
+                                <span class="text-sm font-black text-purple-700 uppercase group-open:hidden">Lihat Anggota ▼</span>
+                                <span class="text-sm font-black text-purple-700 uppercase hidden group-open:inline">Tutup Anggota ▲</span>
                             </summary>
+                            
                             <div class="px-6 pb-6 bg-gray-50">
                                 <table class="w-full">
-                                    <thead><tr class="bg-[#24112e] text-white uppercase text-xs"><th class="p-4 text-left">Nama</th><th class="p-4 text-left">Kode</th><th class="p-4 text-left">Status</th><th class="p-4 text-center">Aksi</th></tr></thead>
+                                    <thead>
+                                        <tr class="bg-[#24112e] text-white uppercase text-xs">
+                                            <th class="p-4 text-left">Nama Anggota</th>
+                                            <th class="p-4 text-left">Kode</th>
+                                            <th class="p-4 text-left">Status</th>
+                                            <th class="p-4 text-center">Aksi</th>
+                                        </tr>
+                                    </thead>
                                     <tbody class="bg-white">
                                         @foreach($tim['anggota'] as $i => $a)
-                                        <tr><td class="p-4">{{ $a['nama'] }}</td><td class="p-4"><span class="bg-pink-200 px-3 py-1 rounded font-bold">{{ $a['kode'] }}</span></td><td class="p-4 font-bold">{{ $a['hadir'] ? 'Hadir' : 'Belum' }}</td><td class="p-4 text-center">
-                                            <form action="{{ route('admin.peserta.checkin_anggota', [$id, $regId, $i]) }}" method="POST">
-                                                @csrf <button class="{{ $a['hadir'] ? 'bg-gray-600' : 'bg-red-600' }} text-white px-4 py-2 rounded text-xs font-bold">{{ $a['hadir'] ? 'Batalkan' : 'Tandai Hadir' }}</button>
-                                            </form>
-                                        </td></tr>
+                                        <tr class="border-b border-gray-100">
+                                            <td class="p-4">
+                                                <div class="flex flex-col">
+                                                    {{-- Nama Anggota --}}
+                                                    <span class="font-bold text-gray-800 flex items-center gap-2">
+                                                        {{ $a['nama'] }} 
+                                                        @if($i == 0) 
+                                                            <span class="text-xs bg-[#ebd9fc] text-[#6119b0] px-2 py-0.5 rounded font-black uppercase">Ketua</span> 
+                                                        @endif
+                                                    </span>
+                                                    
+                                                    {{-- Khusus Ketua (Index 0) yang menampilkan Email, Instansi, dan Kontak --}}
+                                                    @if($i == 0)
+                                                        @if(!empty($a['email']))
+                                                            <span class="text-xs text-gray-500 mt-1">📧 {{ $a['email'] }}</span>
+                                                        @endif
+                                                        @if(!empty($a['instansi']))
+                                                            <span class="text-xs text-gray-400">🏢 {{ $a['instansi'] }}</span>
+                                                        @endif
+                                                        @if(!empty($a['kontak']))
+                                                            <div class="flex items-center gap-2 mt-2">
+                                                                <span class="text-xs text-gray-700 font-bold">📞 {{ $a['kontak'] }}</span>
+                                                                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $a['kontak']) }}" target="_blank" class="bg-[#1ebd62] hover:bg-[#12c868] text-white font-bold text-[10px] px-2 py-0.5 rounded flex items-center gap-0.5 transition-all" title="Hubungi Ketua via WhatsApp">
+                                                                    💬 WA
+                                                                </a>
+                                                            </div>
+                                                        @endif
+                                                    @endif
+                                                </div>
+                                            </td>
+                                            <td class="p-4"><span class="bg-pink-200 px-3 py-1 rounded font-bold text-sm text-pink-800">{{ $a['kode'] }}</span></td>
+                                            <td class="p-4 font-bold text-sm {{ $a['hadir'] ? 'text-green-600' : 'text-red-600' }}">{{ $a['hadir'] ? 'Hadir' : 'Belum' }}</td>
+                                            <td class="p-4 text-center">
+                                                <form action="{{ route('admin.peserta.checkin_anggota', [$id, $regId, $i]) }}" method="POST">
+                                                    @csrf 
+                                                    <button class="{{ $a['hadir'] ? 'bg-gray-600 hover:bg-gray-700' : 'bg-[#7a4988] hover:bg-[#61346e]' }} text-white px-4 py-2 rounded text-xs font-bold transition-colors">
+                                                        {{ $a['hadir'] ? 'Batalkan' : 'Tandai Hadir' }}
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
                                         @endforeach
                                     </tbody>
                                 </table>
@@ -73,16 +120,47 @@
                 @endforeach
             @else
                 <table class="w-full">
-                    <thead><tr class="bg-[#24112e] text-white uppercase text-xs"><th class="p-5 text-left">Nama</th><th class="p-5 text-left">Kode</th><th class="p-5 text-left">Status</th><th class="p-5 text-center">Aksi</th></tr></thead>
+                    <thead>
+                        <tr class="bg-[#24112e] text-white uppercase text-xs">
+                            <th class="p-5 text-left">Nama & Profil</th>
+                            <th class="p-5 text-left">Kode</th>
+                            <th class="p-5 text-left">No. HP / WA</th>
+                            <th class="p-5 text-left">Status</th>
+                            <th class="p-5 text-center">Aksi</th>
+                        </tr>
+                    </thead>
                     <tbody class="divide-y divide-gray-200">
                         @foreach($selectedEvent['pendaftar'] as $regId => $p)
                         <tr>
-                            <td class="p-5 font-bold">{{ $p['nama'] }}</td>
-                            <td class="p-5"><span class="bg-pink-200 px-3 py-1 rounded font-bold">{{ $p['kode'] }}</span></td>
-                            <td class="p-5 font-bold">{{ $p['hadir'] ? 'Hadir' : 'Belum' }}</td>
+                            <td class="p-5">
+                                <div class="flex flex-col">
+                                    <span class="font-bold text-gray-800 text-base">{{ $p['nama'] }}</span>
+                                    {{-- Profil Lengkap Pengunjung Individu --}}
+                                    <span class="text-xs text-gray-500 mt-1">📧 {{ $p['email'] ?? 'peserta@gmail.com' }}</span>
+                                    <span class="text-xs text-gray-400">🏢 {{ $p['instansi'] ?? 'Politeknik Negeri Batam' }}</span>
+                                </div>
+                            </td>
+                            <td class="p-5"><span class="bg-pink-200 px-3 py-1 rounded font-bold text-sm text-pink-800">{{ $p['kode'] }}</span></td>
+                            <td class="p-5">
+                                {{-- Kontak Individu --}}
+                                @if(!empty($p['kontak']))
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-gray-700 font-medium text-sm">{{ $p['kontak'] }}</span>
+                                        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $p['kontak']) }}" target="_blank" class="bg-[#1ebd62] hover:bg-[#12c868] text-white px-2 py-1 rounded text-xs font-bold flex items-center gap-1 transition-colors" title="Hubungi via WhatsApp">
+                                            💬 WA
+                                        </a>
+                                    </div>
+                                @else
+                                    <span class="text-gray-400 italic text-sm">-</span>
+                                @endif
+                            </td>
+                            <td class="p-5 font-bold text-sm {{ $p['hadir'] ? 'text-green-600' : 'text-red-600' }}">{{ $p['hadir'] ? 'Hadir' : 'Belum' }}</td>
                             <td class="p-5 text-center">
                                 <form action="{{ route('admin.peserta.checkin_individu', [$id, $regId]) }}" method="POST">
-                                    @csrf <button class="{{ $p['hadir'] ? 'bg-gray-600' : 'bg-red-600' }} text-white px-4 py-2 rounded text-xs font-bold">{{ $p['hadir'] ? 'Batalkan' : 'Tandai Hadir' }}</button>
+                                    @csrf 
+                                    <button class="{{ $p['hadir'] ? 'bg-gray-600 hover:bg-gray-700' : 'bg-[#7a4988] hover:bg-[#61346e]' }} text-white px-4 py-2 rounded text-xs font-bold transition-colors">
+                                        {{ $p['hadir'] ? 'Batalkan' : 'Tandai Hadir' }}
+                                    </button>
                                 </form>
                             </td>
                         </tr>
@@ -91,6 +169,75 @@
                 </table>
             @endif
         </div>
+
+        {{-- PAGINATION --}}
+        <div class="bg-white px-10 py-8 flex justify-center border-t border-gray-100">
+            @include('components.pagination')
+        </div>
     </div>
+{{-- SCRIPT PENCARIAN DINAMIS --}}
+    <script>
+        document.getElementById('searchInput').addEventListener('keyup', function() {
+            let filter = this.value.toLowerCase();
+            let isTeamEvent = @json($selectedEvent['tipe'] === 'tim');
+
+            if (isTeamEvent) {
+                // --- PENCARIAN UNTUK TIPE TIM ---
+                let teamBlocks = document.querySelectorAll('#participantList > div');
+
+                teamBlocks.forEach(block => {
+                    let teamName = block.querySelector('summary span').textContent.toLowerCase();
+                    let members = block.querySelectorAll('tbody tr');
+                    let teamHasMatch = false;
+
+                    // Cek nama tim terlebih dahulu
+                    if (teamName.includes(filter)) {
+                        teamHasMatch = true;
+                    }
+
+                    // Cek tiap anggota di dalam tim
+                    members.forEach(row => {
+                        let memberName = row.cells[0].textContent.toLowerCase();
+                        let memberCode = row.cells[1].textContent.toLowerCase();
+
+                        if (memberName.includes(filter) || memberCode.includes(filter)) {
+                            row.style.display = ""; // Tampilkan baris anggota yang cocok
+                            teamHasMatch = true;
+                        } else {
+                            row.style.display = "none"; // Sembunyikan baris anggota yang tidak cocok
+                        }
+                    });
+
+                    // Tampilkan atau sembunyikan seluruh blok Tim berdasarkan hasil pencarian
+                    if (teamHasMatch) {
+                        block.style.display = "";
+                        // Otomatis buka accordion details jika filter sedang aktif agar terlihat anggotanya
+                        if (filter !== "") {
+                            block.querySelector('details').setAttribute('open', 'true');
+                        } else {
+                            block.querySelector('details').removeAttribute('open');
+                        }
+                    } else {
+                        block.style.display = "none";
+                    }
+                });
+            } else {
+                // --- PENCARIAN UNTUK TIPE INDIVIDU ---
+                let rows = document.querySelectorAll('#participantList tbody tr');
+
+                rows.forEach(row => {
+                    let nameAndProfile = row.cells[0].textContent.toLowerCase();
+                    let code = row.cells[1].textContent.toLowerCase();
+                    let phone = row.cells[2] ? row.cells[2].textContent.toLowerCase() : '';
+
+                    if (nameAndProfile.includes(filter) || code.includes(filter) || phone.includes(filter)) {
+                        row.style.display = ""; // Tampilkan baris yang cocok
+                    } else {
+                        row.style.display = "none"; // Sembunyikan yang tidak cocok
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
