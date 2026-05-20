@@ -44,7 +44,6 @@
     class="flex flex-col items-center py-10 font-sans antialiased text-gray-900"
 >
 
-
     <div class="bg-white w-full max-w-[850px] rounded-3xl shadow-2xl overflow-hidden mb-10 mx-4 border border-gray-100">
         
         <div class="bg-[#24112e] p-8 text-white border-b-4 border-[#7a4988]">
@@ -52,7 +51,7 @@
             <p class="text-xs text-[#be93d4] font-bold mt-1 uppercase tracking-widest">{{ $event->judul }}</p>
         </div>
 
-        <form action="{{ route('admin.acara.tiket.update', $event->id) }}" method="POST" enctype="multipart/form-data" class="p-8">
+        <form action="{{ route('admin.acara.tiket.update', $event->id_event) }}" method="POST" enctype="multipart/form-data" class="p-8">
             @csrf
             @method('PUT')
 
@@ -69,9 +68,9 @@
                     </div>
                 </div>
                 <div class="text-4xl font-black text-[#24112e]">
-                    <span id="display_total">{{ $event->kapasitas }}</span> <span class="text-xs text-gray-400 font-bold uppercase">Org</span>
+                    <span id="display_total">{{ $event->kapasitas ?? 0 }}</span> <span class="text-xs text-gray-400 font-bold uppercase">Org</span>
                 </div>
-                <input type="hidden" name="kapasitas" id="input_total" value="{{ $event->kapasitas }}">
+                <input type="hidden" name="kapasitas" id="input_total" value="{{ $event->kapasitas ?? 0 }}">
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
@@ -126,13 +125,13 @@
                         <label class="block text-[9px] font-black uppercase text-gray-400 mb-2 tracking-widest">Harga Per Tiket</label>
                         <div class="relative flex items-center">
                             <span class="absolute left-4 text-xs text-[#be93d4] font-black">Rp</span>
-                            <input type="number" name="tiket[{{$key}}][harga]" value="{{ $event->tiket[$key]->harga ?? 0 }}" min="0" 
+                            <input type="number" name="tiket[{{$key}}][harga]" value="{{ isset($event->tiket[$key]) ? $event->tiket[$key]->harga : 0 }}" min="0" 
                                    class="w-full pl-10 pr-4 py-3 border-2 border-gray-100 rounded-xl text-xs font-black text-gray-800 outline-none focus:border-[#7a4988] transition-all">
                         </div>
                     </div>
                     <div>
                         <label class="block text-[9px] font-black uppercase text-gray-400 mb-2 tracking-widest">Kuota</label>
-                        <input type="number" name="tiket[{{$key}}][kuota]" value="{{ $event->tiket[$key]->kuota ?? 0 }}" min="0"
+                        <input type="number" name="tiket[{{$key}}][kuota]" value="{{ isset($event->tiket[$key]) ? $event->tiket[$key]->kuota : 0 }}" min="0"
                                class="kuota-input w-full p-3 border-2 border-[#7a4988] bg-white rounded-xl text-sm font-black text-center text-[#7a4988] outline-none focus:ring-4 focus:ring-purple-100 transition-all" 
                                oninput="updateTotal()">
                     </div>

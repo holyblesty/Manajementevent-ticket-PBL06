@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\AcaraController;
 use App\Http\Controllers\Admin\PesertaController;
 use App\Http\Controllers\Admin\StatistikController;
@@ -12,7 +13,7 @@ use App\Http\Controllers\Admin\StatistikController;
 |--------------------------------------------------------------------------
 */
 
-// Halaman awal langsung ke dashboard
+// Halaman awal langsung ke dashboard / welcome
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
@@ -20,6 +21,7 @@ Route::get('/', function () {
 // =====================================================
 // FITUR AUTENTIKASI NYATA (LOGIN, REGISTER, LOGOUT)
 // =====================================================
+
 // Rute untuk Pengguna yang BELUM Login (Guest)
 Route::middleware('guest')->group(function () {
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
@@ -40,21 +42,24 @@ Route::middleware('auth:admin,web')->group(function () {
 // =====================================================
 Route::prefix('admin')->name('admin.')->group(function () {
     
-    // 1. Dashboard Utama
+    // 1. Dashboard Utama (Mengaktifkan DashboardController sesuai konsep MVC)
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // 2. Resource Acara (Handle: index, create, store, edit, update, destroy)
+    // 2. Statistik Area
+    Route::get('/statistik', [StatistikController::class, 'index'])->name('statistik');
+
+    // 3. Resource Acara (Handle: index, create, store, edit, update, destroy)
     Route::resource('acara', AcaraController::class);
 
-    // 3. Custom Route untuk Tiket
-    Route::get('/acara/{id}/tiket', [AcaraController::class, 'tiket'])->name('acara.tiket');
-    Route::put('/acara/{id}/tiket/update', [AcaraController::class, 'updateTiket'])->name('acara.tiket.update');
+    // 4. Custom Route untuk Tiket (FIXED: Menggunakan {id_event} sesuai Database)
+    Route::get('/acara/{id_event}/tiket', [AcaraController::class, 'tiket'])->name('acara.tiket');
+    Route::put('/acara/{id_event}/tiket/update', [AcaraController::class, 'updateTiket'])->name('acara.tiket.update');
 
-    // 4. Route Profile Admin
+    // 5. Route Profile Admin
     Route::get('/profile', [AcaraController::class, 'profile'])->name('profile');
     Route::put('/profile/update', [AcaraController::class, 'updateProfile'])->name('profile.update');
 
-    // 5. Route Kelola Peserta & Check-In (VERSI FIXED)
+    // 6. Route Kelola Peserta & Check-In
     Route::prefix('peserta')->name('peserta.')->group(function () {
         Route::get('/', [PesertaController::class, 'index'])->name('index');
         
@@ -66,30 +71,28 @@ Route::prefix('admin')->name('admin.')->group(function () {
     });
 });
 
-// Placeholder Login
-Route::get('/login', function () {
-    return "Halaman Login (Belum dibuat)";
-})->name('login');
 
-
-// ================= PENGUNJUNG AREA =================
+// =====================================================
+// PENGUNJUNG AREA
+// =====================================================
 Route::prefix('pengunjung')->name('pengunjung.')->group(function () {
 
-    // Dashboard
+    // Dashboard Pengunjung
     Route::get('/dashboard', function () {
         return view('Pengunjung.dashboard');
     })->name('dashboard');
 
-    // Riwayat
+    // Riwayat Pemesanan
     Route::get('/riwayat', function () {
         return view('Pengunjung.riwayat');
     })->name('riwayat');
 
-        Route::get('/profil', function () {
-            return view('Pengunjung.profil');
-        })->name('profil');
+    // Profil Pengunjung
+    Route::get('/profil', function () {
+        return view('Pengunjung.profil');
+    })->name('profil');
 
-    // Halaman lain
+    // Halaman Informasi Umum
     Route::get('/about', function () {
         return view('Pengunjung.about');
     })->name('about');
@@ -98,16 +101,8 @@ Route::prefix('pengunjung')->name('pengunjung.')->group(function () {
         return view('Pengunjung.contact');
     })->name('contact');
 
+    // Halaman Pembelian Tiket
     Route::get('/pembelian-tiket', function () {
         return view('Pengunjung.pembelian-tiket');
     })->name('pembelian');
-
 });
-
-
-// =====================================================
-// LOGIN (TIDAK DIUBAH)
-// =====================================================
-Route::get('/login', function () {
-    return "Halaman Login (Belum dibuat)";
-})->name('login');
