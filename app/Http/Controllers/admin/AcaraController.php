@@ -27,6 +27,11 @@ class AcaraController extends Controller
     {
         $event = Event::where('id_event', $id_event)->firstOrFail();
         
+        // FITUR OTOMATIS: Jika kolom desain_tiket null/kosong di database, arahkan ke template default
+        if (!$event->desain_tiket) {
+            $event->desain_tiket = 'ticket_default.jpg';
+        }
+        
         // Mengambil data dari tabel tikets langsung secara aman
         $tikets = DB::table('tikets')->where('id_event', $id_event)->get();
         
@@ -114,16 +119,21 @@ class AcaraController extends Controller
      */
     public function updateTiket(Request $request, $id_event) 
     {
+        // PERBAIKAN VALIDASI: Menolak penyimpanan jika array tiket (terutama harga) kosong atau null
         $request->validate([
             'kapasitas' => 'required|integer|min:0',
             'desain_tiket' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'tiket' => 'required|array',
+            'tiket.*.harga' => 'required|numeric|min:0', // Setiap tier wajib ada harganya
+            'tiket.*.kuota' => 'required|integer|min:0',
         ]);
 
         $event = Event::where('id_event', $id_event)->firstOrFail();
         $data = ['kapasitas' => $request->kapasitas];
         
         if ($request->hasFile('desain_tiket')) {
-            if ($event->desain_tiket && File::exists(public_path('images/' . $event->desain_tiket))) {
+            // Abaikan proses hapus jika file lamanya merupakan asset gambar default bawaan sistem
+            if ($event->desain_tiket && $event->desain_tiket !== 'ticket_default.jpg' && File::exists(public_path('images/' . $event->desain_tiket))) {
                 File::delete(public_path('images/' . $event->desain_tiket));
             }
             
@@ -141,7 +151,7 @@ class AcaraController extends Controller
                 DB::table('tikets')->updateOrInsert(
                     ['id_event' => $id_event, 'nama_tiket' => $tierData['nama']],
                     [
-                        'harga' => $tierData['harga'] ?? 0,
+                        'harga' => $tierData['harga'], // Disimpan secara bersih karena validasi terjamin ketat
                         'kuota_total' => $tierData['kuota'] ?? 0,
                         'kuota_tersedia' => $tierData['kuota'] ?? 0, 
                     ]
@@ -149,7 +159,7 @@ class AcaraController extends Controller
             }
         }
 
-        // ALTERNATIF AMAN: Redirect langsung ke Dashboard Admin utama agar tidak terlempar ke welcome page
+        // Redirect aman langsung ke Dashboard Admin utama agar flash session sukses ter-trigger dengan benar
         return redirect()->route('admin.dashboard')
                          ->with('success', 'Kapasitas & Rincian Tiket berhasil diperbarui!');
     }
@@ -164,7 +174,7 @@ class AcaraController extends Controller
         if ($event->poster && File::exists(public_path('images/' . $event->poster))) {
             File::delete(public_path('images/' . $event->poster));
         }
-        if ($event->desain_tiket && File::exists(public_path('images/' . $event->desain_tiket))) {
+        if ($event->desain_tiket && $event->desain_tiket !== 'ticket_default.jpg' && File::exists(public_path('images/' . $event->desain_tiket))) {
             File::delete(public_path('images/' . $event->desain_tiket));
         }
 
