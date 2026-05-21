@@ -131,9 +131,9 @@
                     </div>
                     <div>
                         <label class="block text-[9px] font-black uppercase text-gray-400 mb-2 tracking-widest">Kuota</label>
-                        <input type="number" name="tiket[{{$key}}][kuota]" value="{{ isset($event->tiket[$key]) ? $event->tiket[$key]->kuota : 0 }}" min="0"
+                        <input type="number" name="tiket[{{$key}}][kuota]" value="{{ isset($event->tiket[$key]) ? $event->tiket[$key]->kuota_total : ($key === 'normal' ? ($event->kapasitas ?? 0) : 0) }}" min="0"
                                class="kuota-input w-full p-3 border-2 border-[#7a4988] bg-white rounded-xl text-sm font-black text-center text-[#7a4988] outline-none focus:ring-4 focus:ring-purple-100 transition-all" 
-                               oninput="updateTotal()">
+                               oninput="validateInput(this); updateTotal()">
                     </div>
                 </div>
                 @endforeach
@@ -147,6 +147,14 @@
     </div>
 
     <script>
+        // FUNGSI BARU: Untuk langsung membuang angka 0 liar di depan angka saat user mengetik
+        function validateInput(input) {
+            let val = input.value;
+            if (val.length > 1 && val.startsWith('0')) {
+                input.value = parseInt(val) || 0;
+            }
+        }
+
         function updateTotal() {
             let total = 0;
             document.querySelectorAll('.kuota-input').forEach(input => {
