@@ -10,10 +10,10 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    // Menampilkan halaman Register
+    // Menampilkan halaman Register (Di-redirect ke beranda karena pakai modal)
     public function showRegister()
     {
-        return view('auth.register');
+        return redirect('/');
     }
 
     // Memproses Registrasi Akun Pengunjung (Masuk ke tabel users/pengunjung)
@@ -40,13 +40,14 @@ class AuthController extends Controller
             'role' => 'pengunjung', 
         ]);
 
-        return redirect()->route('login')->with('success', 'Akun berhasil dibuat! Silakan login.');
+        // 🚨 DIUBAH: Langsung lempar ke beranda dengan pesan sukses
+        return redirect('/')->with('success', 'Akun berhasil dibuat! Silakan masuk melalui menu Login.');
     }
 
-    // Menampilkan halaman Login
+    // Menampilkan halaman Login (Di-redirect ke beranda karena pakai modal)
     public function showLogin()
     {
-        return view('auth.login');
+        return redirect('/');
     }
 
     // Memproses Login Multi-Table (Admin & Pengunjung)
@@ -85,16 +86,24 @@ class AuthController extends Controller
     // Memproses Logout Multi-Guard
     public function logout(Request $request)
     {
-        // Logout dari guard admin jika yang login adalah admin
-        if (Auth::guard('admin')->check()) {
+        // Ambil status login guard sebelum di-logout untuk keperluan log/kondisi jika dibutuhkan
+        $isAdmin = Auth::guard('admin')->check();
+        $isWeb = Auth::guard('web')->check();
+
+        // Logout dari guard yang sedang aktif
+        if ($isAdmin) {
             Auth::guard('admin')->logout();
-        } else {
-            // Logout dari guard web/pengunjung jika yang login pengunjung
+        } 
+        
+        if ($isWeb) {
             Auth::guard('web')->logout();
         }
 
+        // Hancurkan session secara total dan buat token baru (mencegah session fixation)
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect()->route('home');
+        
+        // 🚨 DIUBAH: Pakai URL '/' langsung agar tidak bergantung pada nama rute
+        return redirect('/')->with('success', 'Anda telah berhasil keluar.');
     }
 }
