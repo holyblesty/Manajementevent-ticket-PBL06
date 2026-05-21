@@ -50,22 +50,42 @@
                     <button onclick="openModal('registerModal')" class="bg-purpleAccent text-white text-xs font-bold px-5 py-2 rounded shadow hover:bg-purplePrimary transition-colors text-center min-w-[80px] cursor-pointer">Daftar</button>
                 @endguest
 
-                @auth
-                    <div class="flex items-center gap-3">
-                        <span class="text-sm font-medium text-gray-700">Halo, <strong class="text-purplePrimary">{{ Auth::user()->name }}</strong>!</span>
-                        
-                        @if(Auth::user()->role === 'admin')
-                            <a href="{{ route('admin.dashboard') }}" class="bg-purpleAccent text-white text-xs font-bold px-4 py-2 rounded shadow hover:bg-purplePrimary transition-colors text-center">Dashboard Admin</a>
-                        @else
-                            <a href="{{ route('pengunjung.dashboard') }}" class="bg-purpleAccent text-white text-xs font-bold px-4 py-2 rounded shadow hover:bg-purplePrimary transition-colors text-center">Menu Saya</a>
-                        @endif
+               @if(Auth::guard('admin')->check())
+    <div class="flex items-center gap-3">
+        <span class="text-sm font-medium text-gray-700">
+            Halo Admin, <strong class="text-purplePrimary">{{ Auth::guard('admin')->user()->username }}</strong>!
+        </span>
+        
+        <a href="{{ route('admin.dashboard') }}" class="bg-purpleAccent text-white text-xs font-bold px-4 py-2 rounded shadow hover:bg-purplePrimary transition-colors text-center">
+            Dashboard Admin
+        </a>
 
-                        <form action="{{ route('logout') }}" method="POST" class="inline">
-                            @csrf
-                            <button type="submit" class="border border-red-300 text-red-600 hover:bg-red-50 text-xs font-bold px-4 py-2 rounded transition-colors cursor-pointer">Keluar</button>
-                        </form>
-                    </div>
-                @endauth
+        <form action="{{ route('logout') }}" method="POST" class="inline">
+            @csrf
+            <button type="submit" class="border border-red-300 text-red-600 hover:bg-red-50 text-xs font-bold px-4 py-2 rounded transition-colors cursor-pointer">Keluar</button>
+        </form>
+    </div>
+
+@elif(Auth::guard('web')->check())
+    <div class="flex items-center gap-3">
+        <span class="text-sm font-medium text-gray-700">
+            Halo, <strong class="text-purplePrimary">{{ Auth::guard('web')->user()->name }}</strong>!
+        </span>
+        
+        <a href="{{ route('pengunjung.dashboard') }}" class="bg-purpleAccent text-white text-xs font-bold px-4 py-2 rounded shadow hover:bg-purplePrimary transition-colors text-center">
+            Menu Saya
+        </a>
+
+        <form action="{{ route('logout') }}" method="POST" class="inline">
+            @csrf
+            <button type="submit" class="border border-red-300 text-red-600 hover:bg-red-50 text-xs font-bold px-4 py-2 rounded transition-colors cursor-pointer">Keluar</button>
+        </form>
+    </div>
+
+@else
+    <button onclick="openModal('loginModal')" class="bg-purpleHover text-white text-xs font-bold px-5 py-2 rounded shadow hover:bg-purpleAccent transition-colors text-center min-w-[80px] cursor-pointer">Masuk</button>
+    <button onclick="openModal('registerModal')" class="bg-purpleAccent text-white text-xs font-bold px-5 py-2 rounded shadow hover:bg-purplePrimary transition-colors text-center min-w-[80px] cursor-pointer">Daftar</button>
+@endif
             </nav>
         </div>
     </header>

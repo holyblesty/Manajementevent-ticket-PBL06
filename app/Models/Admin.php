@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// WAJIB MENGGUNAKAN ELEMEN AUTHENTICATABLE INI AGAR BISA DIPAKAI LOGIN GUARD
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -10,15 +9,15 @@ class Admin extends Authenticatable
 {
     use Notifiable;
 
-    // Memaksa model agar membaca tabel 'admin' sesuai data di DatabaseSeeder
+    // 1. Pastikan nama tabel persis seperti di seeder
     protected $table = 'admin';
 
-    // Beritahu Laravel kalau kolom login utamamu di database bernama 'username' (bukan email)
-    // Beritahu Laravel kalau primary key dari tabel kamu adalah id (atau id_admin jika disesuaikan ERD)
-    // protected $primaryKey = 'id_admin'; 
+    // 2. JIKA di database kamu primary key-nya bukan 'id' (misal: 'id_admin'), 
+    // hapus tanda ulasan (//) di bawah ini dan sesuaikan:
+    // protected $primaryKey = 'id_admin';
 
     /**
-     * Kolom yang boleh diisi secara massal (Mass Assignment)
+     * Kolom yang boleh diisi secara massal
      */
     protected $fillable = [
         'username',
@@ -28,10 +27,18 @@ class Admin extends Authenticatable
     ];
 
     /**
-     * Kolom keamanan yang disembunyikan saat data di-render
+     * Kolom keamanan yang disembunyikan
      */
     protected $hidden = [
         'password',
         'remember_token',
     ];
+
+    /**
+     * FITUR PENYELAMAT: Beritahu Laravel secara tegas bahwa kolom password bernama 'password'
+     */
+    public function getAuthPassword()
+    {
+        return $this->password;
+    }
 }
