@@ -45,47 +45,25 @@
                 <a class="text-sm font-medium text-black hover:text-purplePrimary transition-colors" href="#">Acara</a>
                 <a class="text-sm font-medium text-black hover:text-purplePrimary transition-colors" href="#">Tentang kami</a>
                 
-                @guest
+                @if(!Auth::guard('admin')->check() && !Auth::guard('web')->check())
                     <button onclick="openModal('loginModal')" class="bg-purpleHover text-white text-xs font-bold px-5 py-2 rounded shadow hover:bg-purpleAccent transition-colors text-center min-w-[80px] cursor-pointer">Masuk</button>
                     <button onclick="openModal('registerModal')" class="bg-purpleAccent text-white text-xs font-bold px-5 py-2 rounded shadow hover:bg-purplePrimary transition-colors text-center min-w-[80px] cursor-pointer">Daftar</button>
-                @endguest
+                @else
+                    <div class="flex items-center gap-3">
+                        @if(Auth::guard('admin')->check())
+                            <span class="text-sm font-medium text-gray-700">Halo, <strong class="text-purplePrimary">{{ Auth::guard('admin')->user()->name }}</strong> (Admin)!</span>
+                            <a href="{{ route('admin.dashboard') }}" class="bg-purpleAccent text-white text-xs font-bold px-4 py-2 rounded shadow hover:bg-purplePrimary transition-colors text-center">Dashboard Admin</a>
+                        @else
+                            <span class="text-sm font-medium text-gray-700">Halo, <strong class="text-purplePrimary">{{ Auth::guard('web')->user()->name }}</strong>!</span>
+                            <a href="{{ route('pengunjung.dashboard') }}" class="bg-purpleAccent text-white text-xs font-bold px-4 py-2 rounded shadow hover:bg-purplePrimary transition-colors text-center">Menu Saya</a>
+                        @endif
 
-               @if(Auth::guard('admin')->check())
-    <div class="flex items-center gap-3">
-        <span class="text-sm font-medium text-gray-700">
-            Halo Admin, <strong class="text-purplePrimary">{{ Auth::guard('admin')->user()->username }}</strong>!
-        </span>
-        
-        <a href="{{ route('admin.dashboard') }}" class="bg-purpleAccent text-white text-xs font-bold px-4 py-2 rounded shadow hover:bg-purplePrimary transition-colors text-center">
-            Dashboard Admin
-        </a>
-
-        <form action="{{ route('logout') }}" method="POST" class="inline">
-            @csrf
-            <button type="submit" class="border border-red-300 text-red-600 hover:bg-red-50 text-xs font-bold px-4 py-2 rounded transition-colors cursor-pointer">Keluar</button>
-        </form>
-    </div>
-
-@elif(Auth::guard('web')->check())
-    <div class="flex items-center gap-3">
-        <span class="text-sm font-medium text-gray-700">
-            Halo, <strong class="text-purplePrimary">{{ Auth::guard('web')->user()->name }}</strong>!
-        </span>
-        
-        <a href="{{ route('pengunjung.dashboard') }}" class="bg-purpleAccent text-white text-xs font-bold px-4 py-2 rounded shadow hover:bg-purplePrimary transition-colors text-center">
-            Menu Saya
-        </a>
-
-        <form action="{{ route('logout') }}" method="POST" class="inline">
-            @csrf
-            <button type="submit" class="border border-red-300 text-red-600 hover:bg-red-50 text-xs font-bold px-4 py-2 rounded transition-colors cursor-pointer">Keluar</button>
-        </form>
-    </div>
-
-@else
-    <button onclick="openModal('loginModal')" class="bg-purpleHover text-white text-xs font-bold px-5 py-2 rounded shadow hover:bg-purpleAccent transition-colors text-center min-w-[80px] cursor-pointer">Masuk</button>
-    <button onclick="openModal('registerModal')" class="bg-purpleAccent text-white text-xs font-bold px-5 py-2 rounded shadow hover:bg-purplePrimary transition-colors text-center min-w-[80px] cursor-pointer">Daftar</button>
-@endif
+                        <form action="{{ route('logout') }}" method="POST" class="inline">
+                            @csrf
+                            <button type="submit" class="border border-red-300 text-red-600 hover:bg-red-50 text-xs font-bold px-4 py-2 rounded transition-colors cursor-pointer">Keluar</button>
+                        </form>
+                    </div>
+                @endif
             </nav>
         </div>
     </header>
@@ -282,7 +260,6 @@
         </div>
     </footer>
 
-
     <div id="loginModal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black/50 backdrop-blur-sm">
         <div class="bg-white w-[90%] sm:w-[420px] p-8 rounded-xl shadow-2xl relative transition-all duration-300 border border-gray-100">
             <button onclick="closeModal('loginModal')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl font-bold cursor-pointer">&times;</button>
@@ -317,7 +294,6 @@
             </p>
         </div>
     </div>
-
 
     <div id="registerModal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black/50 backdrop-blur-sm">
         <div class="bg-white w-[90%] sm:w-[440px] p-7 rounded-xl shadow-2xl relative max-h-[92vh] overflow-y-auto no-scrollbar border border-gray-100">
@@ -385,7 +361,6 @@
         </div>
     </div>
 
-
     <script>
         function openModal(modalId) {
             document.getElementById(modalId).classList.remove('hidden');
@@ -405,13 +380,13 @@
             if (event.target.id === 'registerModal') closeModal('registerModal');
         }
 
-        // Trik Jitu: Otomatis memunculkan kembali pop-up modal jika terjadi eror input saat reload halaman
+        // Auto-reopen modal if validation errors occur
         document.addEventListener("DOMContentLoaded", function() {
             @if($errors->any())
                 @if(old('email') || old('name'))
-                    openModal('registerModal'); // Tampilkan modal register jika yang eror form register
+                    openModal('registerModal');
                 @else
-                    openModal('loginModal'); // Tampilkan modal login jika yang eror form login
+                    openModal('loginModal');
                 @endif
             @endif
         });
