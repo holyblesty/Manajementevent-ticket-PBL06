@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Admin; // PENTING: Panggil model admin kamu di sini!
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -36,7 +37,6 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
             'no_hp' => $request->no_hp,
             'alamat' => $request->alamat,
-            // Kolom role opsional dipertahankan jika tabel users kamu masih pakai kolom ini
             'role' => 'pengunjung', 
         ]);
 
@@ -52,26 +52,31 @@ class AuthController extends Controller
     // Memproses Login Multi-Table (Admin & Pengunjung)
     public function login(Request $request)
     {
-        $credentials = $request->validate([
+        // 1. Validasi Input Form
+        $request->validate([
             'username' => 'required|string',
             'password' => 'required|string',
         ]);
 
-        // 1. STRATEGI UTAMA: Coba login sebagai ADMIN dulu (Ngecek ke tabel 'admin')
+        // 2. Ambil data credentials untuk Auth check
+        $credentials = [
+            'username' => $request->username,
+            'password' => $request->password
+        ];
+
+        // 3. STRATEGI UTAMA: Coba login sebagai ADMIN dulu (Menggunakan Guard Admin)
         if (Auth::guard('admin')->attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->route('admin.dashboard'); // Sukses, langsung ke dashboard admin
+            return redirect()->route('admin.dashboard'); 
         }
 
-        // 2. STRATEGI KEDUA: Kalau bukan admin, coba login sebagai PENGUNJUNG (Ngecek ke tabel 'users')
+        // 4. STRATEGI KEDUA: Coba login sebagai PENGUNJUNG (Menggunakan Guard Web bawaan)
         if (Auth::guard('web')->attempt($credentials)) {
             $request->session()->regenerate();
-            
-            // Pengalihan ke dashboard pengunjung atau home sesuai route kamu
             return redirect()->route('pengunjung.dashboard'); 
         }
 
-        // 3. Jika di kedua tabel tidak ditemukan data yang cocok
+        // 5. Jika di kedua tabel tidak ditemukan data yang cocok
         return back()->withErrors([
             'username' => 'Username atau password yang kamu masukkan salah.',
         ])->onlyInput('username');
