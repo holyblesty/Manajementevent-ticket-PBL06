@@ -2,26 +2,55 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class DetailPesanan extends Model
 {
-    use HasFactory;
+    // ======================================================
+    // NAMA TABEL
+    // ======================================================
+    protected $table = 'detail_pesanan';
 
-    protected $table = 'detail_pesanans';
+    // ======================================================
+    // PRIMARY KEY
+    // ======================================================
     protected $primaryKey = 'id_detail';
-    protected $fillable = ['jumlah_beli', 'subtotal_harga', 'status_checkin', 'id_pesanan', 'id_tiket'];
 
-    // Relasi balik ke Pesanan induk
+    // ======================================================
+    // FIELD YANG BOLEH DIISI
+    // ======================================================
+    protected $fillable = [
+
+        'id_pesanan',
+        'id_tiket',
+        'subtotal_harga',
+        'jumlah_beli',
+        'status_checkin'
+
+    ];
+
+    // ======================================================
+    // TYPE DATA BOOLEAN
+    // ======================================================
+    protected $casts = [
+
+        'status_checkin' => 'boolean'
+
+    ];
+
+    // ======================================================
+    // RELASI KE PESANAN
+    // ======================================================
     public function pesanan()
     {
-        return $this->belongsTo(Pesanan::class, 'id_pesanan', 'id_pesanan');
+        return $this->belongsTo(Pesanan::class, 'id_pesanan');
     }
 
-    // Relasi ke Tiket yang dibeli
+    // ======================================================
+    // RELASI KE TIKET
+    // ======================================================
     public function tiket()
     {
-        return $this->belongsTo(Tiket::class, 'id_tiket', 'id_tiket');
+        return $this->belongsTo(Tiket::class, 'id_tiket');
     }
 }
