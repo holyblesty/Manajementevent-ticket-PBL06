@@ -78,9 +78,9 @@ Route::middleware(['auth:web'])
     ->name('pengunjung.')
     ->group(function () {
 
-        Route::get('/dashboard', function () {
-            return view('Pengunjung.dashboard');
-        })->name('dashboard');
+        Route::get('/', function () {
+            return view('dashboard.index');
+        });
 
         Route::get('/riwayat', function () {
             return view('Pengunjung.riwayat');
@@ -102,3 +102,9 @@ Route::middleware(['auth:web'])
             return view('Pengunjung.pembelian-tiket');
         })->name('pembelian');
 });
+
+//PENGUNJUNG menuju dashboard
+
+Route::get('/pengunjung/dashboard', function () {
+    return view('pengunjung.dashboard.index');
+})->name('pengunjung.dashboard');
