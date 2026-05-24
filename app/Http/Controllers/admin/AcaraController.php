@@ -5,167 +5,101 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use App\Models\Event;
 
 class AcaraController extends Controller
 {
     /**
-     * Menampilkan Dashboard Utama Admin beserta Daftar Event
+     * Menampilkan Dashboard Utama
      */
     public function index()
     {
-        // Ambil semua data event dari dummy session
-        $events = $this->getDummyEvents();
-        
-        // Ubah array data event menjadi object agar mudah diakses di blade menggunakan panah (->)
-        $eventsObject = collect($events)->map(function ($event) {
-            return (object) $event;
-        });
-
-        // Lempar data ke view dashboard admin
-        return view('admin.dashboard', ['events' => $eventsObject]);
+        $events = Event::all();
+        return view('admin.dashboard', compact('events'));
     }
 
     /**
-     * Data Dummy Global
+     * Menampilkan halaman manajemen tiket
      */
-    private function getDummyEvents()
+    public function tiket($id_event) 
     {
-        if (session()->has('custom_events')) {
-            return session('custom_events');
+        $event = Event::where('id_event', $id_event)->firstOrFail();
+        
+        // FITUR OTOMATIS: Jika kolom desain_tiket null/kosong di database, arahkan ke template default
+        if (!$event->desain_tiket) {
+            $event->desain_tiket = 'ticket_default.jpg';
         }
-
-        $events = [
-            1 => [
-                'id' => 1,
-                'judul' => 'Turnamen Basket Antar Mahasiswa',
-                'deskripsi' => 'Pertandingan basket seru antar jurusan di Politeknik Batam.',
-                'tanggal' => '2026-05-20',
-                'kategori' => 'Olahraga',
-                'jenis' => 'tim',
-                'lokasi' => 'Lapangan Basket Politeknik Batam',
-                'kapasitas' => 50,
-                'poster' => 'basket.png',
-                'desain_tiket' => null,
-                'tiket' => [
-                    'early_bird' => (object)['nama' => 'Early Bird', 'harga' => 50000, 'kuota' => 10],
-                    'vip'         => (object)['nama' => 'VIP', 'harga' => 150000, 'kuota' => 10],
-                    'normal'      => (object)['nama' => 'Normal', 'harga' => 75000, 'kuota' => 30],
-                ]
-            ],
-            2 => [
-                'id' => 2,
-                'judul' => 'Festival Musik Kampus 2026',
-                'deskripsi' => 'Konser musik tahunan mahasiswa Politeknik Batam.',
-                'tanggal' => '2026-05-30',
-                'kategori' => 'Hiburan',
-                'jenis' => 'individu',
-                'lokasi' => 'Lapangan Bola Politeknik Batam',
-                'kapasitas' => 500,
-                'poster' => 'musik.png',
-                'desain_tiket' => null,
-                'tiket' => [
-                    'early_bird' => (object)['nama' => 'Presale 1', 'harga' => 80000, 'kuota' => 100],
-                    'vip'         => (object)['nama' => 'VIP', 'harga' => 350000, 'kuota' => 50],
-                    'normal'      => (object)['nama' => 'Festival', 'harga' => 120000, 'kuota' => 350],
-                ]
-            ],
-            3 => [
-                'id' => 3,
-                'judul' => 'Futsal Kampus Championship',
-                'deskripsi' => 'Turnamen futsal bergengsi memperebutkan piala Direktur.',
-                'tanggal' => '2026-06-09',
-                'kategori' => 'Olahraga',
-                'jenis' => 'tim',
-                'lokasi' => 'Sport Hall Politeknik Batam',
-                'kapasitas' => 32,
-                'poster' => 'futsal.jpg',
-                'desain_tiket' => null,
-                'tiket' => [
-                    'early_bird' => (object)['nama' => 'Promo', 'harga' => 25000, 'kuota' => 10],
-                    'vip'         => (object)['nama' => 'VIP', 'harga' => 75000, 'kuota' => 2],
-                    'normal'      => (object)['nama' => 'Reguler', 'harga' => 35000, 'kuota' => 20],
-                ]
-            ],
-            4 => [
-                'id' => 4,
-                'judul' => 'Seminar Nasional: Masa Depan AI',
-                'deskripsi' => 'Membahas perkembangan teknologi AI di industri masa kini.',
-                'tanggal' => '2026-06-15',
-                'kategori' => 'Seminar',
-                'jenis' => 'individu',
-                'lokasi' => 'Auditorium Gd. Utama',
-                'kapasitas' => 200,
-                'poster' => 'seminar.jpg',
-                'desain_tiket' => null,
-                'tiket' => [
-                    'early_bird' => (object)['nama' => 'Early Bird', 'harga' => 50000, 'kuota' => 50],
-                    'vip'         => (object)['nama' => 'VIP', 'harga' => 200000, 'kuota' => 50],
-                    'normal'      => (object)['nama' => 'Normal', 'harga' => 100000, 'kuota' => 100],
-                ]
-            ],
-        ];
-
-        session(['custom_events' => $events]);
-        return $events;
+        
+        // Mengambil data dari tabel tikets langsung secara aman
+        $tikets = DB::table('tikets')->where('id_event', $id_event)->get();
+        
+        // Memformat data menjadi array sesuai dengan struktur pemanggilan desain Blade kamu: $event->tiket[$key]
+        $keyedTiket = [];
+        foreach ($tikets as $tiket) {
+            // SINKRONISASI DATABASE: Menggunakan $tiket->nama_tiket sesuai struktur tabel kamu
+            $key = strtolower(str_replace(' ', '_', $tiket->nama_tiket)); 
+            $keyedTiket[$key] = $tiket;
+        }
+        
+        // Menyuntikkan array data ke dalam objek event secara dinamis
+        $event->tiket = $keyedTiket;
+        
+        return view('admin.tiket', compact('event'));
     }
 
-    // --- PROFILE ---
-    public function profile() {
-        $user = (object) [
-            'name'  => session('admin_name', 'Vivian Sarah Diva Alisianoi'),
-            'email' => 'vivian_018@student.polibatam.ac.id',
-            'foto'  => session('admin_foto', 'profile_default.jpg')
-        ];
-        return view('admin.profile', compact('user'));
+    /**
+     * Menampilkan Profil Admin yang sedang login
+     */
+    public function profile() 
+    {
+        $admin = Auth::guard('admin')->user(); 
+        return view('admin.profile', compact('admin'));
     }
 
-    public function updateProfile(Request $request) {
+    /**
+     * Update Profil Admin
+     */
+    public function updateProfile(Request $request) 
+    {
         $request->validate([
             'name' => 'required|string|max:255',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
-        session(['admin_name' => $request->name]);
+        $admin = Auth::guard('admin')->user();
+        $admin->name = $request->name;
 
         if ($request->hasFile('foto')) {
-            $oldFoto = session('admin_foto');
-            if ($oldFoto && $oldFoto !== 'profile_default.jpg') {
-                $oldPath = public_path('images/' . $oldFoto);
-                if (File::exists($oldPath)) {
-                    File::delete($oldPath);
-                }
+            if ($admin->foto && $admin->foto !== 'profile_default.jpg') {
+                $oldPath = public_path('images/' . $admin->foto);
+                if (File::exists($oldPath)) File::delete($oldPath);
             }
 
             $imageName = 'profile_' . time() . '.' . $request->foto->extension();
             $request->foto->move(public_path('images'), $imageName);
-            
-            session(['admin_foto' => $imageName]);
+            $admin->foto = $imageName;
         }
 
-        session()->save();
-
-        return redirect()->back()->with('success', 'Profil kamu berhasil diperbarui!');
+        $admin->save();
+        return redirect()->back()->with('success', 'Profil berhasil diperbarui!');
     }
 
-    // --- EVENT ---
-    public function create() {
-        return view('admin.create');
-    }
-
-    public function store(Request $request) {
+    /**
+     * Store Event Baru
+     */
+    public function store(Request $request) 
+    {
         $request->validate([
             'judul' => 'required', 
             'poster' => 'required|image|mimes:jpeg,png,jpg|max:5120'
         ]);
 
-        $allEvents = $this->getDummyEvents();
-        $newId = count($allEvents) > 0 ? max(array_keys($allEvents)) + 1 : 1;
-        
         $imageName = time() . '.' . $request->poster->extension();
         $request->poster->move(public_path('images'), $imageName);
 
-        $allEvents[$newId] = [
-            'id' => $newId,
+        Event::create([
             'judul' => $request->judul,
             'deskripsi' => $request->deskripsi,
             'tanggal' => $request->tanggal,
@@ -175,84 +109,76 @@ class AcaraController extends Controller
             'kapasitas' => 0, 
             'poster' => $imageName,
             'desain_tiket' => null,
-            'tiket' => [
-                'early_bird' => (object)['nama' => 'Early Bird', 'harga' => 0, 'kuota' => 0],
-                'vip' => (object)['nama' => 'VIP', 'harga' => 0, 'kuota' => 0],
-                'normal' => (object)['nama' => 'Normal', 'harga' => 0, 'kuota' => 0],
-            ]
-        ];
-
-        session(['custom_events' => $allEvents]);
-        return redirect()->route('admin.dashboard')->with('success', 'Event baru berhasil ditambah!');
-    }
-
-    public function edit($id) {
-        $allEvents = $this->getDummyEvents();
-        if (!isset($allEvents[$id])) abort(404);
-        $event = (object) $allEvents[$id];
-        return view('admin.edit', compact('event'));
-    }
-
-    public function tiket($id) {
-        $allEvents = $this->getDummyEvents();
-        if (!isset($allEvents[$id])) abort(404);
-        $event = (object) $allEvents[$id];
-        return view('admin.tiket', compact('event'));
-    }
-
-    public function update(Request $request, $id) {
-        $allEvents = $this->getDummyEvents();
-        if (isset($allEvents[$id])) {
-            $allEvents[$id]['judul'] = $request->judul;
-            $allEvents[$id]['deskripsi'] = $request->deskripsi;
-            $allEvents[$id]['tanggal'] = $request->tanggal;
-            $allEvents[$id]['lokasi'] = $request->lokasi;
-            $allEvents[$id]['kategori'] = $request->kategori;
-            $allEvents[$id]['jenis'] = $request->jenis;
-            
-            if ($request->hasFile('poster')) {
-                $imageName = time() . '.' . $request->poster->extension();
-                $request->poster->move(public_path('images'), $imageName);
-                $allEvents[$id]['poster'] = $imageName;
-            }
-            session(['custom_events' => $allEvents]);
-        }
-        return redirect()->route('admin.dashboard')->with('success', 'Perubahan event disimpan!');
-    }
-
-    public function updateTiket(Request $request, $id) {
-        $request->validate([
-            'kapasitas' => 'required|integer|min:0',
-            'tiket' => 'nullable|array',
-            'desain_tiket' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        $allEvents = $this->getDummyEvents();
-        if (isset($allEvents[$id])) {
-            $allEvents[$id]['kapasitas'] = $request->kapasitas;
-            
-            if($request->has('tiket')) {
-                foreach($request->tiket as $key => $val) {
-                    $allEvents[$id]['tiket'][$key] = (object)$val;
-                }
-            }
-
-            if ($request->hasFile('desain_tiket')) {
-                $imageName = 'ticket_' . time() . '.' . $request->desain_tiket->extension();
-                $request->desain_tiket->move(public_path('images'), $imageName);
-                $allEvents[$id]['desain_tiket'] = $imageName;
-            }
-            session(['custom_events' => $allEvents]);
-        }
-        return redirect()->route('admin.dashboard')->with('success', 'Kapasitas dan Tiket berhasil disimpan!');
+        return redirect()->route('admin.dashboard')->with('success', 'Event berhasil ditambah!');
     }
 
-    public function destroy($id) {
-        $allEvents = $this->getDummyEvents();
-        if (isset($allEvents[$id])) {
-            unset($allEvents[$id]);
-            session(['custom_events' => $allEvents]);
+    /**
+     * Update Data Kapasitas, Desain Tiket, & 3 Tier Tiket
+     */
+    public function updateTiket(Request $request, $id_event) 
+    {
+        // PERBAIKAN VALIDASI: Menolak penyimpanan jika array tiket (terutama harga) kosong atau null
+        $request->validate([
+            'kapasitas' => 'required|integer|min:0',
+            'desain_tiket' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'tiket' => 'required|array',
+            'tiket.*.harga' => 'required|numeric|min:0', // Setiap tier wajib ada harganya
+            'tiket.*.kuota' => 'required|integer|min:0',
+        ]);
+
+        $event = Event::where('id_event', $id_event)->firstOrFail();
+        $data = ['kapasitas' => $request->kapasitas];
+        
+        if ($request->hasFile('desain_tiket')) {
+            // Abaikan proses hapus jika file lamanya merupakan asset gambar default bawaan sistem
+            if ($event->desain_tiket && $event->desain_tiket !== 'ticket_default.jpg' && File::exists(public_path('images/' . $event->desain_tiket))) {
+                File::delete(public_path('images/' . $event->desain_tiket));
+            }
+            
+            $imageName = 'ticket_' . time() . '.' . $request->desain_tiket->extension();
+            $request->desain_tiket->move(public_path('images'), $imageName);
+            $data['desain_tiket'] = $imageName;
         }
+
+        // 1. Update data utama event (Kapasitas total & Desain Tiket)
+        $event->update($data);
+
+        // 2. Logika Menyimpan/Mengupdate rincian 3 Tier Tiket ke tabel 'tikets'
+        if ($request->has('tiket')) {
+            foreach ($request->tiket as $key => $tierData) {
+                DB::table('tikets')->updateOrInsert(
+                    ['id_event' => $id_event, 'nama_tiket' => $tierData['nama']],
+                    [
+                        'harga' => $tierData['harga'], // Disimpan secara bersih karena validasi terjamin ketat
+                        'kuota_total' => $tierData['kuota'] ?? 0,
+                        'kuota_tersedia' => $tierData['kuota'] ?? 0, 
+                    ]
+                );
+            }
+        }
+
+        // Redirect aman langsung ke Dashboard Admin utama agar flash session sukses ter-trigger dengan benar
+        return redirect()->route('admin.dashboard')
+                         ->with('success', 'Kapasitas & Rincian Tiket berhasil diperbarui!');
+    }
+
+    /**
+     * Hapus Event
+     */
+    public function destroy($id_event) 
+    {
+        $event = Event::where('id_event', $id_event)->firstOrFail();
+        
+        if ($event->poster && File::exists(public_path('images/' . $event->poster))) {
+            File::delete(public_path('images/' . $event->poster));
+        }
+        if ($event->desain_tiket && $event->desain_tiket !== 'ticket_default.jpg' && File::exists(public_path('images/' . $event->desain_tiket))) {
+            File::delete(public_path('images/' . $event->desain_tiket));
+        }
+
+        $event->delete();
         return redirect()->route('admin.dashboard')->with('success', 'Event berhasil dihapus!');
     }
 }

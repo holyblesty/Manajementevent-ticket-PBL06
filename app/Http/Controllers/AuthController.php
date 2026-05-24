@@ -3,16 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Admin; // PENTING: Panggil model admin kamu di sini!
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    // Menampilkan halaman Register
+    // Menampilkan halaman Register (Di-redirect ke beranda karena pakai modal)
     public function showRegister()
     {
-        return view('auth.register');
+        return redirect('/');
     }
 
     // Memproses Registrasi Akun Pengunjung (Masuk ke tabel users/pengunjung)
@@ -36,42 +37,47 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
             'no_hp' => $request->no_hp,
             'alamat' => $request->alamat,
-            // Kolom role opsional dipertahankan jika tabel users kamu masih pakai kolom ini
             'role' => 'pengunjung', 
         ]);
 
-        return redirect()->route('login')->with('success', 'Akun berhasil dibuat! Silakan login.');
+        // 🚨 DIUBAH: Langsung lempar ke beranda dengan pesan sukses
+        return redirect('/')->with('success', 'Akun berhasil dibuat! Silakan masuk melalui menu Login.');
     }
 
-    // Menampilkan halaman Login
+    // Menampilkan halaman Login (Di-redirect ke beranda karena pakai modal)
     public function showLogin()
     {
-        return view('auth.login');
+        return redirect('/');
     }
 
     // Memproses Login Multi-Table (Admin & Pengunjung)
     public function login(Request $request)
     {
-        $credentials = $request->validate([
+        // 1. Validasi Input Form
+        $request->validate([
             'username' => 'required|string',
             'password' => 'required|string',
         ]);
 
-        // 1. STRATEGI UTAMA: Coba login sebagai ADMIN dulu (Ngecek ke tabel 'admin')
+        // 2. Ambil data credentials untuk Auth check
+        $credentials = [
+            'username' => $request->username,
+            'password' => $request->password
+        ];
+
+        // 3. STRATEGI UTAMA: Coba login sebagai ADMIN dulu (Menggunakan Guard Admin)
         if (Auth::guard('admin')->attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->route('admin.dashboard'); // Sukses, langsung ke dashboard admin
+            return redirect()->route('admin.dashboard'); 
         }
 
-        // 2. STRATEGI KEDUA: Kalau bukan admin, coba login sebagai PENGUNJUNG (Ngecek ke tabel 'users')
+        // 4. STRATEGI KEDUA: Coba login sebagai PENGUNJUNG (Menggunakan Guard Web bawaan)
         if (Auth::guard('web')->attempt($credentials)) {
             $request->session()->regenerate();
-            
-            // Pengalihan ke dashboard pengunjung atau home sesuai route kamu
             return redirect()->route('pengunjung.dashboard'); 
         }
 
-        // 3. Jika di kedua tabel tidak ditemukan data yang cocok
+        // 5. Jika di kedua tabel tidak ditemukan data yang cocok
         return back()->withErrors([
             'username' => 'Username atau password yang kamu masukkan salah.',
         ])->onlyInput('username');
@@ -80,16 +86,24 @@ class AuthController extends Controller
     // Memproses Logout Multi-Guard
     public function logout(Request $request)
     {
-        // Logout dari guard admin jika yang login adalah admin
-        if (Auth::guard('admin')->check()) {
+        // Ambil status login guard sebelum di-logout untuk keperluan log/kondisi jika dibutuhkan
+        $isAdmin = Auth::guard('admin')->check();
+        $isWeb = Auth::guard('web')->check();
+
+        // Logout dari guard yang sedang aktif
+        if ($isAdmin) {
             Auth::guard('admin')->logout();
-        } else {
-            // Logout dari guard web/pengunjung jika yang login pengunjung
+        } 
+        
+        if ($isWeb) {
             Auth::guard('web')->logout();
         }
 
+        // Hancurkan session secara total dan buat token baru (mencegah session fixation)
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect()->route('home');
+        
+        // 🚨 DIUBAH: Pakai URL '/' langsung agar tidak bergantung pada nama rute
+        return redirect('/')->with('success', 'Anda telah berhasil keluar.');
     }
 }

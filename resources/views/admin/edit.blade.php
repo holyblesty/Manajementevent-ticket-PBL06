@@ -21,7 +21,6 @@
 </head>
 <body style="margin: 0; min-height: 100vh; background: linear-gradient(-45deg, #2b1238, #7a4988, #4b1d52, #9e7bb5); background-size: 400% 400%; animation: swush 10s ease infinite;" class="flex flex-col items-center py-10 font-sans antialiased text-gray-900">
 
-
     <div class="bg-white w-full max-w-[1200px] rounded-[2.5rem] shadow-2xl overflow-hidden mb-10 mx-4 border border-gray-100">
         
         <div class="bg-[#24112e] p-8 text-white border-b-4 border-[#7a4988]">
@@ -29,7 +28,7 @@
             <p class="text-xs text-[#be93d4] font-bold mt-1 uppercase tracking-widest">{{ $event->judul }}</p>
         </div>
 
-        <form action="{{ route('admin.acara.update', $event->id) }}" method="POST" enctype="multipart/form-data" class="p-10">
+        <form action="{{ route('admin.acara.update', $event->id_event) }}" method="POST" enctype="multipart/form-data" class="p-10">
             @csrf
             @method('PUT')
 
