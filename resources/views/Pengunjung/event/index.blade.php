@@ -1,423 +1,315 @@
-@extends('layouts.app')
+@extends('layouts.pengunjung')
+
+@section('title', 'Semua Acara')
 
 @section('content')
 
-<div>
+{{-- BREADCRUMB --}}
+<div class="mb-6">
 
-    {{-- Breadcrumb --}}
-    <div class="flex items-center gap-2 text-sm text-gray-500 mb-5">
+    <div class="flex items-center gap-2 text-sm text-gray-400">
 
         <span>Beranda</span>
-
-        <i class="fa-solid fa-chevron-right text-xs"></i>
-
-        <span class="text-purple-700 font-medium">
-            Event
+        <span>›</span>
+        <span class="text-[#7a4988] font-semibold">
+            Acara
         </span>
 
     </div>
 
-    {{-- Header --}}
-    <div class="mb-8">
+    <h1 class="mt-2 text-4xl font-bold text-[#7a4988]">
+        Semua Acara
+    </h1>
 
-        <h1 class="text-4xl font-bold text-purple-700">
-            Semua Event
-        </h1>
+    <p class="text-gray-500 mt-2">
+        Temukan berbagai event menarik yang bisa kamu ikuti.
+    </p>
 
-        <p class="text-gray-500 mt-2">
-            Temukan berbagai event menarik yang bisa kamu ikuti.
-        </p>
+</div>
 
-    </div>
+{{-- FILTER --}}
+<div class="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-6">
 
-    {{-- Filter --}}
-    <div class="bg-white p-5 rounded-2xl shadow-sm border mb-8">
+    {{-- SEARCH --}}
+    <div class="lg:col-span-2 relative">
 
-        <div class="grid grid-cols-4 gap-5">
+        <input type="text"
+               placeholder="Cari event berdasarkan judul..."
+               class="w-full border border-gray-200 rounded-xl py-3 pl-12 pr-4 text-sm focus:ring-2 focus:ring-[#7a4988] focus:outline-none">
 
-            {{-- Search --}}
-            <div class="col-span-2">
+        <svg class="w-5 h-5 absolute left-4 top-4 text-gray-400"
+             fill="none"
+             stroke="currentColor"
+             viewBox="0 0 24 24">
 
-                <div class="relative">
+            <path stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M21 21l-4.35-4.35m1.85-5.15a7 7 0 11-14 0 7 7 0 0114 0z"/>
 
-                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-4 text-gray-400"></i>
-
-                    <input type="text"
-                           placeholder="Cari event berdasarkan judul..."
-                           class="w-full border rounded-xl py-3 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-purple-500">
-
-                </div>
-
-            </div>
-
-            {{-- Category --}}
-            <div>
-
-                <select class="w-full border rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:ring-purple-500">
-
-                    <option>Semua Kategori</option>
-                    <option>Olahraga</option>
-                    <option>Seminar</option>
-                    <option>Hiburan</option>
-
-                </select>
-
-            </div>
-
-            {{-- Button --}}
-            <div>
-
-                <button class="w-full border rounded-xl py-3 font-medium hover:bg-gray-100 transition">
-                    <i class="fa-solid fa-rotate-right mr-2"></i>
-                    Reset Filter
-                </button>
-
-            </div>
-
-        </div>
+        </svg>
 
     </div>
 
-    {{-- Category Tabs --}}
-    <div class="flex items-center gap-3 mb-8">
+    {{-- KATEGORI --}}
+    <select class="border border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-[#7a4988] focus:outline-none">
 
-        <button class="bg-purple-700 text-white px-5 py-2 rounded-xl font-medium">
+        <option>Semua Kategori</option>
+        <option>Olahraga</option>
+        <option>Seminar</option>
+        <option>Hiburan</option>
+
+    </select>
+
+    {{-- RESET --}}
+    <button class="border border-gray-200 rounded-xl py-3 text-sm font-semibold hover:bg-gray-50">
+
+        Reset Filter
+
+    </button>
+
+</div>
+
+{{-- FILTER BUTTON --}}
+<div class="flex items-center justify-between mb-8">
+
+    <div class="flex items-center gap-3">
+
+        <button class="bg-[#7a4988] text-white px-5 py-2 rounded-lg text-sm font-semibold">
             Semua
         </button>
 
-        <button class="border px-5 py-2 rounded-xl hover:bg-purple-50">
+        <button class="border border-gray-200 px-5 py-2 rounded-lg text-sm hover:bg-gray-50">
             Olahraga
         </button>
 
-        <button class="border px-5 py-2 rounded-xl hover:bg-purple-50">
+        <button class="border border-gray-200 px-5 py-2 rounded-lg text-sm hover:bg-gray-50">
             Seminar
         </button>
 
-        <button class="border px-5 py-2 rounded-xl hover:bg-purple-50">
+        <button class="border border-gray-200 px-5 py-2 rounded-lg text-sm hover:bg-gray-50">
             Hiburan
         </button>
 
     </div>
 
-    {{-- Event Grid --}}
-    <div class="grid grid-cols-4 gap-6">
+    {{-- SORT --}}
+    <select class="border border-gray-200 rounded-xl px-4 py-2 text-sm">
 
-        {{-- CARD 1 --}}
-        <div class="bg-white rounded-2xl overflow-hidden shadow-sm border hover:shadow-lg transition">
+        <option>Terbaru</option>
+        <option>Terlama</option>
 
-            <div class="relative">
+    </select>
 
-                <img src="https://images.unsplash.com/photo-1511578314322-379afb476865?q=80&w=1200"
-                     class="w-full h-52 object-cover">
+</div>
 
-                <div class="absolute top-4 left-4">
+{{-- EVENT GRID --}}
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
 
-                    <span class="bg-purple-700 text-white text-xs px-3 py-1 rounded-full">
-                        Seminar
-                    </span>
+    {{-- CARD 1 --}}
+    <div class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
 
-                </div>
+        <img src="{{ asset('images/events/seminar.jpg') }}"
+             class="h-52 w-full object-cover">
 
-            </div>
+        <div class="p-5">
 
-            <div class="p-5">
+            <span class="bg-blue-500 text-white text-xs px-3 py-1 rounded-full">
+                Seminar
+            </span>
 
-                <h2 class="font-bold text-xl leading-8 mb-4">
-                    AI & MASA DEPAN KITA TECH FORUM 2026
-                </h2>
+            <h3 class="mt-4 text-xl font-bold text-[#24112e] leading-snug">
+                AI & MASA DEPAN KITA TECH FORUM 2026
+            </h3>
 
-                <div class="space-y-3 text-sm text-gray-500">
+            <div class="mt-4 space-y-2 text-sm text-gray-500">
 
-                    <div class="flex items-center gap-3">
-
-                        <i class="fa-solid fa-calendar text-purple-700"></i>
-
-                        <span>29 Mei 2026</span>
-
-                    </div>
-
-                    <div class="flex items-center gap-3">
-
-                        <i class="fa-solid fa-clock text-purple-700"></i>
-
-                        <span>09.00 - 17.00 WIB</span>
-
-                    </div>
-
-                    <div class="flex items-center gap-3">
-
-                        <i class="fa-solid fa-location-dot text-purple-700"></i>
-
-                        <span>Gedung Utama, Bandung</span>
-
-                    </div>
-
-                </div>
-
-                <div class="mt-5">
-
-                    <p class="text-sm text-gray-400">
-                        Mulai dari
-                    </p>
-
-                    <h3 class="text-2xl font-bold text-purple-700">
-                        Rp 150.000
-                    </h3>
-
-                </div>
-
-                <button class="w-full mt-6 border-2 border-purple-700 text-purple-700 py-3 rounded-xl font-semibold hover:bg-purple-700 hover:text-white transition">
-                    Lihat Detail
-                </button>
+                <p>📅 29 Mei 2026 • 09.00 - 17.00 WIB</p>
+                <p>📍 Gedung Utama, Bandung</p>
 
             </div>
 
-        </div>
+            <div class="mt-6">
 
-        {{-- CARD 2 --}}
-        <div class="bg-white rounded-2xl overflow-hidden shadow-sm border hover:shadow-lg transition">
+                <p class="text-xs text-gray-400">
+                    Mulai dari
+                </p>
 
-            <div class="relative">
-
-                <img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=1200"
-                     class="w-full h-52 object-cover">
-
-                <div class="absolute top-4 left-4">
-
-                    <span class="bg-blue-700 text-white text-xs px-3 py-1 rounded-full">
-                        Olahraga
-                    </span>
-
-                </div>
+                <h4 class="text-2xl font-bold text-[#7a4988]">
+                    Rp 150.000
+                </h4>
 
             </div>
 
-            <div class="p-5">
+            <button class="w-full mt-5 border border-[#7a4988] text-[#7a4988] py-2 rounded-lg font-semibold hover:bg-[#7a4988] hover:text-white transition">
 
-                <h2 class="font-bold text-xl leading-8 mb-4">
-                    FUTSAL KAMPUS CHAMPIONSHIP 2026
-                </h2>
+                Lihat Detail
 
-                <div class="space-y-3 text-sm text-gray-500">
-
-                    <div class="flex items-center gap-3">
-
-                        <i class="fa-solid fa-calendar text-purple-700"></i>
-
-                        <span>30 Mei 2026</span>
-
-                    </div>
-
-                    <div class="flex items-center gap-3">
-
-                        <i class="fa-solid fa-clock text-purple-700"></i>
-
-                        <span>08.00 - 18.00 WIB</span>
-
-                    </div>
-
-                    <div class="flex items-center gap-3">
-
-                        <i class="fa-solid fa-location-dot text-purple-700"></i>
-
-                        <span>Lapangan Politeknik Bandung</span>
-
-                    </div>
-
-                </div>
-
-                <div class="mt-5">
-
-                    <p class="text-sm text-gray-400">
-                        Mulai dari
-                    </p>
-
-                    <h3 class="text-2xl font-bold text-purple-700">
-                        Rp 100.000
-                    </h3>
-
-                </div>
-
-                <a href="/events/show"
-                    class="block text-center w-full mt-6 border-2 border-purple-700 text-purple-700 py-3 rounded-xl font-semibold hover:bg-purple-700 hover:text-white transition">
-                         Lihat Detail
-                </a>
-                </button>
-
-            </div>
-
-        </div>
-
-        {{-- CARD 3 --}}
-        <div class="bg-white rounded-2xl overflow-hidden shadow-sm border hover:shadow-lg transition">
-
-            <div class="relative">
-
-                <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?q=80&w=1200"
-                     class="w-full h-52 object-cover">
-
-                <div class="absolute top-4 left-4">
-
-                    <span class="bg-pink-600 text-white text-xs px-3 py-1 rounded-full">
-                        Hiburan
-                    </span>
-
-                </div>
-
-            </div>
-
-            <div class="p-5">
-
-                <h2 class="font-bold text-xl leading-8 mb-4">
-                    FESTIVAL BAND MAHASISWA 2026
-                </h2>
-
-                <div class="space-y-3 text-sm text-gray-500">
-
-                    <div class="flex items-center gap-3">
-
-                        <i class="fa-solid fa-calendar text-purple-700"></i>
-
-                        <span>31 Mei 2026</span>
-
-                    </div>
-
-                    <div class="flex items-center gap-3">
-
-                        <i class="fa-solid fa-clock text-purple-700"></i>
-
-                        <span>17.00 - 22.00 WIB</span>
-
-                    </div>
-
-                    <div class="flex items-center gap-3">
-
-                        <i class="fa-solid fa-location-dot text-purple-700"></i>
-
-                        <span>Open Space, Bandung</span>
-
-                    </div>
-
-                </div>
-
-                <div class="mt-5">
-
-                    <p class="text-sm text-gray-400">
-                        Mulai dari
-                    </p>
-
-                    <h3 class="text-2xl font-bold text-purple-700">
-                        Rp 75.000
-                    </h3>
-
-                </div>
-
-                <button class="w-full mt-6 border-2 border-purple-700 text-purple-700 py-3 rounded-xl font-semibold hover:bg-purple-700 hover:text-white transition">
-                    Lihat Detail
-                </button>
-
-            </div>
-
-        </div>
-
-        {{-- CARD 4 --}}
-        <div class="bg-white rounded-2xl overflow-hidden shadow-sm border hover:shadow-lg transition">
-
-            <div class="relative">
-
-                <img src="https://images.unsplash.com/photo-1515169067868-5387ec356754?q=80&w=1200"
-                     class="w-full h-52 object-cover">
-
-                <div class="absolute top-4 left-4">
-
-                    <span class="bg-purple-700 text-white text-xs px-3 py-1 rounded-full">
-                        Seminar
-                    </span>
-
-                </div>
-
-            </div>
-
-            <div class="p-5">
-
-                <h2 class="font-bold text-xl leading-8 mb-4">
-                    CREATIVEPRENEUR FEST 2026
-                </h2>
-
-                <div class="space-y-3 text-sm text-gray-500">
-
-                    <div class="flex items-center gap-3">
-
-                        <i class="fa-solid fa-calendar text-purple-700"></i>
-
-                        <span>10 Juni 2026</span>
-
-                    </div>
-
-                    <div class="flex items-center gap-3">
-
-                        <i class="fa-solid fa-clock text-purple-700"></i>
-
-                        <span>10.00 - 18.00 WIB</span>
-
-                    </div>
-
-                    <div class="flex items-center gap-3">
-
-                        <i class="fa-solid fa-location-dot text-purple-700"></i>
-
-                        <span>Eldorado Dome, Bandung</span>
-
-                    </div>
-
-                </div>
-
-                <div class="mt-5">
-
-                    <p class="text-sm text-gray-400">
-                        Mulai dari
-                    </p>
-
-                    <h3 class="text-2xl font-bold text-purple-700">
-                        Rp 125.000
-                    </h3>
-
-                </div>
-
-                <button class="w-full mt-6 border-2 border-purple-700 text-purple-700 py-3 rounded-xl font-semibold hover:bg-purple-700 hover:text-white transition">
-                    Lihat Detail
-                </button>
-
-            </div>
+            </button>
 
         </div>
 
     </div>
 
-    {{-- Pagination --}}
-    <div class="flex items-center justify-center gap-3 mt-12">
+    {{-- CARD 2 --}}
+    <div class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
 
-        <button class="w-10 h-10 border rounded-lg hover:bg-gray-100">
-            <i class="fa-solid fa-chevron-left"></i>
-        </button>
+        <img src="{{ asset('images/events/futsal.jpg') }}"
+             class="h-52 w-full object-cover">
 
-        <button class="w-10 h-10 bg-purple-700 text-white rounded-lg">
-            1
-        </button>
+        <div class="p-5">
 
-        <button class="w-10 h-10 border rounded-lg hover:bg-gray-100">
-            2
-        </button>
+            <span class="bg-[#7a4988] text-white text-xs px-3 py-1 rounded-full">
+                Olahraga
+            </span>
 
-        <button class="w-10 h-10 border rounded-lg hover:bg-gray-100">
-            3
-        </button>
+            <h3 class="mt-4 text-xl font-bold text-[#24112e] leading-snug">
+                FUTSAL KAMPUS CHAMPIONSHIP 2026
+            </h3>
 
-        <button class="w-10 h-10 border rounded-lg hover:bg-gray-100">
-            <i class="fa-solid fa-chevron-right"></i>
-        </button>
+            <div class="mt-4 space-y-2 text-sm text-gray-500">
+
+                <p>📅 30 Mei 2026 • 08.00 - 18.00 WIB</p>
+                <p>📍 Lapangan Politeknik Bandung</p>
+
+            </div>
+
+            <div class="mt-6">
+
+                <p class="text-xs text-gray-400">
+                    Mulai dari
+                </p>
+
+                <h4 class="text-2xl font-bold text-[#7a4988]">
+                    Rp 100.000
+                </h4>
+
+            </div>
+
+            <button class="w-full mt-5 border border-[#7a4988] text-[#7a4988] py-2 rounded-lg font-semibold hover:bg-[#7a4988] hover:text-white transition">
+
+                Lihat Detail
+
+            </button>
+
+        </div>
 
     </div>
+
+    {{-- CARD 3 --}}
+    <div class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
+
+        <img src="{{ asset('images/events/band.jpg') }}"
+             class="h-52 w-full object-cover">
+
+        <div class="p-5">
+
+            <span class="bg-pink-500 text-white text-xs px-3 py-1 rounded-full">
+                Hiburan
+            </span>
+
+            <h3 class="mt-4 text-xl font-bold text-[#24112e] leading-snug">
+                FESTIVAL BAND MAHASISWA 2026
+            </h3>
+
+            <div class="mt-4 space-y-2 text-sm text-gray-500">
+
+                <p>📅 31 Mei 2026 • 17.00 - 22.00 WIB</p>
+                <p>📍 Open Space, Bandung</p>
+
+            </div>
+
+            <div class="mt-6">
+
+                <p class="text-xs text-gray-400">
+                    Mulai dari
+                </p>
+
+                <h4 class="text-2xl font-bold text-[#7a4988]">
+                    Rp 75.000
+                </h4>
+
+            </div>
+
+            <button class="w-full mt-5 border border-[#7a4988] text-[#7a4988] py-2 rounded-lg font-semibold hover:bg-[#7a4988] hover:text-white transition">
+
+                Lihat Detail
+
+            </button>
+
+        </div>
+
+    </div>
+
+    {{-- CARD 4 --}}
+    <div class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
+
+        <img src="{{ asset('images/events/entrepreneur.jpg') }}"
+             class="h-52 w-full object-cover">
+
+        <div class="p-5">
+
+            <span class="bg-violet-600 text-white text-xs px-3 py-1 rounded-full">
+                Seminar
+            </span>
+
+            <h3 class="mt-4 text-xl font-bold text-[#24112e] leading-snug">
+                CREATIVEPRENEUR FEST 2026
+            </h3>
+
+            <div class="mt-4 space-y-2 text-sm text-gray-500">
+
+                <p>📅 10 Juni 2026 • 10.00 - 18.00 WIB</p>
+                <p>📍 Eldorado Dome, Bandung</p>
+
+            </div>
+
+            <div class="mt-6">
+
+                <p class="text-xs text-gray-400">
+                    Mulai dari
+                </p>
+
+                <h4 class="text-2xl font-bold text-[#7a4988]">
+                    Rp 125.000
+                </h4>
+
+            </div>
+
+            <button class="w-full mt-5 border border-[#7a4988] text-[#7a4988] py-2 rounded-lg font-semibold hover:bg-[#7a4988] hover:text-white transition">
+
+                Lihat Detail
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+{{-- PAGINATION --}}
+<div class="flex items-center justify-center gap-3 mt-10">
+
+    <button class="w-10 h-10 rounded-lg border border-gray-200 hover:bg-gray-50">
+        ‹
+    </button>
+
+    <button class="w-10 h-10 rounded-lg bg-[#7a4988] text-white font-bold">
+        1
+    </button>
+
+    <button class="w-10 h-10 rounded-lg border border-gray-200 hover:bg-gray-50">
+        2
+    </button>
+
+    <button class="w-10 h-10 rounded-lg border border-gray-200 hover:bg-gray-50">
+        3
+    </button>
+
+    <button class="w-10 h-10 rounded-lg border border-gray-200 hover:bg-gray-50">
+        ›
+    </button>
 
 </div>
 
