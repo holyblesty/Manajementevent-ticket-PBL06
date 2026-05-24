@@ -106,14 +106,22 @@ Route::prefix('pengunjung')->name('pengunjung.')->group(function () {
 
 //PENGUNJUNG menuju dashboard
 
+<?php
+
+use Illuminate\Support\Facades\Route;
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
 Route::get('/pengunjung/dashboard', function () {
     return view('pengunjung.dashboard.index');
 })->name('pengunjung.dashboard');
-    Route::get('/contact', function () {
-        return view('Pengunjung.contact');
-    })->name('contact');
 
-    // Halaman Pembelian Tiket
-    Route::get('/pembelian-tiket', function () {
-        return view('Pengunjung.pembelian-tiket');
-    })->name('pembelian');
+Route::get('/pengunjung/events', function () {
+    return view('pengunjung.events.index');
+})->name('pengunjung.events');
+
+Route::get('/pengunjung/events/detail', function () {
+    return view('pengunjung.events.detail');
+})->name('pengunjung.events.detail');
