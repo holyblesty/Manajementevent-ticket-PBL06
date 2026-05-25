@@ -73,16 +73,24 @@ Route::prefix('admin')->name('admin.')->group(function () {
 });
 
 
-        Route::get('/', function () {
-            return view('dashboard.index');
-        });
+      
 // ================= PENGUNJUNG AREA =================
 Route::prefix('pengunjung')->name('pengunjung.')->group(function () {
 
     // Dashboard Pengunjung
     Route::get('/dashboard', function () {
-        return view('Pengunjung.dashboard');
+        return view('Pengunjung.dashboard.index');
     })->name('dashboard');
+
+    // Events
+    Route::get('/event', function () {
+        return view('pengunjung.event.index');
+    })->name('event');
+
+    // Detail Event
+    Route::get('/event/detail', function () {
+        return view('pengunjung.event.detail');
+    })->name('event.detail');
 
     // Riwayat Pemesanan
     Route::get('/riwayat', function () {
@@ -104,24 +112,3 @@ Route::prefix('pengunjung')->name('pengunjung.')->group(function () {
         })->name('pembelian');
 });
 
-//PENGUNJUNG menuju dashboard
-
-<?php
-
-use Illuminate\Support\Facades\Route;
-
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::get('/pengunjung/dashboard', function () {
-    return view('pengunjung.dashboard.index');
-})->name('pengunjung.dashboard');
-
-Route::get('/pengunjung/events', function () {
-    return view('pengunjung.events.index');
-})->name('pengunjung.events');
-
-Route::get('/pengunjung/events/detail', function () {
-    return view('pengunjung.events.detail');
-})->name('pengunjung.events.detail');
