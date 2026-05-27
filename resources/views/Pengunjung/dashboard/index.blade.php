@@ -18,22 +18,22 @@
 </div>
 
 {{-- STATISTIK --}}
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
 
-    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-        <p class="text-gray-500 text-sm">Ticket Saya</p>
+    <div class="bg-white rounded-2xl p-3 shadow-sm border border-gray-100">
+        <p class="text-gray-800 text-sm">Ticket Saya</p>
         <h2 class="text-4xl font-bold text-[#24112e] mt-2">2</h2>
         <p class="text-xs text-gray-400 mt-1">Ticket aktif</p>
     </div>
 
-    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-        <p class="text-gray-500 text-sm">Riwayat Pendaftaran</p>
+    <div class="bg-white rounded-2xl p-3 shadow-sm border border-gray-100">
+        <p class="text-gray-800 text-sm">Riwayat Pendaftaran</p>
         <h2 class="text-4xl font-bold text-[#24112e] mt-2">5</h2>
         <p class="text-xs text-gray-400 mt-1">Event diikuti</p>
     </div>
 
-    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-        <p class="text-gray-500 text-sm">Event Mendatang</p>
+    <div class="bg-white rounded-2xl p-3 shadow-sm border border-gray-100">
+        <p class="text-gray-800 text-sm">Event Mendatang</p>
         <h2 class="text-4xl font-bold text-[#24112e] mt-2">3</h2>
         <p class="text-xs text-gray-400 mt-1">Event terdaftar</p>
     </div>
@@ -59,7 +59,7 @@
     {{-- CARD 1 --}}
     <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
 
-        <img src="{{ asset('images/event1.jpg') }}"
+        <img src="{{ asset('images/basket.png') }}"
              class="h-52 w-full object-cover">
 
         <div class="p-5">
@@ -95,7 +95,7 @@
     {{-- CARD 2 --}}
     <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
 
-        <img src="{{ asset('images/event2.jpg') }}"
+        <img src="{{ asset('images/seminar.jpg') }}"
              class="h-52 w-full object-cover">
 
         <div class="p-5">
@@ -131,7 +131,7 @@
     {{-- CARD 3 --}}
     <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
 
-        <img src="{{ asset('images/event3.jpg') }}"
+        <img src="{{ asset('images/musik.png') }}"
              class="h-52 w-full object-cover">
 
         <div class="p-5">

@@ -82,15 +82,26 @@ Route::prefix('pengunjung')->name('pengunjung.')->group(function () {
         return view('Pengunjung.dashboard.index');
     })->name('dashboard');
 
-    // Events
+    // Event
     Route::get('/event', function () {
         return view('pengunjung.event.index');
-    })->name('event');
+    })->name('home');
 
     // Detail Event
     Route::get('/event/detail', function () {
         return view('pengunjung.event.detail');
     })->name('event.detail');
+
+    //REGISTRATION 
+    // Registration Event Kelompok
+    Route::get('/registration/kelompok', function () {
+        return view('pengunjung.registration.kelompok');
+    })->name('registration.kelompok');
+
+    // Registration Event Individu
+    Route::get('/registration/individu', function () {
+        return view('pengunjung.registration.individu');
+    })->name('registration.individu');
 
     // Riwayat Pemesanan
     Route::get('/riwayat', function () {
