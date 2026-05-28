@@ -65,12 +65,37 @@ Route::prefix('admin')->name('admin.')->group(function () {
     });
 });
 
+      
 // ================= PENGUNJUNG AREA =================
 Route::prefix('pengunjung')->name('pengunjung.')->group(function () {
-    Route::get('/dashboard', function () { return view('Pengunjung.dashboard'); })->name('dashboard');
-    Route::get('/riwayat', function () { return view('Pengunjung.riwayat'); })->name('riwayat');
-    Route::get('/profil', function () { return view('Pengunjung.profil'); })->name('profil');
-    Route::get('/about', function () { return view('Pengunjung.about'); })->name('about');
-    Route::get('/contact', function () { return view('Pengunjung.contact'); })->name('contact');
-    Route::get('/pembelian-tiket', function () { return view('Pengunjung.pembelian-tiket'); })->name('pembelian');
+
+    // Dashboard Pengunjung
+    Route::get('/dashboard', function () {
+        return view('Pengunjung.dashboard');
+    })->name('dashboard');
+
+    // Riwayat Pemesanan
+    Route::get('/riwayat', function () {
+        return view('Pengunjung.riwayat');
+    })->name('riwayat');
+
+    // Profil Pengunjung
+    Route::get('/profil', function () {
+        return view('Pengunjung.profil');
+    })->name('profil');
+
+    // Halaman Informasi Umum
+    Route::get('/about', function () {
+        return view('Pengunjung.about');
+    })->name('about');
+
+    Route::get('/contact', function () {
+        return view('Pengunjung.contact');
+    })->name('contact');
+
+    // Halaman Pembelian Tiket
+    Route::get('/pembelian-tiket', function () {
+        return view('Pengunjung.pembelian-tiket');
+    })->name('pembelian');
 });
+
