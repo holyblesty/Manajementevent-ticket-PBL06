@@ -11,14 +11,13 @@ class Admin extends Authenticatable
 
     protected $table = 'admin';
 
-    // 🚨 TAMBAHKAN BARIS INI:
-    // Pastikan ejaannya SAMA PERSIS dengan di phpMyAdmin (Id_Admin)
+    // Gunakan primary key sesuai database Anda
     protected $primaryKey = 'Id_Admin'; 
 
+    // Hanya isi dengan kolom yang BENAR-BENAR ADA di database
     protected $fillable = [
         'username',
         'password',
-        'name',
         'foto',
     ];
 

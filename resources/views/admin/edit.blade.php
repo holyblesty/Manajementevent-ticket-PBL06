@@ -13,8 +13,6 @@
             100% { background-position: 0% 50%; }
         }
         .no-underline { text-decoration: none !important; }
-        
-        /* Kunci layout agar tidak pecah saat layar sedang */
         .form-container { min-width: 650px; }
         .poster-container { min-width: 280px; max-width: 300px; }
     </style>
@@ -76,17 +74,10 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-6">
-                        <div>
-                            <label class="block mb-2 text-[10px] font-black uppercase text-[#7a4988] tracking-widest">Lokasi</label>
-                            <input type="text" name="lokasi" value="{{ $event->lokasi }}" 
-                                   class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-sm font-bold text-gray-700 focus:border-[#7a4988] outline-none">
-                        </div>
-                        <div>
-                            <label class="block mb-2 text-[10px] font-black uppercase text-gray-400 tracking-widest">Kapasitas (Locked)</label>
-                            <input type="number" value="{{ $event->kapasitas }}" readonly
-                                   class="w-full p-4 bg-gray-100 border-2 border-gray-100 rounded-2xl text-sm font-black text-gray-400 cursor-not-allowed outline-none">
-                        </div>
+                    <div>
+                        <label class="block mb-2 text-[10px] font-black uppercase text-[#7a4988] tracking-widest">Lokasi</label>
+                        <input type="text" name="lokasi" value="{{ $event->lokasi }}" 
+                               class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-sm font-bold text-gray-700 focus:border-[#7a4988] outline-none">
                     </div>
                 </div>
 
@@ -97,9 +88,6 @@
                         <img id="image_preview_poster" src="{{ asset('images/' . $event->poster) }}" 
                              class="absolute inset-0 w-full h-full object-cover z-30 group-hover:scale-105 transition-transform duration-500">
                         <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center z-40 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <div class="bg-white/20 backdrop-blur-md p-3 rounded-full text-white mb-2">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
-                            </div>
                             <p class="text-[9px] font-black text-white uppercase tracking-widest">Ganti Poster</p>
                         </div>
                     </div>
@@ -109,7 +97,7 @@
 
             <div class="mt-12 flex justify-end gap-3 pt-8 border-t-2 border-gray-50">
                 <a href="{{ route('admin.dashboard') }}" class="px-8 py-4 bg-white text-gray-400 rounded-2xl font-black text-[10px] uppercase tracking-widest border-2 border-gray-100 hover:bg-gray-50 transition no-underline">Batal</a>
-                <button type="submit" class="px-12 py-4 bg-[#24112e] text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-black transition shadow-xl hover:-translate-y-1 border-none">Simpan Perubahan</button>
+                <button type="submit" class="px-12 py-4 bg-[#24112e] text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-black transition shadow-xl hover:-translate-y-1 border-none cursor-pointer">Simpan Perubahan</button>
             </div>
         </form>
     </div>
