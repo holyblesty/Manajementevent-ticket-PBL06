@@ -60,42 +60,19 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // Peserta & Check-In
     Route::prefix('peserta')->name('peserta.')->group(function () {
         Route::get('/', [PesertaController::class, 'index'])->name('index');
+        // Route ini sekarang bernama: admin.peserta.detail
+        Route::get('/detail/{id}', [PesertaController::class, 'detail'])->name('detail');
         Route::post('/checkin-individu/{eventId}/{regId}', [PesertaController::class, 'checkInIndividu'])->name('checkin_individu');
         Route::post('/checkin-anggota/{eventId}/{regId}/{memberIndex}', [PesertaController::class, 'checkInAnggota'])->name('checkin_anggota');
     });
 });
 
-      
 // ================= PENGUNJUNG AREA =================
 Route::prefix('pengunjung')->name('pengunjung.')->group(function () {
-
-    // Dashboard Pengunjung
-    Route::get('/dashboard', function () {
-        return view('Pengunjung.dashboard');
-    })->name('dashboard');
-
-    // Riwayat Pemesanan
-    Route::get('/riwayat', function () {
-        return view('Pengunjung.riwayat');
-    })->name('riwayat');
-
-    // Profil Pengunjung
-    Route::get('/profil', function () {
-        return view('Pengunjung.profil');
-    })->name('profil');
-
-    // Halaman Informasi Umum
-    Route::get('/about', function () {
-        return view('Pengunjung.about');
-    })->name('about');
-
-    Route::get('/contact', function () {
-        return view('Pengunjung.contact');
-    })->name('contact');
-
-    // Halaman Pembelian Tiket
-    Route::get('/pembelian-tiket', function () {
-        return view('Pengunjung.pembelian-tiket');
-    })->name('pembelian');
+    Route::get('/dashboard', function () { return view('Pengunjung.dashboard'); })->name('dashboard');
+    Route::get('/riwayat', function () { return view('Pengunjung.riwayat'); })->name('riwayat');
+    Route::get('/profil', function () { return view('Pengunjung.profil'); })->name('profil');
+    Route::get('/about', function () { return view('Pengunjung.about'); })->name('about');
+    Route::get('/contact', function () { return view('Pengunjung.contact'); })->name('contact');
+    Route::get('/pembelian-tiket', function () { return view('Pengunjung.pembelian-tiket'); })->name('pembelian');
 });
-
