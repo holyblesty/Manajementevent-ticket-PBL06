@@ -55,14 +55,19 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/profile', [AcaraController::class, 'profile'])->name('profile');
     Route::put('/profile/update', [AcaraController::class, 'updateProfile'])->name('profile.update');
 
-    // 5. Route Kelola Peserta & Check-In (VERSI FIXED)
-    Route::prefix('peserta')->name('peserta.')->group(function () {
-        Route::get('/', [PesertaController::class, 'index'])->name('index');
-        Route::post('/checkin-individu/{eventId}/{regId}', [PesertaController::class, 'checkInIndividu'])->name('checkin_individu');
-        
-        // Route untuk Check-in Anggota Tim (Accordion)
-        Route::post('/checkin-anggota/{eventId}/{regId}/{memberIndex}', [PesertaController::class, 'checkInAnggota'])->name('checkin_anggota');
+// 6. Route Kelola Peserta & Check-In (SUDAH DIPERBAIKI)
+Route::prefix('peserta')->name('peserta.')->group(function () {
+    // Memanggil method 'index', bukan 'peserta'
+    Route::get('/', [PesertaController::class, 'index'])->name('index');
+    
+    // Route Detail
+    Route::get('/detail/{id}', [PesertaController::class, 'detail'])->name('detail');
+    
+    // Route Check-In
+    Route::post('/checkin-individu/{eventId}/{regId}', [PesertaController::class, 'checkInIndividu'])->name('checkin_individu');
+    Route::post('/checkin-anggota/{eventId}/{regId}/{memberIndex}', [PesertaController::class, 'checkInAnggota'])->name('checkin_anggota');
     });
+
 });
 
       

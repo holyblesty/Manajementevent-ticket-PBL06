@@ -50,6 +50,14 @@ class AuthController extends Controller
         // 1. STRATEGI LOGIN ADMIN
         if (Auth::guard('admin')->attempt($credentials)) {
             $request->session()->regenerate();
+            
+            // Perbaikan: Simpan data profil ke session agar bisa diakses global
+            $admin = Auth::guard('admin')->user();
+            session([
+                'admin_name' => $admin->name,
+                'admin_foto' => $admin->foto 
+            ]);
+
             return redirect()->route('admin.dashboard'); 
         }
 
@@ -66,8 +74,10 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
+        // Perbaikan: Hapus session profil saat logout
         if (Auth::guard('admin')->check()) {
             Auth::guard('admin')->logout();
+            $request->session()->forget(['admin_name', 'admin_foto']);
         } 
         
         if (Auth::guard('web')->check()) {

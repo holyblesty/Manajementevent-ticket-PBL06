@@ -15,7 +15,7 @@ class Event extends Model
     // Sesuaikan dengan nama kolom di database kamu
     protected $fillable = [
         'judul', 'deskripsi', 'tanggal', 'lokasi', 'kategori', 
-        'kapasitas', 'jenis', 'poster'
+        'kapasitas', 'jenis', 'poster' , 'desain_tiket'
     ];
 
     // Relasi ke registrasi (pastikan nama model Registration sudah ada)

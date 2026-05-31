@@ -63,20 +63,19 @@
         {{-- SIDEBAR KIRI --}}
         <aside class="fixed top-16 left-0 z-40 w-64 h-[calc(100vh-64px)] bg-white border-r border-gray-200 flex flex-col justify-between py-6">
             <div class="w-full">
-                {{-- FOTO PROFIL --}}
-                <div class="flex flex-col items-center mb-6">
-                    <div class="w-20 h-20 rounded-full border-4 border-[#7a4988] overflow-hidden shadow-md">
-                        <img src="{{ asset('images/' . session('admin_foto', 'profile_default.jpg')) }}" 
-                             onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode(session('admin_name', 'Admin')) }}&color=ffffff&background=7a4988';"
-                             class="w-full h-full object-cover">
-                    </div>
-                </div>
-                
-                {{-- WELCOME ADMIN --}}
-                <h2 class="text-[#7a4988] font-black text-[10px] tracking-[0.2em] mb-8 uppercase text-center w-full px-4 leading-relaxed">
-                    WELCOME, <br>
-                    <span class="text-[#24112e] text-xs tracking-normal block mt-1">{{ session('admin_name', 'Admin') }}</span>
-                </h2>
+{{-- FOTO PROFIL (VERSI STABIL) --}}
+<div class="flex flex-col items-center mb-6">
+    <div class="w-20 h-20 rounded-full border-4 border-[#7a4988] overflow-hidden shadow-md">
+        <img src="{{ asset('images/' . (session('admin_foto') ?: 'profile_default.jpg')) }}" 
+             alt="Admin"
+             onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode(session('admin_name', 'Admin')) }}&color=ffffff&background=7a4988';"
+             class="w-full h-full object-cover">
+    </div>
+    
+    <h3 class="mt-3 text-[#24112e] font-black text-xs uppercase tracking-wider text-center">
+        {{ session('admin_name', 'Admin') }}
+    </h3>
+</div>
                 
                 {{-- NAVIGASI SIDEBAR --}}
                 <nav class="w-full space-y-2 px-4">

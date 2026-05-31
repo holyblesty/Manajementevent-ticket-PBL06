@@ -11,7 +11,7 @@ class PesertaController extends Controller
 {
     public function index() {
         $events = Event::paginate(10);
-        return view('admin.peserta.index', compact('events'));
+        return view('admin.peserta', compact('events'));
     }
 
     public function detail($id) {

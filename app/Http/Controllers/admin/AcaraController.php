@@ -104,12 +104,15 @@ class AcaraController extends Controller
         $event = Event::where('id_event', $id_event)->firstOrFail();
         $data = ['kapasitas' => $request->kapasitas];
         
+        // Memperbaiki masalah desain_tiket yang tidak tersimpan
         if ($request->hasFile('desain_tiket')) {
             if ($event->desain_tiket && $event->desain_tiket !== 'ticket_default.jpg' && File::exists(public_path('images/' . $event->desain_tiket))) {
                 File::delete(public_path('images/' . $event->desain_tiket));
             }
             $imageName = 'ticket_' . time() . '.' . $request->desain_tiket->extension();
             $request->desain_tiket->move(public_path('images'), $imageName);
+            
+            // INI YANG DITAMBAHKAN:
             $data['desain_tiket'] = $imageName;
         }
 
@@ -126,17 +129,15 @@ class AcaraController extends Controller
             );
         }
 
-        return redirect()->route('admin.dashboard')->with('success', 'Tiket berhasil diperbarui!');
+        return redirect()->route('admin.dashboard')->with('success', 'Tiket dan desain berhasil diperbarui!');
     }
 
     public function profile() 
     {
         $admin = Auth::guard('admin')->user(); 
-        
         if (!$admin) {
             abort(403, 'Anda belum login sebagai Admin.');
         }
-
         return view('admin.profile', compact('admin'));
     }
 
@@ -149,13 +150,15 @@ class AcaraController extends Controller
         $admin = Auth::guard('admin')->user();
 
         if ($request->hasFile('foto')) {
-            if ($admin->foto && $admin->foto !== 'profile_default.jpg') {
-                $oldPath = public_path('images/' . $admin->foto);
-                if (File::exists($oldPath)) File::delete($oldPath);
+            if ($admin->foto && $admin->foto !== 'profile_default.jpg' && File::exists(public_path('images/' . $admin->foto))) {
+                File::delete(public_path('images/' . $admin->foto));
             }
+
             $imageName = 'profile_' . time() . '.' . $request->foto->extension();
             $request->foto->move(public_path('images'), $imageName);
+            
             $admin->foto = $imageName;
+            session(['admin_foto' => $imageName]);
         }
 
         $admin->save();
