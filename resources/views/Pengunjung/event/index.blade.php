@@ -109,7 +109,7 @@
     {{-- CARD 1 --}}
     <div class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
 
-        <img src="{{ asset('images/events/seminar.jpg') }}"
+        <img src="{{ asset('images/seminar.jpg') }}"
              class="h-52 w-full object-cover">
 
         <div class="p-5">
@@ -154,7 +154,7 @@
     {{-- CARD 2 --}}
     <div class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
 
-        <img src="{{ asset('images/events/futsal.jpg') }}"
+        <img src="{{ asset('images/futsal.jpg') }}"
              class="h-52 w-full object-cover">
 
         <div class="p-5">
@@ -199,7 +199,7 @@
     {{-- CARD 3 --}}
     <div class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
 
-        <img src="{{ asset('images/events/band.jpg') }}"
+        <img src="{{ asset('images/musik.png') }}"
              class="h-52 w-full object-cover">
 
         <div class="p-5">
@@ -244,7 +244,7 @@
     {{-- CARD 4 --}}
     <div class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
 
-        <img src="{{ asset('images/events/entrepreneur.jpg') }}"
+        <img src="{{ asset('images/entrepreneur.jpg') }}"
              class="h-52 w-full object-cover">
 
         <div class="p-5">

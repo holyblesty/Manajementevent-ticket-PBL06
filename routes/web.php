@@ -6,7 +6,8 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\AcaraController;
 use App\Http\Controllers\Admin\PesertaController;
 use App\Http\Controllers\Admin\StatistikController;
-
+use App\Http\Controllers\Pengunjung\DashboardController as PengunjungDashboardController;
+use App\Http\Controllers\Pengunjung\KelompokController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -70,22 +71,19 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // Route untuk Check-in Anggota Tim (Accordion)
         Route::post('/checkin-anggota/{eventId}/{regId}/{memberIndex}', [PesertaController::class, 'checkInAnggota'])->name('checkin_anggota');
     });
-});
-
-
-      
+});      
 // ================= PENGUNJUNG AREA =================
 Route::prefix('pengunjung')->name('pengunjung.')->group(function () {
 
     // Dashboard Pengunjung
-    Route::get('/dashboard', function () {
-        return view('Pengunjung.dashboard.index');
-    })->name('dashboard');
+   Route::get('/dashboard', [PengunjungDashboardController::class, 'index'])
+    ->name('dashboard');
 
     // Event
     Route::get('/event', function () {
         return view('pengunjung.event.index');
     })->name('home');
+    
 
     // Detail Event
     Route::get('/event/detail', function () {
@@ -102,6 +100,12 @@ Route::prefix('pengunjung')->name('pengunjung.')->group(function () {
     Route::get('/registration/individu', function () {
         return view('pengunjung.registration.individu');
     })->name('registration.individu');
+
+    // Registrasi Event Kelompok
+    
+    Route::get('/pengunjung/kelompok', function () {
+        return view('pengunjung.kelompok.show');
+    })->name('registration.kelompok');
 
     // Riwayat Pemesanan
     Route::get('/riwayat', function () {
@@ -121,5 +125,5 @@ Route::prefix('pengunjung')->name('pengunjung.')->group(function () {
         Route::get('/pembelian-tiket', function () {
             return view('Pengunjung.pembelian-tiket');
         })->name('pembelian');
-});
 
+});

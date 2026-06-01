@@ -47,8 +47,8 @@
         Event Rekomendasi Untuk Anda
     </h2>
 
-    <a href="#"
-       class="text-[#7a4988] font-semibold text-sm no-underline">
+    <a href="{{ route('event.index') }}"
+       class="bg-gradient-to-r from-purple-600 to-pink-500 text-white px-6 py-3 rounded-2xl shadow-lg hover:scale-105 transition duration-300 font-semibold">
         Lihat Semua
     </a>
 
