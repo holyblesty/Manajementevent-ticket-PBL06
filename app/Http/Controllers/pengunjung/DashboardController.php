@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Pengunjung;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 use App\Models\Event;
 use App\Models\Tiket;
 
@@ -12,42 +12,43 @@ class DashboardController extends Controller
 {
     public function index(Request $request)
     {
-        // User login
-        $user = Auth::user();
+        $query = Event::query();
 
-        // Search event
-        $search = $request->query('search');
+        if ($request->filled('search')) {
+            $query->where(function ($q) use ($request) {
 
-        $eventQuery = Event::query();
+                $q->where('judul', 'like', '%' . $request->search . '%')
+                  ->orWhere('lokasi', 'like', '%' . $request->search . '%');
 
-        if (!empty($search)) {
-            $eventQuery->where(function ($q) use ($search) {
-                $q->where('judul', 'like', "%{$search}%")
-                  ->orWhere('lokasi', 'like', "%{$search}%")
-                  ->orWhere('kategori', 'like', "%{$search}%");
             });
         }
 
-        // Event rekomendasi
-        $recommendedEvents = $eventQuery
-            ->latest()
-            ->take(6)
-            ->get();
+        if ($request->filled('kategori')) {
+            $query->where('kategori', $request->kategori);
+        }
 
-        // Total jenis tiket
-        $totalTickets = Tiket::count();
+        $events = $query
+            ->orderBy('tanggal', 'asc')
+            ->paginate(6);
 
-        // Placeholder sementara
-        $totalRegistrations = 0;
-        $upcomingEvents = 0;
+        $jumlahTiket = Tiket::count();
 
-        return view('pengunjung.dashboard', [
-            'user' => $user,
-            'events' => $recommendedEvents,
-            'totalTickets' => $totalTickets,
-            'totalRegistrations' => $totalRegistrations,
-            'upcomingEvents' => $upcomingEvents,
-            'search' => $search,
-        ]);
+        $riwayatPendaftaran = 0;
+
+        $eventMendatang = Event::whereDate(
+            'tanggal',
+            '>=',
+            now()
+        )->count();
+
+        return view(
+            'pengunjung.dashboard',
+            compact(
+                'events',
+                'jumlahTiket',
+                'riwayatPendaftaran',
+                'eventMendatang'
+            )
+        );
     }
 }
