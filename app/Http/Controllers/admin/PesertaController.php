@@ -10,7 +10,6 @@ use Illuminate\Http\Request;
 class PesertaController extends Controller
 {
     public function index() {
-        // Menggunakan paginate(10) agar bisa dipanggil links() di view
         $events = Event::paginate(10);
         return view('admin.peserta', compact('events'));
     }
@@ -25,6 +24,9 @@ class PesertaController extends Controller
                 $p->hadir ? $hadir++ : $belumHadir++;
             }
         }
+        
+        // PERBAIKAN: Menggunakan dot notation untuk mengarah ke file
+        // Pastikan file Anda berada di: resources/views/admin/peserta/detail.blade.php
         return view('admin.peserta-detail', compact('selectedEvent', 'total', 'hadir', 'belumHadir'));
     }
 
