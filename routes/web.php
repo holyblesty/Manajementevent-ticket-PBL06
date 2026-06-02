@@ -7,7 +7,10 @@ use App\Http\Controllers\Admin\AcaraController;
 use App\Http\Controllers\Admin\PesertaController;
 use App\Http\Controllers\Admin\StatistikController;
 use App\Http\Controllers\Pengunjung\DashboardController as PengunjungDashboardController;
-use App\Http\Controllers\Pengunjung\KelompokController;
+use App\Http\Controllers\Pengunjung\EventController;
+use App\Http\Controllers\Pengunjung\ListKelompokController;
+use App\Http\Controllers\Pengunjung\RiwayatController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -22,26 +25,22 @@ Route::get('/', function () {
 // AUTENTIKASI
 // =====================================================
 Route::middleware('guest')->group(function () {
-
-    Route::get('/register', [AuthController::class, 'showRegister'])
-        ->name('register');
-
+    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
+    Route::get('/login', function () {
+        return view('welcome');
+        })->name('login');
 
-    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
 });
 
 Route::middleware('auth:admin,web')->group(function () {
-
-    Route::post('/logout', [AuthController::class, 'logout'])
-        ->name('logout');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
 // =====================================================
 // ADMIN AREA
 // =====================================================
-
 Route::prefix('admin')->name('admin.')->group(function () {
     
     // 1. Dashboard Utama (Mengaktifkan DashboardController sesuai konsep MVC)
@@ -60,70 +59,48 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // 5. Route Profile Admin
     Route::get('/profile', [AcaraController::class, 'profile'])->name('profile');
     Route::put('/profile/update', [AcaraController::class, 'updateProfile'])->name('profile.update');
-
-    // 5. Route Kelola Peserta & Check-In (VERSI FIXED)
-    Route::prefix('peserta')->name('peserta.')->group(function () {
-        Route::get('/', [PesertaController::class, 'index'])->name('index');
-        
-        // Route untuk Check-in Individu
-        Route::post('/checkin-individu/{eventId}/{regId}', [PesertaController::class, 'checkInIndividu'])->name('checkin_individu');
-        
-        // Route untuk Check-in Anggota Tim (Accordion)
-        Route::post('/checkin-anggota/{eventId}/{regId}/{memberIndex}', [PesertaController::class, 'checkInAnggota'])->name('checkin_anggota');
     });
-});      
+
+// 6. Route Kelola Peserta & Check-In (SUDAH DIPERBAIKI)
+Route::prefix('peserta')->name('peserta.')->group(function () {
+    // Memanggil method 'index', bukan 'peserta'
+    Route::get('/', [PesertaController::class, 'index'])->name('index');
+    
+    // Route Detail
+    Route::get('/detail/{id}', [PesertaController::class, 'detail'])->name('detail');
+    
+    // Route Check-In
+    Route::post('/checkin-individu/{eventId}/{regId}', [PesertaController::class, 'checkInIndividu'])->name('checkin_individu');
+    Route::post('/checkin-anggota/{eventId}/{regId}/{memberIndex}', [PesertaController::class, 'checkInAnggota'])->name('checkin_anggota');
+    });    
+
+
+    
 // ================= PENGUNJUNG AREA =================
-Route::prefix('pengunjung')->name('pengunjung.')->group(function () {
+Route::prefix('pengunjung')->name('pengunjung.')->middleware('auth')->group(function () {
 
-    // Dashboard Pengunjung
-   Route::get('/dashboard', [PengunjungDashboardController::class, 'index'])
-    ->name('dashboard');
-
-    // Event
+    // Dashboard
+    Route::get('/dashboard',[PengunjungDashboardController::class, 'index'])->name('dashboard');
+    
+    // Halaman Event
     Route::get('/event', function () {
-        return view('pengunjung.event.index');
-    })->name('home');
-    
-
+        return view('Pengunjung.show');
+    })->name('event');
+   
     // Detail Event
-    Route::get('/event/detail', function () {
-        return view('pengunjung.event.detail');
-    })->name('event.detail');
+    Route::get( '/event/{id}', [EventController::class, 'show'] )->name('event.show');
 
-    //REGISTRATION 
-    // Registration Event Kelompok
-    Route::get('/registration/kelompok', function () {
-        return view('pengunjung.registration.kelompok');
-    })->name('registration.kelompok');
+    // Detail Tiket
+    Route::get('/detail-tiket', function () {
+        return view('Pengunjung.detail-tiket');
+    })->name('detail-tiket');
 
-    // Registration Event Individu
-    Route::get('/registration/individu', function () {
-        return view('pengunjung.registration.individu');
-    })->name('registration.individu');
+    // Kelompok
+    Route::get('/pengunjung/kelompok',[ListKelompokController::class, 'show'])->name('kelompok');
+    Route::post('/pengunjung/kelompok/simpan',[ListKelompokController::class, 'simpan'])->name('kelompok.simpan');
 
-    // Registrasi Event Kelompok
-    
-    Route::get('/pengunjung/kelompok', function () {
-        return view('pengunjung.kelompok.show');
-    })->name('registration.kelompok');
-
-    // Riwayat Pemesanan
+    // Riwayat
     Route::get('/riwayat', function () {
         return view('Pengunjung.riwayat');
     })->name('riwayat');
-
-    // Profil Pengunjung
-    Route::get('/profil', function () {
-        return view('Pengunjung.profil');
-    })->name('profil');
-
-    // Halaman Informasi Umum
-    Route::get('/about', function () {
-        return view('Pengunjung.about');
-    })->name('about');
-
-        Route::get('/pembelian-tiket', function () {
-            return view('Pengunjung.pembelian-tiket');
-        })->name('pembelian');
-
 });

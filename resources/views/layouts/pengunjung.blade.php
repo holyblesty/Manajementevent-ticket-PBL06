@@ -106,8 +106,8 @@
 
                 </div>
 
-                <h2 class="mt-4 text-lg font-bold text-[#24112e]">
-                    Sisi
+                <h2 class="text-base font-semibold text-center break-words">
+                    {{ Auth::user()->name }}
                 </h2>
 
                 <p class="text-sm text-[#7a4988] font-medium">

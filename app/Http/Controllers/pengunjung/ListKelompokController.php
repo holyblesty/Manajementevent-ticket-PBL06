@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Pengunjung;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Kelompok;
 
@@ -9,32 +10,30 @@ class ListKelompokController extends Controller
 {
     public function show()
     {
-        // Mengambil semua data dari tabel kelompoks
-        $data = Kelompok::get();
+        $kelompoks = Kelompok::all();
 
-        // Membuat array kosong
-        $nama_kelompok = [];
-        $jumlah_anggota = [];
-        $event_id = [];
-
-        // Looping data
-        foreach ($data as $kelompok) {
-
-            $nama_kelompok[] = $kelompok->nama_kelompok;
-
-            $jumlah_anggota[] = $kelompok->jumlah_anggota;
-
-            $event_id[] = $kelompok->event_id;
-        }
-
-        // Mengirim data ke view
         return view(
-            'Pengunjung.kelompok.list_kelompok',
-            compact(
-                'nama_kelompok',
-                'jumlah_anggota',
-                'event_id'
-            )
+            'pengunjung.kelompok',
+            compact('kelompoks')
         );
+    }
+
+    public function simpan(Request $request)
+    {
+        $request->validate([
+            'nama_kelompok' => 'required',
+            'jumlah_anggota' => 'required|numeric',
+            'event_id' => 'required|numeric'
+        ]);
+
+        Kelompok::create([
+            'nama_kelompok' => $request->nama_kelompok,
+            'jumlah_anggota' => $request->jumlah_anggota,
+            'event_id' => $request->event_id
+        ]);
+
+        return redirect()
+            ->route('kelompok')
+            ->with('success', 'Data kelompok berhasil disimpan');
     }
 }

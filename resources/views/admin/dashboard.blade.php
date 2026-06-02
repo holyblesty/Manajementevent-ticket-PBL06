@@ -19,15 +19,18 @@
         <p class="bg-white/20 inline-block px-5 py-2 rounded text-sm font-bold uppercase tracking-widest text-white">Kelola Acara</p>
     </div>
     
+    {{-- PERBAIKAN: Menggunakan Auth::guard('admin') agar data dinamis sesuai akun login --}}
     <a href="{{ route('admin.profile') }}" class="flex items-center gap-4 bg-white/10 hover:bg-white/20 p-3 pr-8 rounded-full transition-all group no-underline border border-white/20">
         <div class="w-14 h-14 rounded-full border-2 border-white overflow-hidden shadow-md">
-           <img src="{{ asset('images/' . session('admin_foto', 'profile_default.jpg')) }}?v={{ time() }}" 
-                onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode(session('admin_name', 'Vivian')) }}&color=7a4988&background=ffffff';"
-                class="w-full h-full object-cover">
+             <img src="{{ Auth::guard('admin')->user()->foto ? asset('images/' . Auth::guard('admin')->user()->foto) : asset('images/profile_default.jpg') }}?v={{ time() }}" 
+                  onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode(Auth::guard('admin')->user()->username) }}&color=7a4988&background=ffffff';"
+                  class="w-full h-full object-cover">
         </div>
         <div class="text-left">
             <p class="text-xs font-black uppercase tracking-widest text-[#be93d4] leading-none mb-1.5">Administrator</p>
-            <p class="text-lg font-bold text-white leading-none group-hover:text-[#be93d4] transition-colors">{{ session('admin_name', 'Vivian Sarah Diva Alisianoi') }}</p>
+            <p class="text-lg font-bold text-white leading-none group-hover:text-[#be93d4] transition-colors">
+                {{ Auth::guard('admin')->user()->username }}
+            </p>
         </div>
     </a>
 </div>
@@ -82,23 +85,20 @@
                             <img src="{{ asset('images/' . $event->poster) }}" class="w-full h-full object-cover">
                         </div>
                     </td>
-                    
                     <td class="px-6 py-5 text-center">
-                        @if($event->desain_tiket)
-                            <div onclick="openModal('{{ asset('images/' . $event->desain_tiket) }}', 'E-Ticket: {{ $event->judul }}')" class="w-20 h-14 bg-gray-100 rounded border border-gray-200 overflow-hidden shadow-sm mx-auto cursor-pointer hover:ring-2 hover:ring-[#7a4988] transition-all">
+                        @if(!empty($event->desain_tiket))
+                            <div onclick="openModal('{{ asset('images/' . $event->desain_tiket) }}', 'E-Ticket: {{ $event->judul }}')" 
+                                 class="w-20 h-14 bg-gray-100 rounded border border-gray-200 overflow-hidden shadow-sm mx-auto cursor-pointer hover:ring-2 hover:ring-[#7a4988] transition-all">
                                 <img src="{{ asset('images/' . $event->desain_tiket) }}" class="w-full h-full object-cover">
                             </div>
                         @else
-                            <span class="text-sm font-bold text-gray-300 uppercase italic tracking-widest">Belum Ada</span>
+                            <span class="text-sm font-bold text-gray-300 uppercase italic tracking-widest">BELUM ADA</span>
                         @endif
                     </td>
-                    
                     <td class="px-6 py-5 font-bold text-xl text-gray-800 judul-acara">{{ $event->judul }}</td>
-                    
                     <td class="px-6 py-5 text-lg text-gray-500 font-medium whitespace-nowrap">
                         {{ date('d-m-y', strtotime($event->tanggal)) }}
                     </td>
-
                     <td class="px-6 py-5">
                         <div class="flex items-center gap-2 text-lg text-gray-600 font-medium">
                             <svg class="w-5 h-5 text-[#be93d4] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -108,11 +108,9 @@
                             <span class="lokasi-acara">{{ $event->lokasi ?? '-' }}</span>
                         </div>
                     </td>
-                    
                     <td class="px-6 py-5 text-center">
                         <span class="px-5 py-2 bg-[#be93d4]/20 text-[#7a4988] rounded-full text-sm font-bold uppercase tracking-wider kategori-label">{{ $event->kategori }}</span>
                     </td>
-                    
                     <td class="px-6 py-5 text-center">
                         <div class="inline-flex items-center justify-center bg-gray-100 px-5 py-3 rounded-md border border-gray-200">
                             <svg class="w-5 h-5 text-gray-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
@@ -121,7 +119,6 @@
                             <span class="text-lg font-bold text-gray-700">{{ $event->kapasitas }} <span class="text-sm text-gray-400 font-bold uppercase ml-1">Org</span></span>
                         </div>
                     </td>
-                    
                     <td class="px-6 py-5">
                         <div class="flex justify-center items-center gap-3"> 
                             <a href="{{ route('admin.acara.tiket', $event->id_event) }}" class="no-underline" style="width: 90px; height: 42px; background-color: #be93d4; color: #24112e; border-radius: 8px; font-size: 13px; font-weight: 900; display: flex; align-items: center; justify-content: center; text-transform: uppercase; letter-spacing: 0.05em;">TIKET</a>
@@ -143,7 +140,6 @@
 @include('components.pagination')
 
 <script>
-    // FUNGSI MODAL PREVIEW IMAGE
     function openModal(imgSrc, caption) {
         document.getElementById('modalImg').src = imgSrc;
         document.getElementById('modalCaption').innerText = caption;
@@ -160,7 +156,6 @@
         if(e.target === this) closeModal();
     });
 
-    // POP-UP SWEETALERT UNTUK AKSI DELETE
     function confirmDelete(button) {
         const form = button.closest('.form-delete');
         Swal.fire({
@@ -184,7 +179,6 @@
         })
     }
 
-    // SCRIPT LIVE FILTER KATEGORI & REAL-TIME SEARCH INPUT
     const searchInput = document.getElementById('searchInput');
     const filterKategori = document.getElementById('filterKategori');
 
@@ -208,7 +202,6 @@
     searchInput.addEventListener('keyup', applyFilters);
     filterKategori.addEventListener('change', applyFilters);
 
-    // Jalankan filter sekali saat halaman pertama kali dimuat untuk menyesuaikan dropdown backend
     window.addEventListener('DOMContentLoaded', applyFilters);
 </script>
 @endsection

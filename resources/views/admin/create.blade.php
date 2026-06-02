@@ -18,11 +18,7 @@
         input[type=number] { -moz-appearance: textfield; }
     </style>
 </head>
-<body 
-    style="margin: 0; min-height: 100vh; background: linear-gradient(-45deg, #2b1238, #7a4988, #4b1d52, #9e7bb5); background-size: 400% 400%; animation: swush 10s ease infinite;"
-    class="flex flex-col items-center py-10 font-sans antialiased text-gray-900"
->
-
+<body style="margin: 0; min-height: 100vh; background: linear-gradient(-45deg, #2b1238, #7a4988, #4b1d52, #9e7bb5); background-size: 400% 400%; animation: swush 10s ease infinite;" class="flex flex-col items-center py-10 font-sans antialiased text-gray-900">
 
     <div class="bg-white w-full max-w-[1100px] rounded-[2.5rem] shadow-2xl overflow-hidden mb-10 mx-4 border border-gray-100">
         
@@ -111,22 +107,12 @@
                             <img id="image_preview" src="#" class="hidden absolute inset-0 w-full h-full object-cover z-30">
                         </div>
                     </div>
-
-                    <div class="bg-purple-50 p-6 rounded-3xl border-2 border-purple-100 shadow-sm text-center">
-                        <label class="block mb-1 text-[9px] font-black uppercase text-purple-300 tracking-widest">Kapasitas</label>
-                        <div class="flex items-baseline justify-center gap-1">
-                            <span class="text-3xl font-black text-[#7a4988]">0</span>
-                            <span class="text-[10px] font-bold text-gray-400 uppercase">Orang</span>
-                        </div>
-                        <p class="text-[8px] text-[#be93d4] mt-2 font-bold uppercase italic leading-tight">* Otomatis terhitung di menu Tiket</p>
-                    </div>
                 </div>
-
             </div>
 
             <div class="mt-12 flex justify-end gap-3 pt-8 border-t-2 border-gray-50">
-                <a href="{{ route('admin.dashboard') }}" class="px-8 py-4 bg-white text-gray-400 rounded-2xl font-black text-[10px] uppercase tracking-widest border-2 border-gray-100 hover:bg-gray-50 transition no-underline">Batal</a>
-                <button type="submit" class="px-12 py-4 bg-[#24112e] text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-black transition shadow-xl hover:-translate-y-1 border-none">Simpan Acara</button>
+                <a href="{{ route('admin.acara.index') }}" class="px-8 py-4 bg-white text-gray-400 rounded-2xl font-black text-[10px] uppercase tracking-widest border-2 border-gray-100 hover:bg-gray-50 transition no-underline">Batal</a>
+                <button type="submit" class="px-12 py-4 bg-[#24112e] text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-black transition shadow-xl hover:-translate-y-1 border-none cursor-pointer">Simpan Acara</button>
             </div>
         </form>
     </div>
