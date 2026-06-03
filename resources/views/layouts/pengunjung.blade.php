@@ -22,7 +22,7 @@
             <div class="flex items-center gap-4">
 
                 <img src="{{ asset('images/logo.jpeg') }}"
-                     class="h-10">
+                     class="h-16">
 
             </div>
 
@@ -228,7 +228,7 @@
 
                 <ul class="space-y-3 text-gray-300">
 
-                    <li>📧 Sisi@gmail.com</li>
+                    <li>📧 lusi@gmail.com</li>
                     <li>📞 +62 895 3128 7505</li>
 
                 </ul>
