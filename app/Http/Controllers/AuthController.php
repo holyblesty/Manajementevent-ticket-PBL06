@@ -10,10 +10,8 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function showRegister()
-    {
-        return redirect('/');
-    }
+    public function showLogin() { return view('welcome'); }
+    public function showRegister() { return view('welcome'); }
 
     public function register(Request $request)
     {
@@ -32,7 +30,7 @@ class AuthController extends Controller
             'role' => 'pengunjung', 
         ]);
 
-        return redirect('/')->with('success', 'Akun berhasil dibuat!');
+        return redirect('/')->with('success', 'Akun berhasil dibuat! Silakan login.');
     }
 
     public function login(Request $request)
@@ -48,13 +46,14 @@ class AuthController extends Controller
         ];
 
         // 1. STRATEGI LOGIN ADMIN
+        // Menggunakan guard 'admin' yang sudah didefinisikan di config/auth.php
         if (Auth::guard('admin')->attempt($credentials)) {
             $request->session()->regenerate();
-            
-            // Perbaikan: Simpan data profil ke session agar bisa diakses global
             $admin = Auth::guard('admin')->user();
+            
+            // PERBAIKAN: Menggunakan 'username' karena 'name' tidak ada di tabel admin
             session([
-                'admin_name' => $admin->name,
+                'admin_username' => $admin->username,
                 'admin_foto' => $admin->foto 
             ]);
 
@@ -74,10 +73,9 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        // Perbaikan: Hapus session profil saat logout
         if (Auth::guard('admin')->check()) {
             Auth::guard('admin')->logout();
-            $request->session()->forget(['admin_name', 'admin_foto']);
+            $request->session()->forget(['admin_username', 'admin_foto']);
         } 
         
         if (Auth::guard('web')->check()) {

@@ -9,12 +9,16 @@ class Participant extends Model
 {
     use HasFactory;
 
-    // Menentukan nama tabel yang sebenarnya di database
     protected $table = 'participants';
     
-    // Menentukan Primary Key yang kita buat kustom
     protected $primaryKey = 'id_participant';
 
     // Kolom-kolom yang boleh diisi
     protected $fillable = ['id_registration', 'nama', 'kode', 'email', 'instansi', 'hadir'];
+
+    // Menambahkan relasi ke Registration (Opsional tapi disarankan)
+    public function registration()
+    {
+        return $this->belongsTo(Registration::class, 'id_registration', 'id_registration');
+    }
 }
