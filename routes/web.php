@@ -30,6 +30,7 @@ Route::middleware('guest')->group(function () {
     Route::get('/login', function () {
         return view('welcome');
         })->name('login');
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 
     Route::post('/login', [AuthController::class, 'login']);
 });
@@ -74,6 +75,19 @@ Route::prefix('peserta')->name('peserta.')->group(function () {
     Route::post('/checkin-anggota/{eventId}/{regId}/{memberIndex}', [PesertaController::class, 'checkInAnggota'])->name('checkin_anggota');
     });    
 
+// 6. Route Kelola Peserta & Check-In (SUDAH DIPERBAIKI)
+Route::prefix('peserta')->name('peserta.')->group(function () {
+    // Memanggil method 'index', bukan 'peserta'
+    Route::get('/', [PesertaController::class, 'index'])->name('index');
+    
+    // Route Detail
+    Route::get('/detail/{id}', [PesertaController::class, 'detail'])->name('detail');
+    
+    // Route Check-In
+    Route::post('/checkin-individu/{eventId}/{regId}', [PesertaController::class, 'checkInIndividu'])->name('checkin_individu');
+    Route::post('/checkin-anggota/{eventId}/{regId}/{memberIndex}', [PesertaController::class, 'checkInAnggota'])->name('checkin_anggota');
+    });
+
 
     
 // ================= PENGUNJUNG AREA =================
@@ -103,4 +117,28 @@ Route::prefix('pengunjung')->name('pengunjung.')->middleware('auth')->group(func
     Route::get('/riwayat', function () {
         return view('Pengunjung.riwayat');
     })->name('riwayat');
+
+    // Riwayat Pemesanan
+    Route::get('/riwayat', function () {
+        return view('Pengunjung.riwayat');
+    })->name('riwayat');
+
+    // Profil Pengunjung
+    Route::get('/profil', function () {
+        return view('Pengunjung.profil');
+    })->name('profil');
+
+    // Halaman Informasi Umum
+    Route::get('/about', function () {
+        return view('Pengunjung.about');
+    })->name('about');
+
+    Route::get('/contact', function () {
+        return view('Pengunjung.contact');
+    })->name('contact');
+
+    // Halaman Pembelian Tiket
+    Route::get('/pembelian-tiket', function () {
+        return view('Pengunjung.pembelian-tiket');
+    })->name('pembelian');
 });
