@@ -73,7 +73,7 @@
     </div>
 
     <h3 class="mt-3 text-[#24112e] font-black text-xs uppercase tracking-wider text-center group-hover:text-[#7a4988] transition-colors">
-        {{ session('admin_name', 'Admin') }}
+       {{ Auth::guard('admin')->user()->username }}
     </h3>
 
     <span class="text-xs text-gray-500 mt-1 font-semibold">
