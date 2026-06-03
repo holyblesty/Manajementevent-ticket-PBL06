@@ -22,7 +22,7 @@
             <div class="flex items-center gap-4">
 
                 <img src="{{ asset('images/logo.jpeg') }}"
-                     class="h-10">
+                     class="h-16">
 
             </div>
 
@@ -101,13 +101,13 @@
 
                 <div class="w-24 h-24 rounded-full overflow-hidden border-4 border-[#7a4988] shadow-md">
 
-                    <img src="{{ asset('images/profile-user.jpg') }}"
+                    <img src="{{ asset('images/profile_1777288175.webp') }}"
                          class="w-full h-full object-cover">
 
                 </div>
 
-                <h2 class="mt-4 text-lg font-bold text-[#24112e]">
-                    Sisi
+                <h2 class="text-base font-semibold text-center break-words">
+                    {{ Auth::user()->name }}
                 </h2>
 
                 <p class="text-sm text-[#7a4988] font-medium">
@@ -117,38 +117,38 @@
             </div>
 
             {{-- MENU --}}
-            <nav class="mt-10 px-4 space-y-2">
+            <nav class="mt-4 px-3 flex-col gap-1 font-bold">
 
                 <a href="#"
-                   class="flex items-center gap-3 px-4 py-3 rounded-xl bg-[#f3ebf8] text-[#7a4988] font-semibold no-underline">
+                   class="flex items-center gap-3 px-2 py-3 rounded-xl bg-[#f3ebf8] text-[#7a4988] font-semibold no-underline">
 
                     🏠 Beranda
 
                 </a>
 
                 <a href="#"
-                   class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-[#f9f5fc] hover:text-[#7a4988] no-underline">
+                   class="flex items-center gap-4 px-2 py-3 rounded-xl text-gray-600 hover:bg-[#f9f5fc] hover:text-[#7a4988] no-underline">
 
                     🎫 Ticket Saya
 
                 </a>
 
                 <a href="#"
-                   class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-[#f9f5fc] hover:text-[#7a4988] no-underline">
+                   class="flex items-center gap-2 px-2 py-3 rounded-xl text-gray-600 hover:bg-[#f9f5fc] hover:text-[#7a4988] no-underline">
 
                     🕒 Riwayat Pendaftaran
 
                 </a>
 
                 <a href="#"
-                   class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-[#f9f5fc] hover:text-[#7a4988] no-underline">
+                   class="flex items-center gap-2 px-2 py-3 rounded-xl text-gray-600 hover:bg-[#f9f5fc] hover:text-[#7a4988] no-underline">
 
                     👤 Profil
 
                 </a>
 
                 <a href="#"
-                   class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-red-50 hover:text-red-500 no-underline">
+                   class="flex items-center gap-2 px-2 py-3 rounded-xl text-gray-600 hover:bg-red-50 hover:text-red-500 no-underline">
 
                     🚪 Keluar
 
@@ -179,7 +179,7 @@
                      class="h-20 mb-4">
 
                 <p class="text-gray-300 text-sm leading-relaxed">
-                    EventTicketing adalah platform untuk menemukan dan memesan tiket event terbaik dengan mudah dan cepat.
+                    Event Ticketing adalah platform untuk menemukan dan memesan tiket event terbaik dengan mudah dan cepat.
                 </p>
 
             </div>
@@ -228,7 +228,7 @@
 
                 <ul class="space-y-3 text-gray-300">
 
-                    <li>📧 Sisi@gmail.com</li>
+                    <li>📧 lusi@gmail.com</li>
                     <li>📞 +62 895 3128 7505</li>
 
                 </ul>

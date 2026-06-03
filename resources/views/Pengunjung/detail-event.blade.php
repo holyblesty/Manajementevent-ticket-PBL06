@@ -14,7 +14,7 @@
     <span>›</span>
 
     <span class="text-[#7a4988] font-semibold">
-        Detail Tiket
+        Detail Event
     </span>
 
 </div>
@@ -30,7 +30,7 @@
             {{-- IMAGE --}}
             <div class="w-full lg:w-72">
 
-                <img src="{{ asset('images/events/basket-detail.jpg') }}"
+                <img src="{{ asset('images/basket.png') }}"
                      class="w-full h-72 object-cover rounded-2xl shadow-sm">
 
             </div>
