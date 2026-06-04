@@ -9,12 +9,11 @@ class Admin extends Authenticatable
 {
     use Notifiable;
 
-    protected $table = 'admin';
+    protected $table = 'admin'; // Sesuai dengan nama tabel di database Anda
+    protected $primaryKey = 'Id_admin'; // Sesuaikan huruf kecil 'a'
+    
+    public $timestamps = false; // Karena di database Anda 'created_at' banyak yang NULL
 
-    // Gunakan primary key sesuai database Anda
-    protected $primaryKey = 'Id_Admin'; 
-
-    // Hanya isi dengan kolom yang BENAR-BENAR ADA di database
     protected $fillable = [
         'username',
         'password',
@@ -23,11 +22,5 @@ class Admin extends Authenticatable
 
     protected $hidden = [
         'password',
-        'remember_token',
     ];
-
-    public function getAuthPassword()
-    {
-        return $this->password;
-    }
 }

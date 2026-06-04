@@ -64,18 +64,22 @@
         <aside class="fixed top-16 left-0 z-40 w-64 h-[calc(100vh-64px)] bg-white border-r border-gray-200 flex flex-col justify-between py-6">
             <div class="w-full">
 {{-- FOTO PROFIL (VERSI STABIL) --}}
-<div class="flex flex-col items-center mb-6">
-    <div class="w-20 h-20 rounded-full border-4 border-[#7a4988] overflow-hidden shadow-md">
+<a href="{{ route('admin.profile') }}" class="flex flex-col items-center mb-6 no-underline group">
+    <div class="w-36 h-36 rounded-full border-4 border-[#7a4988] overflow-hidden shadow-md transition-all duration-300 group-hover:scale-105">
         <img src="{{ asset('images/' . (session('admin_foto') ?: 'profile_default.jpg')) }}" 
              alt="Admin"
              onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode(session('admin_name', 'Admin')) }}&color=ffffff&background=7a4988';"
              class="w-full h-full object-cover">
     </div>
-    
-    <h3 class="mt-3 text-[#24112e] font-black text-xs uppercase tracking-wider text-center">
-        {{ session('admin_name', 'Admin') }}
+
+    <h3 class="mt-3 text-[#24112e] font-black text-xs uppercase tracking-wider text-center group-hover:text-[#7a4988] transition-colors">
+       {{ Auth::guard('admin')->user()->username }}
     </h3>
-</div>
+
+    <span class="text-xs text-gray-500 mt-1 font-semibold">
+        Edit Profile
+    </span>
+</a>
                 
                 {{-- NAVIGASI SIDEBAR --}}
                 <nav class="w-full space-y-2 px-4">

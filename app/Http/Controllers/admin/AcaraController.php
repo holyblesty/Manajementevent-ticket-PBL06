@@ -11,6 +11,9 @@ use App\Models\Event;
 
 class AcaraController extends Controller
 {
+    /**
+     * Menampilkan daftar semua event.
+     */
     public function index()
     {
         $events = Event::all();
@@ -18,11 +21,17 @@ class AcaraController extends Controller
         return view('admin.dashboard', compact('events', 'selectedCategory'));
     }
 
+    /**
+     * Menampilkan form untuk membuat event baru.
+     */
     public function create()
     {
         return view('admin.create');
     }
 
+    /**
+     * Menyimpan event baru ke database.
+     */
     public function store(Request $request) 
     {
         $request->validate([
@@ -34,25 +43,34 @@ class AcaraController extends Controller
         $request->poster->move(public_path('images'), $imageName);
 
         Event::create([
-            'judul' => $request->judul,
-            'deskripsi' => $request->deskripsi,
-            'tanggal' => $request->tanggal,
-            'kategori' => $request->kategori,
-            'jenis' => $request->jenis,
-            'lokasi' => $request->lokasi,
-            'kapasitas' => 0, 
-            'poster' => $imageName,
+            'judul'         => $request->judul,
+            'deskripsi'     => $request->deskripsi,
+            'tanggal'       => $request->tanggal,
+            'waktu_acara'   => $request->waktu_acara ?? '00:00:00',
+            'lokasi'        => $request->lokasi,
+            'kategori'      => $request->kategori,
+            'kapasitas'     => 0, 
+            'kuota_tersedia'=> 0, 
+            'status_event'  => 'draft',
+            'poster'        => $imageName,
+            'id_admin'      => Auth::id()
         ]);
 
         return redirect()->route('admin.dashboard')->with('success', 'Event berhasil ditambah!');
     }
 
+    /**
+     * Menampilkan form edit event.
+     */
     public function edit($id_event) 
     {
         $event = Event::where('id_event', $id_event)->firstOrFail();
         return view('admin.edit', compact('event'));
     }
 
+    /**
+     * Mengupdate data event.
+     */
     public function update(Request $request, $id_event) 
     {
         $request->validate([
@@ -76,99 +94,77 @@ class AcaraController extends Controller
         return redirect()->route('admin.dashboard')->with('success', 'Data acara berhasil diupdate!');
     }
 
+    /**
+     * Menampilkan halaman pengaturan tiket untuk event.
+     */
     public function tiket($id_event) 
     {
-        $event = Event::where('id_event', $id_event)->firstOrFail();
-        $tikets = DB::table('tikets')->where('id_event', $id_event)->get();
+        $event = Event::with('tiket')->where('id_event', $id_event)->firstOrFail();
         
-        $keyedTiket = [];
-        foreach ($tikets as $tiket) {
-            $key = strtolower(str_replace(' ', '_', $tiket->nama_tiket)); 
-            $keyedTiket[$key] = $tiket;
-        }
+        // Memproses koleksi tiket menjadi array asosiatif berdasarkan nama_tiket 
+        // agar mudah diakses di view sebagai $tiketData['Early Bird']->harga
+        $tiketData = $event->tiket->keyBy('nama_tiket'); 
         
-        $event->tiket = $keyedTiket;
-        return view('admin.tiket', compact('event'));
+        return view('admin.tiket', compact('event', 'tiketData'));
     }
 
-    public function updateTiket(Request $request, $id_event) 
-    {
-        $request->validate([
-            'kapasitas' => 'required|integer|min:0',
-            'desain_tiket' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'tiket' => 'required|array',
-            'tiket.*.harga' => 'required|numeric|min:0',
-            'tiket.*.kuota' => 'required|integer|min:0',
+    /**
+ * Menghapus event.
+ */
+public function destroy($id_event)
+{
+    $event = Event::where('id_event', $id_event)->firstOrFail();
+
+    // Hapus semua tiket yang terkait dengan event
+    $event->tiket()->delete();
+
+    // Hapus file poster jika ada
+    if ($event->poster && File::exists(public_path('images/' . $event->poster))) {
+        File::delete(public_path('images/' . $event->poster));
+    }
+
+    // Hapus event
+    $event->delete();
+
+    return redirect()->route('admin.dashboard')
+        ->with('success', 'Event berhasil dihapus!');
+}
+
+public function updateTiket(Request $request, $id_event)
+{
+    try {
+
+        $event = Event::where('id_event', $id_event)->firstOrFail();
+
+        if ($request->has('tiket')) {
+
+            foreach ($request->tiket as $data) {
+
+                $event->tiket()->updateOrCreate(
+                    [
+                        'nama_tiket' => $data['nama']
+                    ],
+                    [
+                        'harga' => $data['harga'],
+                        'kuota_total' => $data['kuota'],
+                        'kuota_tersedia' => $data['kuota']
+                    ]
+                );
+            }
+        }
+
+        $event->update([
+            'kapasitas' => $request->kapasitas
         ]);
 
-        $event = Event::where('id_event', $id_event)->firstOrFail();
-        $data = ['kapasitas' => $request->kapasitas];
-        
-        // Memperbaiki masalah desain_tiket yang tidak tersimpan
-        if ($request->hasFile('desain_tiket')) {
-            if ($event->desain_tiket && $event->desain_tiket !== 'ticket_default.jpg' && File::exists(public_path('images/' . $event->desain_tiket))) {
-                File::delete(public_path('images/' . $event->desain_tiket));
-            }
-            $imageName = 'ticket_' . time() . '.' . $request->desain_tiket->extension();
-            $request->desain_tiket->move(public_path('images'), $imageName);
-            
-            // INI YANG DITAMBAHKAN:
-            $data['desain_tiket'] = $imageName;
-        }
+       return redirect()->route('admin.dashboard')
+    ->with('success', 'Tiket berhasil diupdate!');
+    } catch (\Exception $e) {
 
-        $event->update($data);
-
-        foreach ($request->tiket as $tierData) {
-            DB::table('tikets')->updateOrInsert(
-                ['id_event' => $id_event, 'nama_tiket' => $tierData['nama']],
-                [
-                    'harga' => $tierData['harga'],
-                    'kuota_total' => $tierData['kuota'] ?? 0,
-                    'kuota_tersedia' => $tierData['kuota'] ?? 0, 
-                ]
-            );
-        }
-
-        return redirect()->route('admin.dashboard')->with('success', 'Tiket dan desain berhasil diperbarui!');
+        return redirect()->back()->with(
+            'error',
+            $e->getMessage()
+        );
     }
-
-    public function profile() 
-    {
-        $admin = Auth::guard('admin')->user(); 
-        if (!$admin) {
-            abort(403, 'Anda belum login sebagai Admin.');
-        }
-        return view('admin.profile', compact('admin'));
-    }
-
-    public function updateProfile(Request $request) 
-    {
-        $request->validate([
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-        ]);
-
-        $admin = Auth::guard('admin')->user();
-
-        if ($request->hasFile('foto')) {
-            if ($admin->foto && $admin->foto !== 'profile_default.jpg' && File::exists(public_path('images/' . $admin->foto))) {
-                File::delete(public_path('images/' . $admin->foto));
-            }
-
-            $imageName = 'profile_' . time() . '.' . $request->foto->extension();
-            $request->foto->move(public_path('images'), $imageName);
-            
-            $admin->foto = $imageName;
-            session(['admin_foto' => $imageName]);
-        }
-
-        $admin->save();
-        return redirect()->back()->with('success', 'Profil berhasil diperbarui!');
-    }
-
-    public function destroy($id_event) 
-    {
-        $event = Event::where('id_event', $id_event)->firstOrFail();
-        $event->delete();
-        return redirect()->route('admin.dashboard')->with('success', 'Event berhasil dihapus!');
-    }
+}
 }

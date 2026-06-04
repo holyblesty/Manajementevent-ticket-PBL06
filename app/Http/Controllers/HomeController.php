@@ -2,12 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Event;
+use App\Models\Registration;
+use App\Models\User;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        return view('home');
+        $jumlahPengunjung = User::count();
+
+        $jumlahEvent = Event::count();
+
+        $totalRegistrasi = Registration::count();
+
+        $events = Event::latest()->get();
+
+        return view('pengunjung.dashboard', compact(
+            'jumlahPengunjung',
+            'jumlahEvent',
+            'totalRegistrasi',
+            'events'
+        ));
     }
 }

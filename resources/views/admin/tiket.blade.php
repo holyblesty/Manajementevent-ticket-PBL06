@@ -16,33 +16,9 @@
         .no-underline { text-decoration: none !important; }
         input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
-
-        /* Style Mockup Tiket Bersih */
-        .ticket-mockup {
-            position: relative;
-            width: 100%;
-            height: 220px;
-            border-radius: 1.5rem;
-            overflow: hidden;
-            background: #1a0b21;
-            box-shadow: inset 0 2px 15px rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        .ticket-cutout {
-            position: absolute;
-            left: 72%;
-            top: -15px;
-            bottom: -15px;
-            width: 30px;
-            border-left: 3px dashed rgba(255,255,255,0.3);
-            z-index: 40;
-        }
     </style>
 </head>
-<body 
-    style="margin: 0; min-height: 100vh; background: linear-gradient(-45deg, #2b1238, #7a4988, #4b1d52, #9e7bb5); background-size: 400% 400%; animation: swush 10s ease infinite;"
-    class="flex flex-col items-center py-10 font-sans antialiased text-gray-900"
->
+<body style="margin: 0; min-height: 100vh; background: linear-gradient(-45deg, #2b1238, #7a4988, #4b1d52, #9e7bb5); background-size: 400% 400%; animation: swush 10s ease infinite;" class="flex flex-col items-center py-10 font-sans antialiased text-gray-900">
 
     <div class="bg-white w-full max-w-[850px] rounded-3xl shadow-2xl overflow-hidden mb-10 mx-4 border border-gray-100">
         
@@ -58,9 +34,7 @@
             <div class="mb-8 p-6 bg-purple-50 border-2 border-dashed border-purple-200 rounded-2xl flex items-center justify-between shadow-inner">
                 <div class="flex items-center gap-4">
                     <div class="bg-[#7a4988] p-3 rounded-xl text-white">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                        </svg>
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                     </div>
                     <div>
                         <h3 class="text-[#7a4988] font-black text-xs uppercase tracking-widest">Total Kapasitas Terhitung</h3>
@@ -73,86 +47,72 @@
                 <input type="hidden" name="kapasitas" id="input_total" value="{{ $event->kapasitas ?? 0 }}">
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
-                <div class="p-6 bg-gray-50 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-center">
-                    <label class="block mb-4 text-[10px] font-black uppercase text-[#7a4988] tracking-widest text-center">Update Desain Tiket (16:9)</label>
-                    <div class="relative w-full h-32 bg-white border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center group hover:border-[#7a4988] transition-all cursor-pointer overflow-hidden shadow-inner">
-                        <input type="file" name="desain_tiket" class="absolute inset-0 opacity-0 cursor-pointer z-50" onchange="previewImage(this, 'ticket_preview', 'ticket_placeholder')">
-                        
-                        <div id="ticket_placeholder" class="flex flex-col items-center group-hover:scale-110 transition-transform">
-                            <div class="bg-purple-100 p-3 rounded-xl mb-2 text-[#7a4988]">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                            </div>
-                            <p class="text-[9px] font-black text-gray-400 uppercase tracking-widest">Klik Ganti File</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="p-6 bg-[#1a0b21] rounded-2xl shadow-xl flex flex-col justify-center">
-                    <div class="ticket-mockup">
-                        <img id="ticket_preview" src="{{ $event->desain_tiket ? asset('images/'.$event->desain_tiket) : '#' }}" 
-                             class="{{ $event->desain_tiket ? '' : 'hidden' }} absolute inset-0 w-full h-full object-cover">
-                        
-                        <div class="ticket-cutout"></div>
-
-                        <div class="absolute bottom-4 left-4 z-50">
-                            <div class="bg-white/10 backdrop-blur-md px-3 py-1 rounded-lg border border-white/20">
-                                <p class="text-[8px] font-black text-white uppercase tracking-[0.2em]">OFFICIAL E-TICKET</p>
-                            </div>
-                        </div>
-
-                        <div id="no_design_text" class="{{ $event->desain_tiket ? 'hidden' : '' }} absolute inset-0 flex items-center justify-center text-[#7a4988] text-[9px] font-black uppercase p-8 text-center tracking-[0.3em]">
-                            NO DESIGN UPLOADED
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="space-y-4">
+            <div class="space-y-6">
                 <div class="flex items-center space-x-4 mb-4">
                     <span class="text-[10px] font-black text-[#7a4988] uppercase tracking-[0.3em] whitespace-nowrap">Rincian Kuota & Harga</span>
                     <div class="flex-grow border-t-2 border-gray-100"></div>
                 </div>
 
-                @foreach(['early_bird' => 'Early Bird', 'normal' => 'Normal', 'vip' => 'VIP'] as $key => $label)
-                <div class="bg-white p-5 rounded-2xl border-2 border-gray-100 grid grid-cols-1 md:grid-cols-3 gap-4 items-end hover:border-[#be93d4] transition-all shadow-sm group">
-                    <div>
-                        <label class="block text-[9px] font-black uppercase text-[#7a4988] mb-2 tracking-widest">Tier Tiket</label>
-                        <input type="text" value="{{ $label }}" readonly class="w-full p-3 border-2 border-gray-100 rounded-xl text-xs font-black text-gray-400 uppercase bg-gray-50 cursor-not-allowed outline-none">
-                        <input type="hidden" name="tiket[{{$key}}][nama]" value="{{ $label }}">
-                    </div>
-                    <div class="relative">
-                        <label class="block text-[9px] font-black uppercase text-gray-400 mb-2 tracking-widest">Harga Per Tiket</label>
-                        <div class="relative flex items-center">
-                            <span class="absolute left-4 text-xs text-[#be93d4] font-black">Rp</span>
-                            <input type="number" name="tiket[{{$key}}][harga]" value="{{ isset($event->tiket[$key]) ? $event->tiket[$key]->harga : 0 }}" min="0" 
-                                   class="w-full pl-10 pr-4 py-3 border-2 border-gray-100 rounded-xl text-xs font-black text-gray-800 outline-none focus:border-[#7a4988] transition-all">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-[9px] font-black uppercase text-gray-400 mb-2 tracking-widest">Kuota</label>
-                        <input type="number" name="tiket[{{$key}}][kuota]" value="{{ isset($event->tiket[$key]) ? $event->tiket[$key]->kuota_total : ($key === 'normal' ? ($event->kapasitas ?? 0) : 0) }}" min="0"
-                               class="kuota-input w-full p-3 border-2 border-[#7a4988] bg-white rounded-xl text-sm font-black text-center text-[#7a4988] outline-none focus:ring-4 focus:ring-purple-100 transition-all" 
-                               oninput="validateInput(this); updateTotal()">
-                    </div>
-                </div>
-                @endforeach
+ @foreach(['early_bird' => 'Early Bird', 'normal' => 'Normal', 'vip' => 'VIP'] as $key => $label)
+
+<div class="bg-white p-5 rounded-2xl border-2 border-gray-100 grid grid-cols-1 md:grid-cols-3 gap-4 items-end hover:border-[#be93d4] transition-all shadow-sm">
+
+    <div>
+        <label class="block text-[9px] font-black uppercase text-[#7a4988] mb-2 tracking-widest">
+            Tier Tiket
+        </label>
+
+        <input type="text"
+               value="{{ $label }}"
+               readonly
+               class="w-full p-3 border-2 border-gray-100 rounded-xl text-xs font-black text-gray-400 uppercase bg-gray-50 cursor-not-allowed outline-none">
+
+        <input type="hidden"
+               name="tiket[{{$key}}][nama]"
+               value="{{ $label }}">
+    </div>
+
+    <div>
+        <label class="block text-[9px] font-black uppercase text-gray-400 mb-2 tracking-widest">
+            Harga Per Tiket (Rp)
+        </label>
+
+        <input type="number"
+               name="tiket[{{$key}}][harga]"
+               value="{{ $tiketData[$label]->harga ?? 0 }}"
+               min="0"
+               class="w-full p-3 border-2 border-gray-100 rounded-xl text-xs font-black text-gray-800 outline-none focus:border-[#7a4988] transition-all">
+    </div>
+
+    <div>
+        <label class="block text-[9px] font-black uppercase text-gray-400 mb-2 tracking-widest">
+            Kuota
+        </label>
+
+        <input type="number"
+               name="tiket[{{$key}}][kuota]"
+               value="{{ $tiketData[$label]->kuota_total ?? 0 }}"
+               min="0"
+               class="kuota-input w-full p-3 border-2 border-[#7a4988] bg-white rounded-xl text-sm font-black text-center text-[#7a4988] outline-none focus:ring-4 focus:ring-purple-100 transition-all"
+               oninput="validateInput(this); updateTotal()">
+    </div>
+
+</div>
+
+@endforeach
             </div>
 
             <div class="mt-10 flex justify-end gap-3 pt-6 border-t-2 border-gray-50">
                 <a href="{{ route('admin.dashboard') }}" class="px-8 py-3 bg-white text-gray-400 rounded-xl font-black text-[10px] uppercase tracking-widest border-2 border-gray-100 hover:bg-gray-50 transition no-underline">Batal</a>
-                <button type="submit" class="px-10 py-3 bg-[#24112e] text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-black transition shadow-lg hover:-translate-y-1 border-none">Simpan Pengaturan</button>
+                <button type="submit" class="px-10 py-3 bg-[#24112e] text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-black transition shadow-lg hover:-translate-y-1 border-none cursor-pointer">Simpan Pengaturan</button>
             </div>
         </form>
     </div>
 
     <script>
-        // FUNGSI BARU: Untuk langsung membuang angka 0 liar di depan angka saat user mengetik
         function validateInput(input) {
             let val = input.value;
-            if (val.length > 1 && val.startsWith('0')) {
-                input.value = parseInt(val) || 0;
-            }
+            if (val.length > 1 && val.startsWith('0')) { input.value = parseInt(val) || 0; }
         }
 
         function updateTotal() {
@@ -165,25 +125,6 @@
             document.getElementById('display_total').innerText = total;
             document.getElementById('input_total').value = total;
         }
-
-        function previewImage(input, imgId, placeholderId) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const img = document.getElementById(imgId);
-                    img.src = e.target.result;
-                    img.classList.remove('hidden');
-                    
-                    const placeholder = document.getElementById(placeholderId);
-                    if(placeholder) placeholder.classList.add('hidden');
-                    
-                    const noDesign = document.getElementById('no_design_text');
-                    if(noDesign) noDesign.classList.add('hidden');
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
         window.onload = updateTotal;
     </script>
 </body>

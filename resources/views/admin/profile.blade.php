@@ -55,26 +55,50 @@
 
             <div class="space-y-5">
                 {{-- USERNAME (Identitas Utama) --}}
-                <div>
-                    <label class="block mb-1 text-[10px] font-black uppercase text-[#7a4988] tracking-widest">Username</label>
-                    <input type="text" value="{{ $admin->username }}" disabled
-                        class="w-full p-3 bg-gray-100 border-2 border-gray-100 rounded-xl text-sm font-bold text-gray-500 cursor-not-allowed outline-none">
-                </div>
+   <div>
+    <label class="block mb-1 text-[10px] font-black uppercase text-[#7a4988] tracking-widest">
+        Username
+    </label>
+
+    <input type="text" name="username" value="{{ $admin->username }}"
+        class="w-full p-3 bg-gray-50 border-2 border-gray-100 rounded-xl text-sm font-bold text-gray-700 focus:border-[#7a4988] outline-none transition-all">
+</div>
 
                 <hr class="border-gray-100 my-4">
 
                 {{-- PASSWORD AREA --}}
-                <div>
-                    <label class="block mb-1 text-[10px] font-black uppercase text-[#7a4988] tracking-widest">Password Lama</label>
-                    <input type="password" name="password_lama" placeholder="Wajib diisi untuk keamanan" 
-                        class="w-full p-3 bg-gray-50 border-2 border-gray-100 rounded-xl text-sm font-bold text-gray-700 focus:border-[#7a4988] outline-none transition-all">
-                </div>
+<div>
+    <label class="block mb-1 text-[10px] font-black uppercase text-[#7a4988] tracking-widest">Password Lama</label>
 
-                <div>
-                    <label class="block mb-1 text-[10px] font-black uppercase text-[#7a4988] tracking-widest">Password Baru <span class="text-gray-400 font-normal lowercase tracking-normal">(Opsional)</span></label>
-                    <input type="password" name="password_baru" placeholder="Kosongkan jika tidak diubah" 
-                        class="w-full p-3 bg-gray-50 border-2 border-gray-100 rounded-xl text-sm font-bold text-gray-700 focus:border-[#7a4988] outline-none transition-all">
-                </div>
+    <div class="relative">
+        <input type="password" name="password_lama" id="password_lama"
+            placeholder="Wajib diisi untuk keamanan"
+            class="w-full p-3 pr-12 bg-gray-50 border-2 border-gray-100 rounded-xl text-sm font-bold text-gray-700 focus:border-[#7a4988] outline-none transition-all">
+
+        <button type="button" onclick="togglePassword('password_lama', this)"
+            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#7a4988]">
+            👁
+        </button>
+    </div>
+</div>
+
+<div>
+    <label class="block mb-1 text-[10px] font-black uppercase text-[#7a4988] tracking-widest">
+        Password Baru 
+        <span class="text-gray-400 font-normal lowercase tracking-normal">(Opsional)</span>
+    </label>
+
+    <div class="relative">
+        <input type="password" name="password_baru" id="password_baru"
+            placeholder="Kosongkan jika tidak diubah"
+            class="w-full p-3 pr-12 bg-gray-50 border-2 border-gray-100 rounded-xl text-sm font-bold text-gray-700 focus:border-[#7a4988] outline-none transition-all">
+
+        <button type="button" onclick="togglePassword('password_baru', this)"
+            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#7a4988]">
+            👁
+        </button>
+    </div>
+</div>
             </div>
 
             <div class="mt-10 flex flex-col gap-3">
@@ -116,6 +140,18 @@
                 confirmButtonColor: '#24112e'
             });
         @endif
+
+        function togglePassword(id, btn) {
+    const input = document.getElementById(id);
+
+    if (input.type === "password") {
+        input.type = "text";
+        btn.innerHTML = "🙈";
+    } else {
+        input.type = "password";
+        btn.innerHTML = "👁";
+    }
+}
     </script>
 </body>
 </html>

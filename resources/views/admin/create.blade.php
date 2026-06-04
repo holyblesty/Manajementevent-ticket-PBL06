@@ -69,25 +69,10 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-6">
-                        <div>
-                            <label class="block mb-2 text-[10px] font-black uppercase text-[#7a4988] tracking-widest">Lokasi <span class="text-red-500">*</span></label>
-                            <input type="text" name="lokasi" value="{{ old('lokasi') }}" placeholder="Tempat acara..." 
-                                   class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-sm font-bold text-gray-700 focus:border-[#7a4988] outline-none shadow-sm">
-                        </div>
-                        <div>
-                            <label class="block mb-2 text-[10px] font-black uppercase text-gray-400 tracking-widest">Jenis Kepesertaan <span class="text-red-500">*</span></label>
-                            <div class="flex border-2 border-gray-100 rounded-2xl overflow-hidden h-[58px] bg-gray-50 shadow-sm">
-                                <label class="flex-1 flex items-center justify-center cursor-pointer">
-                                    <input type="radio" name="jenis" value="tim" class="hidden peer" {{ old('jenis') == 'tim' ? 'checked' : '' }}>
-                                    <span class="w-full h-full flex items-center justify-center text-[10px] font-black uppercase peer-checked:bg-[#7a4988] peer-checked:text-white text-gray-400 transition-all">Tim</span>
-                                </label>
-                                <label class="flex-1 flex items-center justify-center cursor-pointer border-l-2 border-gray-100">
-                                    <input type="radio" name="jenis" value="individu" class="hidden peer" {{ old('jenis', 'individu') == 'individu' ? 'checked' : '' }}>
-                                    <span class="w-full h-full flex items-center justify-center text-[10px] font-black uppercase peer-checked:bg-[#7a4988] peer-checked:text-white text-gray-400 transition-all">Individu</span>
-                                </label>
-                            </div>
-                        </div>
+                    <div>
+                        <label class="block mb-2 text-[10px] font-black uppercase text-[#7a4988] tracking-widest">Lokasi <span class="text-red-500">*</span></label>
+                        <input type="text" name="lokasi" value="{{ old('lokasi') }}" placeholder="Tempat acara..." 
+                               class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-sm font-bold text-gray-700 focus:border-[#7a4988] outline-none shadow-sm">
                     </div>
                 </div>
 
