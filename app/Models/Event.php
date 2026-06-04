@@ -9,27 +9,56 @@ class Event extends Model
 {
     use HasFactory;
 
-    protected $table = 'events';
     protected $primaryKey = 'id_event';
-    
-    // Sesuaikan dengan nama kolom di database kamu
+
     protected $fillable = [
-        'judul', 'deskripsi', 'tanggal', 'lokasi', 'kategori', 
-        'kapasitas', 'jenis', 'poster' , 'desain_tiket'
+        'judul',
+        'deskripsi',
+        'tanggal',
+        'jam_mulai',
+        'jam_selesai',
+        'lokasi',
+        'kategori',
+        'kapasitas',
+        'jenis',
+        'poster',
+        'desain_tiket',
+        'gambar',
     ];
 
-    // Relasi ke registrasi (pastikan nama model Registration sudah ada)
-    public function registrations() {
-        return $this->hasMany(Registration::class, 'id_event', 'id_event');
+    protected $casts = [
+        'tanggal' => 'date',
+    ];
+
+    public function tikets()
+    {
+        return $this->hasMany(Tiket::class, 'id_event', 'id_event');
     }
 
-    // Hitung total pendaftar otomatis
-    public function getTotalPendaftarAttribute() {
-        return $this->registrations()->count();
+    public function pesanans()
+    {
+        return $this->hasMany(Pesanan::class, 'id_event', 'id_event');
     }
 
-    // Cek status penuh otomatis
-    public function getIsFullAttribute() {
-        return $this->total_pendaftar >= $this->kapasitas;
+    public function participants()
+    {
+        return $this->hasMany(Participant::class, 'id_event', 'id_event');
+    }
+
+    public function getTotalTerjualAttribute(): int
+    {
+        return $this->tikets->sum('terjual');
+    }
+
+    public function getSisaKapasitasAttribute(): int
+    {
+        return $this->kapasitas - $this->total_terjual;
+    }
+
+    public function getPosterUrlAttribute(): string
+    {
+        return $this->poster
+            ? asset('storage/posters/' . $this->poster)
+            : asset('images/default-event.jpg');
     }
 }

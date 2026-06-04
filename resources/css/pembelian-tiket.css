@@ -1,0 +1,14 @@
+.sidebar-menu{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    padding:18px 30px;
+    color:#3f3f46;
+    font-weight:600;
+    transition:0.3s;
+}
+
+.sidebar-menu:hover{
+    background:#f3e8ff;
+    color:#6b21a8;
+}

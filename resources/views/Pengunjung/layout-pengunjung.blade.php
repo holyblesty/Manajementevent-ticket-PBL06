@@ -1,165 +1,246 @@
-{{-- resources/views/layouts/pengunjung.blade.php --}}
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Event Ticket') - Event Ticketing</title>
+    <title>@yield('title')</title>
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <style>
-        /* Custom warna sesuai palette mockup */
-        :root {
-            --purple-deep:    #2b1238;
-            --purple-darker:  #24112e;
-            --purple-medium:  #7a4988;
-            --purple-dark:    #4b1d52;
-            --purple-lavender:#9e7bb5;
-            --purple-search:  #5e007d;
-            --purple-thead:   #7c2f84;
-        }
-    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-<body class="bg-gray-50 font-sans">
 
-    {{-- ============================== NAVBAR ============================== --}}
-    <header class="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 shadow-sm h-16 flex items-center px-6">
+<body class="bg-gray-50 font-sans antialiased">
 
-        {{-- Logo --}}
-        <a href="{{ route('beranda') ?? '/' }}" class="flex items-center gap-2 min-w-[180px]">
-            <div class="w-9 h-9 rounded-lg flex items-center justify-center"
-                 style="background: linear-gradient(135deg, #7c2f84, #2b1238);">
-                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"/>
-                </svg>
+    {{-- ================= NAVBAR ================= --}}
+    <header class="fixed top-0 z-50 w-full bg-white shadow-sm">
+
+        <nav class="h-16 flex items-center justify-between px-8">
+
+            {{-- LOGO --}}
+            <div class="flex items-center gap-4">
+
+                <img src="{{ asset('images/logo.jpeg') }}"
+                     class="h-10">
+
             </div>
-            <div class="leading-none">
-                <p class="text-sm font-extrabold text-purple-800 tracking-tight">Event Ticket</p>
-                <p class="text-[10px] text-gray-400 font-medium tracking-widest uppercase">Event & Ticketing</p>
-            </div>
-        </a>
 
-        {{-- Search Bar --}}
-        <div class="flex-1 flex justify-center px-8">
-            <div class="flex items-center gap-0 w-full max-w-md">
-                <div class="flex items-center gap-2 border border-gray-300 rounded-l-lg px-3 py-2 flex-1 bg-white">
-                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                    </svg>
+            {{-- SEARCH --}}
+            <div class="hidden lg:flex items-center w-[420px]">
+
+                <div class="relative w-full">
+
                     <input type="text"
                            placeholder="Cari event..."
-                           class="flex-1 text-sm outline-none bg-transparent text-gray-700 placeholder-gray-400">
+                           class="w-full border border-gray-200 rounded-l-xl py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-[#7a4988] focus:outline-none">
+
+                    <svg class="w-4 h-4 absolute left-3 top-3 text-gray-400"
+                         fill="none"
+                         stroke="currentColor"
+                         viewBox="0 0 24 24">
+
+                        <path stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M21 21l-4.35-4.35m1.85-5.15a7 7 0 11-14 0 7 7 0 0114 0z"/>
+
+                    </svg>
+
                 </div>
-                <button class="px-5 py-2 rounded-r-lg text-white text-sm font-semibold transition hover:opacity-90"
-                        style="background-color: #7c2f84;">
+
+                <button class="bg-[#7a4988] text-white px-5 py-2 rounded-r-xl text-sm font-semibold hover:bg-[#693b76]">
                     Cari
                 </button>
-            </div>
-        </div>
 
-        {{-- Nav Links --}}
-        <nav class="flex items-center gap-6 text-sm font-medium text-gray-700">
-            <a href="{{ route('beranda') ?? '/' }}"
-               class="hover:text-purple-700 transition {{ request()->routeIs('beranda') ? 'text-purple-700 font-semibold' : '' }}">
-                Beranda
-            </a>
-            <a href="{{ route('acara') ?? '/acara' }}"
-               class="hover:text-purple-700 transition {{ request()->routeIs('acara*') ? 'text-purple-700 font-semibold' : '' }}">
-                Acara
-            </a>
-            <a href="{{ route('tentang') ?? '/tentang' }}"
-               class="hover:text-purple-700 transition {{ request()->routeIs('tentang*') ? 'text-purple-700 font-semibold' : '' }}">
-                Tentang kami
-            </a>
+            </div>
+
+            {{-- MENU --}}
+            <div class="flex items-center gap-8">
+
+                <a href="#" class="text-sm font-semibold text-gray-700 hover:text-[#7a4988] no-underline">
+                    Beranda
+                </a>
+
+                <a href="#" class="text-sm font-semibold text-gray-700 hover:text-[#7a4988] no-underline">
+                    Acara
+                </a>
+
+                <a href="#" class="text-sm font-semibold text-gray-700 hover:text-[#7a4988] no-underline">
+                    Tentang kami
+                </a>
+
+                <div class="flex items-center gap-3 border-l pl-6">
+
+                    <button class="px-5 py-2 rounded-lg text-xs font-bold bg-[#2b1238] text-white hover:bg-[#1c0c25]">
+                        Masuk
+                    </button>
+
+                    <button class="px-5 py-2 rounded-lg text-xs font-bold bg-[#be93d4] text-[#2b1238] hover:bg-[#a97bc2]">
+                        Daftar
+                    </button>
+
+                </div>
+
+            </div>
+
         </nav>
+
+        <div class="w-full h-1 bg-[#7a4988]"></div>
 
     </header>
 
-    {{-- Spacer untuk fixed header --}}
-    <div class="h-16"></div>
+    {{-- ================= CONTENT ================= --}}
+    <div class="flex pt-16">
 
-    {{-- ============================== KONTEN ============================== --}}
-    @yield('content')
+        {{-- ================= SIDEBAR ================= --}}
+        <aside class="fixed left-0 top-16 w-64 h-screen bg-white border-r border-gray-200 py-8 flex flex-col">
 
-    {{-- ============================== FOOTER ============================== --}}
-    <footer style="background-color: #2b1238;">
-        <div class="max-w-7xl mx-auto px-8 py-10">
-            <div class="grid grid-cols-4 gap-8">
+            {{-- PROFILE --}}
+            <div class="flex flex-col items-center">
 
-                {{-- Kolom 1: Brand --}}
-                <div class="flex flex-col gap-3">
-                    <div class="flex items-center gap-2">
-                        <div class="w-9 h-9 rounded-lg flex items-center justify-center"
-                             style="background: linear-gradient(135deg, #7c2f84, #4b1d52);">
-                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"/>
-                            </svg>
-                        </div>
-                        <div class="leading-none">
-                            <p class="text-sm font-extrabold text-white tracking-tight">Event Ticket</p>
-                            <p class="text-[10px] text-purple-300 font-medium tracking-widest uppercase">Event & Ticketing</p>
-                        </div>
-                    </div>
-                    <p class="text-xs text-purple-200 leading-relaxed mt-1">
-                        EventTicketing adalah platform untuk menemukan dan memesan tiket event terbaik dengan mudah dan cepat.
-                    </p>
+                <div class="w-24 h-24 rounded-full overflow-hidden border-4 border-[#7a4988] shadow-md">
+
+                    <img src="{{ asset('images/profile_1777288175.webp') }}"
+                         class="w-full h-full object-cover">
+
                 </div>
 
-                {{-- Kolom 2: Navigasi --}}
-                <div>
-                    <h4 class="text-white font-bold text-sm mb-4 tracking-wide">NAVIGASI</h4>
-                    <ul class="space-y-2">
-                        @foreach(['Beranda', 'Acara', 'Tentang Kami', 'Kontak Kami'] as $nav)
-                        <li>
-                            <a href="#" class="text-purple-200 text-xs hover:text-white transition">{{ $nav }}</a>
-                        </li>
-                        @endforeach
-                    </ul>
-                </div>
+                <h2 class="text-base font-semibold text-center break-words">
+                    {{ Auth::user()->name }}
+                </h2>
 
-                {{-- Kolom 3: Kategori --}}
-                <div>
-                    <h4 class="text-white font-bold text-sm mb-4 tracking-wide">KATEGORI</h4>
-                    <ul class="space-y-2">
-                        @foreach(['Hiburan', 'Olahraga', 'Seminar'] as $kat)
-                        <li>
-                            <a href="#" class="text-purple-200 text-xs hover:text-white transition">{{ $kat }}</a>
-                        </li>
-                        @endforeach
-                    </ul>
-                </div>
-
-                {{-- Kolom 4: Hubungi --}}
-                <div>
-                    <h4 class="text-white font-bold text-sm mb-4 tracking-wide">HUBUNGI KAMI</h4>
-                    <ul class="space-y-3">
-                        <li class="flex items-center gap-2">
-                            <svg class="w-4 h-4 text-purple-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                      d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                            </svg>
-                            <span class="text-purple-200 text-xs">Jesinaaa@appmail.com</span>
-                        </li>
-                        <li class="flex items-center gap-2">
-                            <svg class="w-4 h-4 text-purple-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                      d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
-                            </svg>
-                            <span class="text-purple-200 text-xs">+62 896 3128 7605</span>
-                        </li>
-                    </ul>
-                </div>
-
-            </div>
-
-            {{-- Garis & Copyright --}}
-            <div class="border-t mt-8 pt-5" style="border-color: #4b1d52;">
-                <p class="text-center text-xs text-purple-300">
-                    &copy; 2026 Event Ticketing System. All Rights Reserved
+                <p class="text-sm text-[#7a4988] font-medium">
+                    Pengunjung
                 </p>
-            </div>
-        </div>
-    </footer>
 
-</body>
-</html>
+            </div>
+
+            {{-- MENU --}}
+            <nav class="mt-4 px-3 flex-col gap-1 font-bold">
+
+                <a href="#"
+                   class="flex items-center gap-3 px-2 py-3 rounded-xl bg-[#f3ebf8] text-[#7a4988] font-semibold no-underline">
+
+                    🏠 Beranda
+
+                </a>
+
+                <a href="#"
+                   class="flex items-center gap-4 px-2 py-3 rounded-xl text-gray-600 hover:bg-[#f9f5fc] hover:text-[#7a4988] no-underline">
+
+                    🎫 Ticket Saya
+
+                </a>
+
+                <a href="#"
+                   class="flex items-center gap-2 px-2 py-3 rounded-xl text-gray-600 hover:bg-[#f9f5fc] hover:text-[#7a4988] no-underline">
+
+                    🕒 Riwayat Pendaftaran
+
+                </a>
+
+                <a href="#"
+                   class="flex items-center gap-2 px-2 py-3 rounded-xl text-gray-600 hover:bg-[#f9f5fc] hover:text-[#7a4988] no-underline">
+
+                    👤 Profil
+
+                </a>
+
+                <a href="#"
+                   class="flex items-center gap-2 px-2 py-3 rounded-xl text-gray-600 hover:bg-red-50 hover:text-red-500 no-underline">
+
+                    🚪 Keluar
+
+                </a>
+
+            </nav>
+
+        </aside>
+
+        {{-- ================= MAIN ================= --}}
+        <main class="flex-1 ml-64 p-8 bg-gray-50 min-h-screen">
+
+            @yield('content')
+
+        </main>
+
+    </div>
+
+    {{-- ================= FOOTER ================= --}}
+    <footer class="ml-64 bg-[#24112e] text-white px-10 py-10">
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-10">
+
+            {{-- LOGO --}}
+            <div>
+
+                <img src="{{ asset('images/footer.jpg') }}"
+                     class="h-20 mb-4">
+
+                <p class="text-gray-300 text-sm leading-relaxed">
+                    Event Ticketing adalah platform untuk menemukan dan memesan tiket event terbaik dengan mudah dan cepat.
+                </p>
+
+            </div>
+
+            {{-- NAVIGASI --}}
+            <div>
+
+                <h3 class="text-[#be93d4] font-bold mb-4 uppercase">
+                    Navigasi
+                </h3>
+
+                <ul class="space-y-2 text-gray-300">
+
+                    <li>Beranda</li>
+                    <li>Acara</li>
+                    <li>Tentang Kami</li>
+                    <li>Kontak Kami</li>
+
+                </ul>
+
+            </div>
+
+            {{-- KATEGORI --}}
+            <div>
+
+                <h3 class="text-[#be93d4] font-bold mb-4 uppercase">
+                    Kategori
+                </h3>
+
+                <ul class="space-y-2 text-gray-300">
+
+                    <li>Olahraga</li>
+                    <li>Seminar</li>
+                    <li>Hiburan</li>
+
+                </ul>
+
+            </div>
+
+            {{-- KONTAK --}}
+            <div>
+
+                <h3 class="text-[#be93d4] font-bold mb-4 uppercase">
+                    Hubungi Kami
+                </h3>
+
+                <ul class="space-y-3 text-gray-300">
+
+                    <li>📧 Sisi@gmail.com</li>
+                    <li>📞 +62 895 3128 7505</li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+        <div class="border-t border-white/10 mt-8 pt-4 text-center text-gray-400 text-sm">
+
+            © 2026 Event Ticketing System | All Rights Reserved
+
+        </div>
+
+    </footer>

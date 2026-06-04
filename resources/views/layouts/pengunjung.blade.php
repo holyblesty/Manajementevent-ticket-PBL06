@@ -70,17 +70,52 @@
                     Tentang kami
                 </a>
 
-                <div class="flex items-center gap-3 border-l pl-6">
+               @auth
 
-                    <button class="px-5 py-2 rounded-lg text-xs font-bold bg-[#2b1238] text-white hover:bg-[#1c0c25]">
-                        Masuk
-                    </button>
+<div class="flex items-center gap-3 border-l pl-6">
 
-                    <button class="px-5 py-2 rounded-lg text-xs font-bold bg-[#be93d4] text-[#2b1238] hover:bg-[#a97bc2]">
-                        Daftar
-                    </button>
+    <div class="flex items-center gap-3">
 
-                </div>
+        <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-[#7a4988]">
+
+            <img src="{{ asset('images/profile-user.jpg') }}"
+                 class="w-full h-full object-cover">
+
+        </div>
+
+        <div>
+
+            <p class="text-sm font-bold text-[#24112e]">
+                {{ Auth::user()->name }}
+            </p>
+
+            <p class="text-xs text-[#7a4988]">
+                Pengunjung
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+@endauth
+
+@guest
+
+<div class="flex items-center gap-3 border-l pl-6">
+
+    <button class="px-5 py-2 rounded-lg text-xs font-bold bg-[#2b1238] text-white hover:bg-[#1c0c25]">
+        Masuk
+    </button>
+
+    <button class="px-5 py-2 rounded-lg text-xs font-bold bg-[#be93d4] text-[#2b1238] hover:bg-[#a97bc2]">
+        Daftar
+    </button>
+
+</div>
+
+@endguest
 
             </div>
 
