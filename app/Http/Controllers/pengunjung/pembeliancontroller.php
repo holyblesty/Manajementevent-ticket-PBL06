@@ -1,59 +1,25 @@
 <?php
 
-namespace App\Http\Controllers\Pengunjung;
+namespace App\Http\Controllers\pengunjung;
 
 use App\Http\Controllers\Controller;
-use App\Models\Event;
-use App\Models\Tiket;
 use Illuminate\Http\Request;
 
-class PembelianController extends Controller
+class pembeliancontroller extends Controller
 {
-    /**
-     * Halaman Pembelian Tiket
-     */
-    public function index($id)
+    public function index()
     {
-        // AMBIL EVENT
-        $event = Event::findOrFail($id);
+        // Data dummy event yang sedang dipilih untuk dibeli sesuai mockup
+        $event = [
+            'nama_event' => 'AI & MASA DEPAN KITA TECH FORUM 2024',
+            'banner' => 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=500&q=80',
+            'hari_tanggal' => 'Kamis, 29 Mei 2024',
+            'jam' => '09.00 - 17.00 WIB',
+            'lokasi' => 'Gedung Utama, Jl. Teknologi No. 1, Bandung',
+            'deskripsi' => 'Tech Forum yang membahas perkembangan kecerdasan buatan dan masa depan teknologi.'
+        ];
 
-        // AMBIL TIKET BERDASARKAN EVENT
-        $tikets = Tiket::where(
-            'id_event',
-            $id
-        )->get();
-
-        // KIRIM KE VIEW
-        return view(
-            'Pengunjung.pembeliantiket',
-            compact(
-                'event',
-                'tikets'
-            )
-        );
-    }
-
-    /**
-     * Simpan Pembelian
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Update Pembelian
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Hapus Pembelian
-     */
-    public function destroy($id)
-    {
-        //
+        // Mengarah ke folder layouts/Pengunjung/pembeliantiket.blade.php
+        return view('layouts.Pengunjung.pembeliantiket', compact('event'));
     }
 }
