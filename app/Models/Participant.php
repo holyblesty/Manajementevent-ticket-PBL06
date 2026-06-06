@@ -10,7 +10,6 @@ class Participant extends Model
 {
     use HasFactory;
 
-<<<<<<< HEAD
     protected $fillable = [
         'id_pesanan',
         'id_event',
@@ -37,18 +36,5 @@ class Participant extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
-=======
-    protected $table = 'participants';
-    
-    protected $primaryKey = 'id_participant';
-
-    // Kolom-kolom yang boleh diisi
-    protected $fillable = ['id_registration', 'nama', 'kode', 'email', 'instansi', 'hadir'];
-
-    // Menambahkan relasi ke Registration (Opsional tapi disarankan)
-    public function registration()
-    {
-        return $this->belongsTo(Registration::class, 'id_registration', 'id_registration');
->>>>>>> 753712b85d573d6b370734fecba1397481f4df9d
     }
 }

@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
-<<<<<<< HEAD
     // =========================================================
     // REGISTER
     // =========================================================
@@ -22,10 +21,6 @@ class AuthController extends Controller
         }
         return view('auth.register');
     }
-=======
-    public function showLogin() { return view('welcome'); }
-    public function showRegister() { return view('welcome'); }
->>>>>>> 753712b85d573d6b370734fecba1397481f4df9d
 
     public function register(Request $request)
     {
@@ -60,7 +55,7 @@ class AuthController extends Controller
             'role'     => 'pengunjung',
         ]);
 
-<<<<<<< HEAD
+// HEAD
         // Auto login setelah register
         Auth::guard('web')->login($user);
         $request->session()->regenerate();
@@ -84,9 +79,7 @@ class AuthController extends Controller
         }
 
         return view('auth.login');
-=======
         return redirect('/')->with('success', 'Akun berhasil dibuat! Silakan login.');
->>>>>>> 753712b85d573d6b370734fecba1397481f4df9d
     }
 
     public function login(Request $request)
@@ -108,7 +101,6 @@ class AuthController extends Controller
             'password' => $request->password,
         ];
 
-<<<<<<< HEAD
         // --------------------------------------------------
         // STRATEGI 1: Login sebagai Admin
         // --------------------------------------------------
@@ -121,18 +113,6 @@ class AuthController extends Controller
             session([
                 'admin_name' => $admin->name,
                 'admin_foto' => $admin->foto ?? null,
-=======
-        // 1. STRATEGI LOGIN ADMIN
-        // Menggunakan guard 'admin' yang sudah didefinisikan di config/auth.php
-        if (Auth::guard('admin')->attempt($credentials)) {
-            $request->session()->regenerate();
-            $admin = Auth::guard('admin')->user();
-            
-            // PERBAIKAN: Menggunakan 'username' karena 'name' tidak ada di tabel admin
-            session([
-                'admin_username' => $admin->username,
-                'admin_foto' => $admin->foto 
->>>>>>> 753712b85d573d6b370734fecba1397481f4df9d
             ]);
 
             return redirect()->route('admin.dashboard')
@@ -167,7 +147,6 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-<<<<<<< HEAD
         // Logout Admin
         if (Auth::guard('admin')->check()) {
             Auth::guard('admin')->logout();
@@ -177,13 +156,6 @@ class AuthController extends Controller
         }
 
         // Logout Pengunjung
-=======
-        if (Auth::guard('admin')->check()) {
-            Auth::guard('admin')->logout();
-            $request->session()->forget(['admin_username', 'admin_foto']);
-        } 
-        
->>>>>>> 753712b85d573d6b370734fecba1397481f4df9d
         if (Auth::guard('web')->check()) {
             Auth::guard('web')->logout();
         }
@@ -258,4 +230,4 @@ class AuthController extends Controller
 
         return back()->with('success', 'Profil berhasil diperbarui!');
     }
-}
+    }

@@ -68,7 +68,7 @@
     <div class="w-36 h-36 rounded-full border-4 border-[#7a4988] overflow-hidden shadow-md transition-all duration-300 group-hover:scale-105">
         <img src="{{ asset('images/' . (session('admin_foto') ?: 'profile_default.jpg')) }}" 
              alt="Admin"
-             onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode(session('admin_name', 'Admin')) }}&color=ffffff&background=7a4988';"
+             onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode(session('admin_name','Admin')) }}&color=ffffff&background=7a4988';"
              class="w-full h-full object-cover">
     </div>
 
