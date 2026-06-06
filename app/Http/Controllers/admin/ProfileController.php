@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin; // Pastikan Model Admin di-import
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -11,6 +12,7 @@ class ProfileController extends Controller
 {
     public function index()
     {
+        /** @var Admin $admin */
         $admin = Auth::guard('admin')->user();
 
         return view('admin.profile', compact('admin'));
@@ -18,6 +20,7 @@ class ProfileController extends Controller
 
     public function update(Request $request)
     {
+        /** @var Admin $admin */ // <-- Type hinting agar Intelephense mengenali method 'save'
         $admin = Auth::guard('admin')->user();
 
         // ==================================================
@@ -31,7 +34,7 @@ class ProfileController extends Controller
         ]);
 
         // ==================================================
-        // UPDATE USERNAME (WAJIB)
+        // UPDATE USERNAME
         // ==================================================
         $admin->username = $request->username;
 
@@ -39,17 +42,12 @@ class ProfileController extends Controller
         // 1. PASSWORD (OPSIONAL)
         // ==================================================
         if ($request->filled('password_baru')) {
-
             if (!$request->filled('password_lama')) {
-                return back()->withErrors([
-                    'password_lama' => 'Masukkan password lama dulu'
-                ]);
+                return back()->withErrors(['password_lama' => 'Masukkan password lama dulu']);
             }
 
             if (!Hash::check($request->password_lama, $admin->password)) {
-                return back()->withErrors([
-                    'password_lama' => 'Password lama salah'
-                ]);
+                return back()->withErrors(['password_lama' => 'Password lama salah']);
             }
 
             $admin->password = Hash::make($request->password_baru);
@@ -59,13 +57,12 @@ class ProfileController extends Controller
         // 2. FOTO (OPSIONAL)
         // ==================================================
         if ($request->hasFile('foto')) {
-
             $file = $request->file('foto');
             $namaFile = time() . '.' . $file->getClientOriginalExtension();
 
             $file->move(public_path('images'), $namaFile);
 
-            // hapus foto lama
+            // Hapus foto lama
             if ($admin->foto && file_exists(public_path('images/' . $admin->foto))) {
                 unlink(public_path('images/' . $admin->foto));
             }
@@ -76,7 +73,7 @@ class ProfileController extends Controller
         // ==================================================
         // SAVE
         // ==================================================
-        $admin->save();
+        $admin->save(); // Sekarang tidak akan ada error "Undefined method"
 
         // ==================================================
         // SYNC SIDEBAR SESSION

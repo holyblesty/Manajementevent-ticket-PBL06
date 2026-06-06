@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class AuthController extends Controller
 {
@@ -55,7 +56,6 @@ class AuthController extends Controller
             'role'     => 'pengunjung',
         ]);
 
-// HEAD
         // Auto login setelah register
         Auth::guard('web')->login($user);
         $request->session()->regenerate();
@@ -70,7 +70,6 @@ class AuthController extends Controller
 
     public function showLogin()
     {
-        // Redirect kalau sudah login
         if (Auth::guard('admin')->check()) {
             return redirect()->route('admin.dashboard');
         }
@@ -79,7 +78,6 @@ class AuthController extends Controller
         }
 
         return view('auth.login');
-        return redirect('/')->with('success', 'Akun berhasil dibuat! Silakan login.');
     }
 
     public function login(Request $request)
@@ -101,15 +99,11 @@ class AuthController extends Controller
             'password' => $request->password,
         ];
 
-        // --------------------------------------------------
-        // STRATEGI 1: Login sebagai Admin
-        // --------------------------------------------------
+        // Login Admin
         if (Auth::guard('admin')->attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
-
             $admin = Auth::guard('admin')->user();
 
-            // Simpan data profil admin ke session agar bisa diakses global
             session([
                 'admin_name' => $admin->name,
                 'admin_foto' => $admin->foto ?? null,
@@ -119,26 +113,18 @@ class AuthController extends Controller
                 ->with('success', 'Selamat datang, ' . $admin->name . '!');
         }
 
-        // --------------------------------------------------
-        // STRATEGI 2: Login sebagai Pengunjung (web guard)
-        // --------------------------------------------------
+        // Login Pengunjung
         if (Auth::guard('web')->attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
-
             $user = Auth::guard('web')->user();
 
             return redirect()->route('pengunjung.beranda')
                 ->with('success', 'Selamat datang, ' . $user->name . '!');
         }
 
-        // --------------------------------------------------
-        // GAGAL: Kedua guard tidak cocok
-        // --------------------------------------------------
         return back()
             ->withInput($request->only('username'))
-            ->withErrors([
-                'username' => 'Username atau password salah.',
-            ]);
+            ->withErrors(['username' => 'Username atau password salah.']);
     }
 
     // =========================================================
@@ -147,15 +133,11 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        // Logout Admin
         if (Auth::guard('admin')->check()) {
             Auth::guard('admin')->logout();
-
-            // Hapus session profil admin
             $request->session()->forget(['admin_name', 'admin_foto']);
         }
 
-        // Logout Pengunjung
         if (Auth::guard('web')->check()) {
             Auth::guard('web')->logout();
         }
@@ -173,12 +155,14 @@ class AuthController extends Controller
 
     public function showProfil()
     {
+        /** @var \App\Models\User $user */
         $user = Auth::guard('web')->user();
         return view('pengunjung.profil', compact('user'));
     }
 
     public function updateProfil(Request $request)
     {
+        /** @var \App\Models\User $user */
         $user = Auth::guard('web')->user();
 
         $validator = Validator::make($request->all(), [
@@ -186,11 +170,6 @@ class AuthController extends Controller
             'email'  => 'required|email|unique:users,email,' . $user->id,
             'no_hp'  => 'required|string|max:20',
             'alamat' => 'nullable|string|max:500',
-        ], [
-            'name.required'  => 'Nama lengkap wajib diisi.',
-            'email.required' => 'Email wajib diisi.',
-            'email.unique'   => 'Email sudah digunakan akun lain.',
-            'no_hp.required' => 'Nomor HP wajib diisi.',
         ]);
 
         if ($validator->fails()) {
@@ -199,30 +178,16 @@ class AuthController extends Controller
 
         $data = $request->only(['name', 'email', 'no_hp', 'alamat']);
 
-        // Update password jika diisi
         if ($request->filled('password')) {
-            $passValidator = Validator::make($request->all(), [
-                'password' => 'min:6|confirmed',
-            ], [
-                'password.min'       => 'Password minimal 6 karakter.',
-                'password.confirmed' => 'Konfirmasi password tidak cocok.',
-            ]);
-
-            if ($passValidator->fails()) {
-                return back()->withErrors($passValidator)->withInput();
-            }
-
+            $request->validate(['password' => 'min:6|confirmed']);
             $data['password'] = Hash::make($request->password);
         }
 
-        // Upload foto profil jika ada
         if ($request->hasFile('foto')) {
             $request->validate(['foto' => 'image|mimes:jpg,jpeg,png|max:2048']);
-
             if ($user->foto) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($user->foto);
+                Storage::disk('public')->delete($user->foto);
             }
-
             $data['foto'] = $request->file('foto')->store('foto-profil', 'public');
         }
 
@@ -230,4 +195,4 @@ class AuthController extends Controller
 
         return back()->with('success', 'Profil berhasil diperbarui!');
     }
-    }
+}
