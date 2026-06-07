@@ -8,7 +8,6 @@ use App\Http\Controllers\Admin\PesertaController;
 use App\Http\Controllers\Admin\StatistikController;
 use App\Http\Controllers\Pengunjung\DashboardController as PengunjungDashboardController;
 use App\Http\Controllers\Pengunjung\EventController;
-use App\Http\Controllers\Pengunjung\ListKelompokController;
 use App\Http\Controllers\Pengunjung\RiwayatController;
 
 /*
@@ -108,10 +107,6 @@ Route::prefix('pengunjung')->name('pengunjung.')->middleware('auth')->group(func
     Route::get('/detail-tiket', function () {
         return view('Pengunjung.detail-tiket');
     })->name('detail-tiket');
-
-    // Kelompok
-    Route::get('/pengunjung/kelompok',[ListKelompokController::class, 'show'])->name('kelompok');
-    Route::post('/pengunjung/kelompok/simpan',[ListKelompokController::class, 'simpan'])->name('kelompok.simpan');
 
     // Riwayat
     Route::get('/riwayat', function () {
