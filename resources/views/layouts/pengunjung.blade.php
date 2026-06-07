@@ -176,9 +176,9 @@
             <div>
 
                 <img src="{{ asset('images/footer.jpg') }}"
-                     class="h-20 mb-4">
+                     class="h-41 mb-4">
 
-                <p class="text-gray-300 text-sm leading-relaxed">
+                <p class="text-gray-300 text-center text-sm leading-relaxed">
                     Event Ticketing adalah platform untuk menemukan dan memesan tiket event terbaik dengan mudah dan cepat.
                 </p>
 
@@ -228,7 +228,7 @@
 
                 <ul class="space-y-3 text-gray-300">
 
-                    <li>📧 lusi@gmail.com</li>
+                    <li>📧 AdminKita@gmail.com</li>
                     <li>📞 +62 895 3128 7505</li>
 
                 </ul>
