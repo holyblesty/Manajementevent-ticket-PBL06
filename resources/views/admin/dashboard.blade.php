@@ -89,7 +89,13 @@
                         </div>
                     </td>
                     <td class="px-6 py-5 text-center">
-                        <span class="px-5 py-2 bg-[#be93d4]/20 text-[#7a4988] rounded-full text-sm font-bold uppercase tracking-wider kategori-label">{{ $event->kategori ?? '-' }}</span>
+                       <span class="... kategori-label">
+    @if(is_array($event->kategori) || is_object($event->kategori))
+        {{ $event->kategori['nama_kategori'] ?? ($event->kategori->nama_kategori ?? '-') }}
+    @else
+        {{ $event->kategori ?? '-' }}
+    @endif
+</span>
                     </td>
                     <td class="px-6 py-5 text-center">
                         <div class="inline-flex items-center justify-center bg-gray-100 px-5 py-3 rounded-md border border-gray-200">

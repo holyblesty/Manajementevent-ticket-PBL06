@@ -28,32 +28,36 @@
     {{-- LIST EVENT --}}
     <div class="bg-white pb-8" id="eventList">
         @forelse($events as $event)
-        <a href="{{ route('admin.peserta.detail', $event->id_event) }}"
-           data-kategori="{{ strtolower($event->kategori) }}"
-           class="event-link flex items-center justify-between px-10 py-8 border-b border-gray-100 hover:bg-gray-50 transition no-underline group">
-            
-            <div class="flex items-center gap-8">
-                <div class="w-40 h-28 rounded-xl overflow-hidden bg-gray-200 shrink-0 border border-gray-100 shadow-sm">
-                    <img src="{{ asset('images/' . $event->poster) }}" onerror="this.src='https://placehold.co/160x112?text=Event'" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                </div>
-                <div>
-                    <h3 class="text-3xl font-black text-gray-800 group-hover:text-[#7a4988] transition mb-3 uppercase">{{ $event->judul }}</h3>
-                    <p class="text-gray-500 text-lg font-bold flex items-center gap-4">
-                        {{ $event->tanggal }} 
-                        <span class="bg-gray-100 text-gray-600 px-4 py-1.5 rounded-lg text-sm font-black uppercase tracking-wider border border-gray-200">{{ $event->kategori }}</span>
-                    </p>
-                </div>
-            </div>
+            {{-- LOGIKA RELASI --}}
+            @php
+                $namaTampil = $event->kategori ? $event->kategori->nama_kategori : 'UMUM';
+            @endphp
 
-            {{-- INDIKATOR KUOTA OTOMATIS --}}
-            <div class="shrink-0">
-                <span class="inline-flex items-center justify-center px-8 py-4 rounded-xl border-2 text-2xl font-black shadow-sm 
-                    {{ $event->is_full ? 'bg-red-50 text-red-700 border-red-200' : 'bg-blue-50 text-blue-700 border-blue-200' }}">
-                    {{ $event->total_pendaftar }} <span class="mx-2 text-gray-400 font-bold">/</span> {{ $event->kapasitas }} 
-                    <span class="ml-2 text-sm uppercase tracking-widest text-gray-500">{{ $event->is_full ? 'PENUH' : 'TERSEDIA' }}</span>
-                </span>
-            </div>
-        </a>
+            <a href="{{ route('admin.peserta.detail', $event->id_event) }}"
+               data-kategori="{{ strtolower($namaTampil) }}"
+               class="event-link flex items-center justify-between px-10 py-8 border-b border-gray-100 hover:bg-gray-50 transition no-underline group">
+                
+                <div class="flex items-center gap-8">
+                    <div class="w-40 h-28 rounded-xl overflow-hidden bg-gray-200 shrink-0 border border-gray-100 shadow-sm">
+                        <img src="{{ asset('images/' . $event->poster) }}" onerror="this.src='https://placehold.co/160x112?text=Event'" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <div>
+                        <h3 class="text-3xl font-black text-gray-800 group-hover:text-[#7a4988] transition mb-3 uppercase">{{ $event->judul }}</h3>
+                        <p class="text-gray-500 text-lg font-bold flex items-center gap-4">
+                            {{ $event->tanggal ? \Carbon\Carbon::parse($event->tanggal)->format('d M Y') : '-' }} 
+                            <span class="bg-gray-100 text-gray-600 px-4 py-1.5 rounded-lg text-sm font-black uppercase tracking-wider border border-gray-200">{{ $namaTampil }}</span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="shrink-0">
+                    <span class="inline-flex items-center justify-center px-8 py-4 rounded-xl border-2 text-2xl font-black shadow-sm 
+                        {{ $event->is_full ? 'bg-red-50 text-red-700 border-red-200' : 'bg-blue-50 text-blue-700 border-blue-200' }}">
+                        {{ $event->total_pendaftar ?? 0 }} <span class="mx-2 text-gray-400 font-bold">/</span> {{ $event->kapasitas }} 
+                        <span class="ml-2 text-sm uppercase tracking-widest text-gray-500">{{ $event->is_full ? 'PENUH' : 'TERSEDIA' }}</span>
+                    </span>
+                </div>
+            </a>
         @empty
             <div class="text-center py-24 text-gray-400 font-bold text-3xl">Belum ada event yang tersedia.</div>
         @endforelse

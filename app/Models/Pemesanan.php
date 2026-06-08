@@ -6,10 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class Pesanan extends Model
+class pemesanan extends Model
 {
     use HasFactory;
 
+// TAMBAHKAN INI: Agar Laravel mengarah ke tabel 'pemesanan'
+    protected $table = 'pemesanan'; 
     protected $primaryKey = 'id_pesanan';
 
     protected $fillable = [
@@ -41,7 +43,7 @@ class Pesanan extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'id_pengunjung');
     }
 
     public function event()
@@ -54,14 +56,9 @@ class Pesanan extends Model
         return $this->belongsTo(Tiket::class, 'id_tiket', 'id_tiket');
     }
 
-    public function detailPesanans()
-    {
-        return $this->hasMany(DetailPesanan::class, 'id_pesanan', 'id_pesanan');
-    }
-
     public function participants()
     {
-        return $this->hasMany(Participant::class, 'id_pesanan', 'id_pesanan');
+        return $this->hasMany(Menghadiri::class, 'id_pesanan', 'id_pesanan');
     }
 
     public function getStatusBadgeAttribute(): string

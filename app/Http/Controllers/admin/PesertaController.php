@@ -4,44 +4,42 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Event;
-use App\Models\Menghadiri; // Ganti ini
+use App\Models\Menghadiri; 
 use Illuminate\Http\Request;
 
 class PesertaController extends Controller
 {
     public function index() {
-        $events = Event::paginate(10);
+        $events = Event::with('kategori')->paginate(10);
         return view('admin.peserta', compact('events'));
     }
 
-    // Tambahkan type hint (int) untuk $id
     public function detail(int $id) { 
-        // Sesuaikan relasi jika di Event.php sudah menggunakan participants() yang mengarah ke Menghadiri
-        $selectedEvent = Event::with(['registrations.participants'])->findOrFail($id);
+        // Menggunakan with agar relasi dipanggil sekaligus (Eager Loading)
+        $selectedEvent = Event::with(['pemesanan.participants'])->findOrFail($id);
         
-        $total = 0; 
-        $hadir = 0; 
-        $belumHadir = 0;
+        $total = 0; $hadir = 0; $belumHadir = 0;
 
-        foreach ($selectedEvent->registrations as $reg) {
-            foreach ($reg->participants as $p) {
+        // Pengecekan null menggunakan null-coalescing operator ?? 
+        // Jika pemesanan null, maka foreach akan mengulang array kosong (tidak error)
+        foreach ($selectedEvent->pemesanan ?? [] as $pesanan) {
+            // Sama halnya dengan participants
+            foreach ($pesanan->participants ?? [] as $p) {
                 $total++;
-                $p->sts_checkin == 'sudah' ? $hadir++ : $belumHadir++; // Sesuaikan dengan kolom status
+                ($p->sts_checkin == 'sudah') ? $hadir++ : $belumHadir++;
             }
         }
         
         return view('admin.peserta-detail', compact('selectedEvent', 'total', 'hadir', 'belumHadir'));
     }
 
-    // Tambahkan type hint (int)
-    public function checkInIndividu(int $eventId, int $regId) {
-        // Gunakan model Menghadiri
-        $participant = Menghadiri::where('id_event', $eventId)->firstOrFail(); 
+    public function checkInIndividu(int $eventId, int $id_partisipan) {
+        $participant = Menghadiri::findOrFail($id_partisipan); 
         
-        // Logika toggle status
-        $participant->sts_checkin = ($participant->sts_checkin == 'sudah') ? 'belum' : 'sudah';
+        // Toggle status
+        $participant->sts_checkin = ($participant->sts_checkin === 'sudah') ? 'belum' : 'sudah';
         $participant->save();
         
-        return redirect()->back()->with('success', 'Status berhasil diubah!');
+        return redirect()->back()->with('success', 'Status check-in berhasil diubah!');
     }
 }

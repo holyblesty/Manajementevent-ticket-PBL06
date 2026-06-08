@@ -9,10 +9,15 @@ class Admin extends Authenticatable
 {
     use Notifiable;
 
-    protected $table = 'admin'; // Sesuai dengan nama tabel di database Anda
-    protected $primaryKey = 'Id_admin'; // Sesuaikan huruf kecil 'a'
+    protected $table = 'admin'; 
     
-    public $timestamps = false; // Karena di database Anda 'created_at' banyak yang NULL
+    // Sesuaikan dengan nama kolom asli di tabel Anda (huruf kecil semua)
+    protected $primaryKey = 'id_admin'; 
+    
+    // Jika tipe data primary key bukan integer (misal string/UUID), 
+    // tambahkan: public $incrementing = true; (biarkan default jika auto-increment)
+
+    public $timestamps = false; 
 
     protected $fillable = [
         'username',

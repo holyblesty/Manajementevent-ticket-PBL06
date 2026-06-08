@@ -5,8 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Tiket;
-use App\Models\Menghadiri; // Menggunakan model Menghadiri sebagai ganti Participant
-use App\Models\Pesanan;
+use App\Models\Menghadiri;
+use App\Models\Pemesanan;
 
 class Event extends Model
 {
@@ -21,20 +21,21 @@ class Event extends Model
     // Pastikan timestamps aktif
     public $timestamps = true;
 
-    protected $fillable = [
-        'judul',
-        'deskripsi',
-        'tanggal',
-        'jam_mulai',
-        'jam_selesai',
-        'lokasi',
-        'id_kategori', // Diperbarui dari 'kategori' menjadi 'id_kategori'
-        'kapasitas',
-        'jenis',
-        'poster',
-        'desain_tiket',
-        'gambar',
-    ];
+protected $fillable = [
+    'judul',
+    'deskripsi',
+    'tanggal',
+    'jam_mulai',
+    'jam_selesai',
+    'lokasi',
+    'id_kategori',
+    'kapasitas',
+    'kuota_tersedia', // Tambahkan ini
+    'status_event',   // Tambahkan ini
+    'jenis',
+    'poster',
+    'id_admin',
+];
 
     protected $casts = [
         'tanggal' => 'date',
@@ -43,24 +44,30 @@ class Event extends Model
     ];
 
     // Relasi ke Kategori
-    public function kategori()
+public function kategori()
     {
         return $this->belongsTo(KategoriEvent::class, 'id_kategori', 'id_kategori');
     }
 
     // Relasi ke Tiket
-    public function tikets()
+    public function tiket()
     {
         return $this->hasMany(Tiket::class, 'id_event', 'id_event');
     }
 
-    // Relasi ke Pesanan
-    public function pesanans()
-    {
-        return $this->hasMany(Pesanan::class, 'id_event', 'id_event');
-    }
+public function pemesanan()
+{
+    // Ini artinya: Event punya banyak tiket, dan setiap tiket punya banyak pesanan
+    return $this->hasManyThrough(
+        Pemesanan::class, // Target akhir
+        Tiket::class,     // Model perantara
+        'id_event',       // Foreign key di tabel 'tiket'
+        'id_tiket',       // Foreign key di tabel 'pemesanan'
+        'id_event',       // Local key di tabel 'events'
+        'id_tiket'        // Local key di tabel 'tiket'
+    );
+}
 
-    // Relasi ke Menghadiri (sebagai pengganti Participant)
     public function participants()
     {
         return $this->hasMany(Menghadiri::class, 'id_event', 'id_event');
@@ -69,7 +76,7 @@ class Event extends Model
     // Accessor untuk total terjual
     public function getTotalTerjualAttribute(): int
     {
-        return $this->tikets->sum('terjual');
+        return $this->tiket->sum('terjual');
     }
 
     // Accessor untuk sisa kapasitas

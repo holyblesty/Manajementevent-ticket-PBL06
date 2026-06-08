@@ -27,7 +27,7 @@
             <p class="text-xs text-[#be93d4] font-bold mt-1 uppercase tracking-widest">{{ $event->judul }}</p>
         </div>
 
-        <form action="{{ route('admin.acara.tiket.update', $event->id_event) }}" method="POST" enctype="multipart/form-data" class="p-8">
+        <form action="{{ route('admin.acara.tiket.update', $event->id_event) }}" method="POST" class="p-8">
             @csrf
             @method('PUT')
 
@@ -53,53 +53,34 @@
                     <div class="flex-grow border-t-2 border-gray-100"></div>
                 </div>
 
- @foreach(['early_bird' => 'Early Bird', 'normal' => 'Normal', 'vip' => 'VIP'] as $key => $label)
+                @foreach(['early_bird' => 'Early Bird', 'normal' => 'Normal', 'vip' => 'VIP'] as $key => $label)
+                <div class="bg-white p-5 rounded-2xl border-2 border-gray-100 grid grid-cols-1 md:grid-cols-3 gap-4 items-end hover:border-[#be93d4] transition-all shadow-sm">
+                    <div>
+                        <label class="block text-[9px] font-black uppercase text-[#7a4988] mb-2 tracking-widest">Tier Tiket</label>
+                        <input type="text" value="{{ $label }}" readonly class="w-full p-3 border-2 border-gray-100 rounded-xl text-xs font-black text-gray-400 uppercase bg-gray-50 cursor-not-allowed outline-none">
+                        <input type="hidden" name="tiket[{{$key}}][nama]" value="{{ $label }}">
+                    </div>
 
-<div class="bg-white p-5 rounded-2xl border-2 border-gray-100 grid grid-cols-1 md:grid-cols-3 gap-4 items-end hover:border-[#be93d4] transition-all shadow-sm">
+                    <div>
+                        <label class="block text-[9px] font-black uppercase text-gray-400 mb-2 tracking-widest">Harga Per Tiket (Rp)</label>
+                        <input type="number" 
+                               name="tiket[{{$key}}][harga]" 
+                               value="{{ $tiketData[$label]->harga ?? 0 }}" 
+                               min="0" 
+                               class="w-full p-3 border-2 border-gray-100 rounded-xl text-xs font-black text-gray-800 outline-none focus:border-[#7a4988] transition-all">
+                    </div>
 
-    <div>
-        <label class="block text-[9px] font-black uppercase text-[#7a4988] mb-2 tracking-widest">
-            Tier Tiket
-        </label>
-
-        <input type="text"
-               value="{{ $label }}"
-               readonly
-               class="w-full p-3 border-2 border-gray-100 rounded-xl text-xs font-black text-gray-400 uppercase bg-gray-50 cursor-not-allowed outline-none">
-
-        <input type="hidden"
-               name="tiket[{{$key}}][nama]"
-               value="{{ $label }}">
-    </div>
-
-    <div>
-        <label class="block text-[9px] font-black uppercase text-gray-400 mb-2 tracking-widest">
-            Harga Per Tiket (Rp)
-        </label>
-
-        <input type="number"
-               name="tiket[{{$key}}][harga]"
-               value="{{ $tiketData[$label]->harga ?? 0 }}"
-               min="0"
-               class="w-full p-3 border-2 border-gray-100 rounded-xl text-xs font-black text-gray-800 outline-none focus:border-[#7a4988] transition-all">
-    </div>
-
-    <div>
-        <label class="block text-[9px] font-black uppercase text-gray-400 mb-2 tracking-widest">
-            Kuota
-        </label>
-
-        <input type="number"
-               name="tiket[{{$key}}][kuota]"
-               value="{{ $tiketData[$label]->kuota_total ?? 0 }}"
-               min="0"
-               class="kuota-input w-full p-3 border-2 border-[#7a4988] bg-white rounded-xl text-sm font-black text-center text-[#7a4988] outline-none focus:ring-4 focus:ring-purple-100 transition-all"
-               oninput="validateInput(this); updateTotal()">
-    </div>
-
-</div>
-
-@endforeach
+                    <div>
+                        <label class="block text-[9px] font-black uppercase text-gray-400 mb-2 tracking-widest">Kuota</label>
+                        <input type="number" 
+                               name="tiket[{{$key}}][kuota]" 
+                               value="{{ $tiketData[$label]->kuota_total ?? 0 }}" 
+                               min="0" 
+                               class="kuota-input w-full p-3 border-2 border-[#7a4988] bg-white rounded-xl text-sm font-black text-center text-[#7a4988] outline-none focus:ring-4 focus:ring-purple-100 transition-all" 
+                               oninput="validateInput(this); updateTotal()">
+                    </div>
+                </div>
+                @endforeach
             </div>
 
             <div class="mt-10 flex justify-end gap-3 pt-6 border-t-2 border-gray-50">

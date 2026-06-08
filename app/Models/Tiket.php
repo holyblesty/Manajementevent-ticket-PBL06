@@ -9,19 +9,18 @@ class Tiket extends Model
 {
     use HasFactory;
 
+    // TAMBAHKAN BARIS INI
+    protected $table = 'tiket'; 
+    public $timestamps = false;
     protected $primaryKey = 'id_tiket';
 
-    protected $fillable = [
-        'id_event',
-        'jenis_tiket',
-        'harga',
-        'kuota',
-        'terjual',
-    ];
-
-    protected $casts = [
-        'harga' => 'decimal:2',
-    ];
+protected $fillable = [
+    'id_event',
+    'jenis_tiket',
+    'harga',
+    'kuota_total',    // Sesuaikan dengan nama di database
+    'kuota_tersedia', // Sesuaikan dengan nama di database
+];
 
     public function event()
     {
@@ -30,7 +29,7 @@ class Tiket extends Model
 
     public function pesanans()
     {
-        return $this->hasMany(Pesanan::class, 'id_tiket', 'id_tiket');
+        return $this->hasMany(Pemesanan::class, 'id_tiket', 'id_tiket');
     }
 
     public function getSisaAttribute(): int

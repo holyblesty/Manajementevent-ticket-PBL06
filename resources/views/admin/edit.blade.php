@@ -25,7 +25,15 @@
             <h1 class="text-2xl font-black uppercase tracking-tighter text-white">Ubah Informasi Event</h1>
             <p class="text-xs text-[#be93d4] font-bold mt-1 uppercase tracking-widest">{{ $event->judul }}</p>
         </div>
-
+@if ($errors->any())
+    <div class="mb-8 p-6 bg-red-50 border-2 border-red-200 rounded-2xl">
+        <ul class="list-disc list-inside text-xs font-bold text-red-600 space-y-1">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
         <form action="{{ route('admin.acara.update', $event->id_event) }}" method="POST" enctype="multipart/form-data" class="p-10">
             @csrf
             @method('PUT')
