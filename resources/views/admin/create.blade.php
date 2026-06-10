@@ -34,8 +34,25 @@
             </div>
         </div>
 
-        <form action="{{ route('admin.acara.store') }}" method="POST" enctype="multipart/form-data" class="p-10">
-            @csrf
+       <form action="{{ route('admin.acara.store') }}" method="POST" enctype="multipart/form-data" class="p-10">
+    @csrf
+
+    <input type="hidden" name="kapasitas" value="0">
+    <input type="hidden" name="kuota_tersedia" value="0">
+    <input type="hidden" name="status_event" value="draft">
+    
+
+            {{-- ERROR HANDLING AREA --}}
+            @if ($errors->any())
+                <div class="mb-8 p-6 bg-red-50 border-l-8 border-red-600 rounded-r-2xl shadow-sm">
+                    <p class="text-[10px] font-black text-red-700 uppercase tracking-widest mb-3">Terjadi Kesalahan:</p>
+                    <ul class="list-disc list-inside text-xs font-bold text-red-500 space-y-1">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
             <div class="flex flex-row items-start gap-12">
                 
@@ -43,7 +60,7 @@
                     <div>
                         <label class="block mb-2 text-[10px] font-black uppercase text-[#7a4988] tracking-widest">Judul Event <span class="text-red-500">*</span></label>
                         <input type="text" name="judul" value="{{ old('judul') }}" placeholder="Masukkan nama event..." 
-                               class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-sm font-bold text-gray-700 focus:border-[#7a4988] outline-none transition-all shadow-sm">
+                               class="w-full p-4 bg-gray-50 border-2 {{ $errors->has('judul') ? 'border-red-500' : 'border-gray-100' }} rounded-2xl text-sm font-bold text-gray-700 focus:border-[#7a4988] outline-none transition-all shadow-sm">
                     </div>
 
                     <div>
@@ -59,42 +76,29 @@
                                    class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-xs font-bold text-gray-500 outline-none shadow-sm">
                         </div>
                         <div>
-                            <label class="block mb-2 text-[10px] font-black uppercase text-gray-400 tracking-widest">Kategori <span class="text-red-500">*</span></label>
-                            <select name="kategori" class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-xs font-bold text-gray-500 outline-none cursor-pointer shadow-sm">
-                                <option value="">Pilih Kategori</option>
-                                <option value="Olahraga" {{ old('kategori') == 'Olahraga' ? 'selected' : '' }}>Olahraga</option>
-                                <option value="Seminar" {{ old('kategori') == 'Seminar' ? 'selected' : '' }}>Seminar</option>
-                                <option value="Hiburan" {{ old('kategori') == 'Hiburan' ? 'selected' : '' }}>Hiburan</option>
-                            </select>
+<div>
+    <label class="block mb-2 text-[10px] font-black uppercase text-gray-400 tracking-widest">Kategori <span class="text-red-500">*</span></label>
+    <select name="id_kategori" required class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-xs font-bold text-gray-500 outline-none cursor-pointer shadow-sm">
+        <option value="">Pilih Kategori</option>
+        <option value="1" {{ old('id_kategori') == '1' ? 'selected' : '' }}>Olahraga</option>
+        <option value="2" {{ old('id_kategori') == '2' ? 'selected' : '' }}>Seminar</option>
+        <option value="3" {{ old('id_kategori') == '3' ? 'selected' : '' }}>Hiburan</option>
+    </select>
+</div>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-6">
-                        <div>
-                            <label class="block mb-2 text-[10px] font-black uppercase text-[#7a4988] tracking-widest">Lokasi <span class="text-red-500">*</span></label>
-                            <input type="text" name="lokasi" value="{{ old('lokasi') }}" placeholder="Tempat acara..." 
-                                   class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-sm font-bold text-gray-700 focus:border-[#7a4988] outline-none shadow-sm">
-                        </div>
-                        <div>
-                            <label class="block mb-2 text-[10px] font-black uppercase text-gray-400 tracking-widest">Jenis Kepesertaan <span class="text-red-500">*</span></label>
-                            <div class="flex border-2 border-gray-100 rounded-2xl overflow-hidden h-[58px] bg-gray-50 shadow-sm">
-                                <label class="flex-1 flex items-center justify-center cursor-pointer">
-                                    <input type="radio" name="jenis" value="tim" class="hidden peer" {{ old('jenis') == 'tim' ? 'checked' : '' }}>
-                                    <span class="w-full h-full flex items-center justify-center text-[10px] font-black uppercase peer-checked:bg-[#7a4988] peer-checked:text-white text-gray-400 transition-all">Tim</span>
-                                </label>
-                                <label class="flex-1 flex items-center justify-center cursor-pointer border-l-2 border-gray-100">
-                                    <input type="radio" name="jenis" value="individu" class="hidden peer" {{ old('jenis', 'individu') == 'individu' ? 'checked' : '' }}>
-                                    <span class="w-full h-full flex items-center justify-center text-[10px] font-black uppercase peer-checked:bg-[#7a4988] peer-checked:text-white text-gray-400 transition-all">Individu</span>
-                                </label>
-                            </div>
-                        </div>
+                    <div>
+                        <label class="block mb-2 text-[10px] font-black uppercase text-[#7a4988] tracking-widest">Lokasi <span class="text-red-500">*</span></label>
+                        <input type="text" name="lokasi" value="{{ old('lokasi') }}" placeholder="Tempat acara..." 
+                               class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-sm font-bold text-gray-700 focus:border-[#7a4988] outline-none shadow-sm">
                     </div>
                 </div>
 
                 <div class="flex-1 min-w-[280px] space-y-6">
                     <div>
                         <label class="block mb-2 text-[10px] font-black uppercase text-[#7a4988] tracking-widest text-center">Poster Event <span class="text-red-500">*</span></label>
-                        <div class="bg-gray-50 border-2 border-dashed border-gray-200 rounded-[2rem] h-[400px] flex flex-col items-center justify-center relative text-center group overflow-hidden cursor-pointer hover:border-[#7a4988] transition-all shadow-inner">
+                        <div class="bg-gray-50 border-2 {{ $errors->has('poster') ? 'border-red-500' : 'border-dashed border-gray-200' }} rounded-[2rem] h-[400px] flex flex-col items-center justify-center relative text-center group overflow-hidden cursor-pointer hover:border-[#7a4988] transition-all shadow-inner">
                             <input type="file" name="poster" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-50" onchange="previewImage(this)">
                             
                             <div id="placeholder_view" class="z-10 flex flex-col items-center group-hover:scale-110 transition-transform duration-300">
@@ -117,20 +121,44 @@
         </form>
     </div>
 
-    <script>
-        function previewImage(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const img = document.getElementById('image_preview');
-                    const placeholder = document.getElementById('placeholder_view');
-                    img.src = e.target.result;
-                    img.classList.remove('hidden');
-                    placeholder.classList.add('hidden');
-                }
-                reader.readAsDataURL(input.files[0]);
+     <script>
+    // 1. Script untuk Preview Gambar
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = document.getElementById('image_preview');
+                const placeholder = document.getElementById('placeholder_view');
+                img.src = e.target.result;
+                img.classList.remove('hidden');
+                placeholder.classList.add('hidden');
             }
+            reader.readAsDataURL(input.files[0]);
         }
+    }
+
+    // 2. Script untuk Navigasi Enter ke Kolom Berikutnya atau Submit
+    document.addEventListener("DOMContentLoaded", function() {
+        const form = document.querySelector('form');
+        // Mengambil semua input, select, dan textarea yang terlihat/bisa diisi
+        const formFields = Array.from(form.querySelectorAll('input:not([type="hidden"]), select, textarea'));
+
+        formFields.forEach((field, index) => {
+            field.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault(); // Mencegah submit dini
+
+                    // Jika bukan field terakhir, pindah ke field berikutnya
+                    if (index < formFields.length - 1) {
+                        formFields[index + 1].focus();
+                    } else {
+                        // Jika sudah di field terakhir, lakukan submit form
+                        form.submit();
+                    }
+                }
+            });
+        });
+    });
     </script>
 </body>
 </html>

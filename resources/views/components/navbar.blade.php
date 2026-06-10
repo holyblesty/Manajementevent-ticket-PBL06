@@ -1,57 +1,48 @@
-<nav class="bg-white shadow-sm border-b">
+<nav class="navbar-custom">
 
-    <div class="max-w-full px-8 py-4 flex items-center justify-between">
+    <div class="navbar-left">
 
-        {{-- LOGO --}}
-        <div class="flex items-center gap-3">
-
-            <div class="w-12 h-12 rounded-full bg-purple-200 flex items-center justify-center">
-                🎟️
-            </div>
-
-            <div>
-                <h1 class="font-bold text-2xl text-[#5b178f]">
-                    Event Ticket
-                </h1>
-
-                <p class="text-xs text-gray-500">
-                    EVENT & TICKETING
-                </p>
-            </div>
+        <div class="logo-circle">
+            ET
         </div>
 
-        {{-- SEARCH --}}
-        <div class="flex items-center w-[450px]">
+        <div>
 
-            <div class="w-full relative">
+            <h1 class="logo-title">
+                Event Ticket
+            </h1>
 
-                <i class="fa-solid fa-magnifying-glass absolute left-4 top-4 text-gray-400"></i>
-
-                <input
-                    type="text"
-                    placeholder="Cari event..."
-                    class="w-full border border-gray-300 rounded-l-lg py-3 pl-12 pr-4 outline-none focus:border-[#5b178f]">
-
-            </div>
-
-            <button
-                class="bg-[#5b178f] text-white px-8 py-3 rounded-r-lg hover:bg-[#491170] transition">
-                Cari
-            </button>
-
-        </div>
-
-        {{-- MENU --}}
-        <div class="flex items-center gap-10 font-medium text-[#2d124d]">
-
-            <a href="#" class="hover:text-[#5b178f]">Beranda</a>
-            <a href="#" class="hover:text-[#5b178f]">Acara</a>
-            <a href="#" class="hover:text-[#5b178f]">Tentang kami</a>
+            <p class="logo-subtitle">
+                Event Management System
+            </p>
 
         </div>
 
     </div>
 
-    <div class="h-3 bg-[#5b178f]"></div>
+    <div class="navbar-center">
+
+        <input
+            type="text"
+            placeholder="Cari event..."
+            class="search-input">
+
+    </div>
+
+    <div class="navbar-right">
+
+        <a href="#">
+            Beranda
+        </a>
+
+        <a href="#">
+            Event
+        </a>
+
+        <a href="#">
+            Tentang
+        </a>
+
+    </div>
 
 </nav>

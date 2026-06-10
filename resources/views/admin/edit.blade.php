@@ -25,7 +25,15 @@
             <h1 class="text-2xl font-black uppercase tracking-tighter text-white">Ubah Informasi Event</h1>
             <p class="text-xs text-[#be93d4] font-bold mt-1 uppercase tracking-widest">{{ $event->judul }}</p>
         </div>
-
+@if ($errors->any())
+    <div class="mb-8 p-6 bg-red-50 border-2 border-red-200 rounded-2xl">
+        <ul class="list-disc list-inside text-xs font-bold text-red-600 space-y-1">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
         <form action="{{ route('admin.acara.update', $event->id_event) }}" method="POST" enctype="multipart/form-data" class="p-10">
             @csrf
             @method('PUT')
@@ -60,24 +68,10 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block mb-2 text-[10px] font-black uppercase text-gray-400 tracking-widest">Jenis Event</label>
-                            <div class="flex border-2 border-gray-100 rounded-2xl overflow-hidden h-[58px] bg-gray-50">
-                                <label class="flex-1 flex items-center justify-center cursor-pointer">
-                                    <input type="radio" name="jenis" value="tim" class="hidden peer" {{ $event->jenis == 'tim' ? 'checked' : '' }}>
-                                    <span class="w-full h-full flex items-center justify-center text-[10px] font-black uppercase peer-checked:bg-[#7a4988] peer-checked:text-white text-gray-400 transition-all">Tim</span>
-                                </label>
-                                <label class="flex-1 flex items-center justify-center cursor-pointer border-l-2 border-gray-100">
-                                    <input type="radio" name="jenis" value="individu" class="hidden peer" {{ $event->jenis == 'individu' ? 'checked' : '' }}>
-                                    <span class="w-full h-full flex items-center justify-center text-[10px] font-black uppercase peer-checked:bg-[#7a4988] peer-checked:text-white text-gray-400 transition-all">Individu</span>
-                                </label>
-                            </div>
+                            <label class="block mb-2 text-[10px] font-black uppercase text-[#7a4988] tracking-widest">Lokasi</label>
+                            <input type="text" name="lokasi" value="{{ $event->lokasi }}" 
+                                   class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-sm font-bold text-gray-700 focus:border-[#7a4988] outline-none">
                         </div>
-                    </div>
-
-                    <div>
-                        <label class="block mb-2 text-[10px] font-black uppercase text-[#7a4988] tracking-widest">Lokasi</label>
-                        <input type="text" name="lokasi" value="{{ $event->lokasi }}" 
-                               class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-sm font-bold text-gray-700 focus:border-[#7a4988] outline-none">
                     </div>
                 </div>
 

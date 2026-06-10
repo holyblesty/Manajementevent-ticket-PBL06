@@ -9,12 +9,16 @@ class Admin extends Authenticatable
 {
     use Notifiable;
 
-    protected $table = 'admin';
+    protected $table = 'admin'; 
+    
+    // Sesuaikan dengan nama kolom asli di tabel Anda (huruf kecil semua)
+    protected $primaryKey = 'id_admin'; 
+    
+    // Jika tipe data primary key bukan integer (misal string/UUID), 
+    // tambahkan: public $incrementing = true; (biarkan default jika auto-increment)
 
-    // Gunakan primary key sesuai database Anda
-    protected $primaryKey = 'Id_Admin'; 
+    public $timestamps = false; 
 
-    // Hanya isi dengan kolom yang BENAR-BENAR ADA di database
     protected $fillable = [
         'username',
         'password',
@@ -23,11 +27,5 @@ class Admin extends Authenticatable
 
     protected $hidden = [
         'password',
-        'remember_token',
     ];
-
-    public function getAuthPassword()
-    {
-        return $this->password;
-    }
 }

@@ -9,13 +9,36 @@ class Tiket extends Model
 {
     use HasFactory;
 
-    protected $table = 'tikets';
+    // TAMBAHKAN BARIS INI
+    protected $table = 'tiket'; 
+    public $timestamps = false;
     protected $primaryKey = 'id_tiket';
-    protected $fillable = ['nama_tiket', 'harga', 'kuota_total', 'kuota_tersedia', 'id_event'];
 
-    // Relasi balik ke Event
+protected $fillable = [
+    'id_event',
+    'jenis_tiket',
+    'harga',
+    'kuota_total',    // Sesuaikan dengan nama di database
+    'kuota_tersedia', // Sesuaikan dengan nama di database
+];
+
     public function event()
     {
         return $this->belongsTo(Event::class, 'id_event', 'id_event');
+    }
+
+    public function pesanans()
+    {
+        return $this->hasMany(Pemesanan::class, 'id_tiket', 'id_tiket');
+    }
+
+    public function getSisaAttribute(): int
+    {
+        return $this->kuota - $this->terjual;
+    }
+
+    public function isAvailable(): bool
+    {
+        return $this->sisa > 0;
     }
 }

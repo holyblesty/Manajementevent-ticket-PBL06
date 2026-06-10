@@ -2,15 +2,20 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
+
+    // PENTING: Memberitahu Laravel bahwa primary key tabel ini adalah id_pengunjung
+    protected $primaryKey = 'id_pengunjung';
+
+    // Jika id_pengunjung adalah auto-incrementing integer
+    public $incrementing = true;
+    protected $keyType = 'int';
 
     /**
      * The attributes that are mass assignable.
@@ -19,12 +24,12 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-        'username',   // Tambahan sesuai ERD kamu
+        'username',
         'email',
         'password',
-        'no_hp',      // Tambahan sesuai ERD kamu
-        'alamat',     // Tambahan sesuai ERD kamu
-        'role',       // Tambahan sesuai ERD kamu (admin / pengunjung)
+        'no_hp',
+        'alamat',
+        'role',
     ];
 
     /**
@@ -50,9 +55,13 @@ class User extends Authenticatable
         ];
     }
 
-    // Relasi tambahan: Pengunjung bisa memiliki banyak pesanan
+    /**
+     * Relasi: Pengunjung bisa memiliki banyak pesanan
+     * Sesuaikan foreign key dengan kolom di tabel 'pemesanan'
+     */
     public function pesanans()
     {
-        return $this->hasMany(Pesanan::class, 'id_pengunjung', 'id');
+        // Parameter: (ModelTujuan, 'foreign_key_di_tabel_pemesanan', 'local_key_di_tabel_users')
+        return $this->hasMany(Pemesanan::class, 'id_pengunjung', 'id_pengunjung');
     }
 }

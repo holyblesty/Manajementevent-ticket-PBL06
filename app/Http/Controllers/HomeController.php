@@ -3,26 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
-use App\Models\Registration;
-use App\Models\User;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        $jumlahPengunjung = User::count();
+        $events = Event::whereDate('tanggal', '>=', now())
+                    ->orderBy('tanggal')
+                    ->take(8)
+                    ->get();
 
-        $jumlahEvent = Event::count();
+        $sliderEvents = Event::whereDate('tanggal', '>=', now())
+                        ->orderBy('tanggal')
+                        ->take(3)
+                        ->get();
 
-        $totalRegistrasi = Registration::count();
-
-        $events = Event::latest()->get();
-
-        return view('pengunjung.dashboard', compact(
-            'jumlahPengunjung',
-            'jumlahEvent',
-            'totalRegistrasi',
-            'events'
+        return view('welcome', compact(
+            'events',
+            'sliderEvents'
         ));
     }
 }

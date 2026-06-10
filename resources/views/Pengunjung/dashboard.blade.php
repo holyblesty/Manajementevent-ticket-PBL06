@@ -147,7 +147,7 @@
 
                 <div class="mt-5">
 
-                    <a href="{{ route('pengunjung.event.show',$event->id_event) }}"
+                    <a href="{{ route('pengunjung.event.show',$event->id_event) }}">
                        class="block text-center bg-gradient-to-r from-purple-600 to-pink-500 text-white py-3 rounded-xl font-bold">
                         LIHAT DETAIL
                     </a>
