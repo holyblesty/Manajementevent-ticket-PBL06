@@ -89,7 +89,7 @@
             </main>
 
                  {{-- FOOTER --}}
-            <footer class="mt-12 bg-[#24112e] rounded-3xl p-8 text-white shadow-xl flex-shrink-0">
+            <footer class="mt-12 bg-[#1E0F30] rounded-3xl p-8 text-white shadow-xl flex-shrink-0">
                 <div class="flex flex-col md:flex-row items-start justify-between gap-8">
                     <div class="md:w-[35%]">
                         <div class="flex items-center gap-5 mb-4">
