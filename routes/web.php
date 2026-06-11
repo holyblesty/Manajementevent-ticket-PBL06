@@ -7,7 +7,7 @@ use App\Http\Controllers\Admin\AcaraController;
 use App\Http\Controllers\Admin\PesertaController;
 use App\Http\Controllers\Admin\StatistikController;
 use App\Http\Controllers\pengunjung\RiwayatController;
-use App\Http\Controllers\pengunjung\pembeliancontroller;
+use App\Http\Controllers\pengunjung\PembelianController; // Pastikan menggunakan PascalCase
 
 // Halaman Utama
 Route::get('/', function () {
@@ -27,7 +27,7 @@ Route::middleware('guest')->group(function () {
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // =====================================================
-// ADMIN AREA
+// ADMIN AREA (Tidak Ada Perubahan)
 // =====================================================
 Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('dashboard');
@@ -37,8 +37,9 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
     Route::get('/acara/{id_event}/tiket', [AcaraController::class, 'tiket'])->name('acara.tiket');
     Route::put('/acara/{id_event}/tiket/update', [AcaraController::class, 'updateTiket'])->name('acara.tiket.update');
 
-    Route::get('/profile', [AdminDashboard::class, 'profile'])->name('profile');
-    Route::put('/profile/update', [AdminDashboard::class, 'updateProfile'])->name('profile.update');
+    $adminDashboardClass = AdminDashboard::class;
+    Route::get('/profile', [$adminDashboardClass, 'profile'])->name('profile');
+    Route::put('/profile/update', [$adminDashboardClass, 'updateProfile'])->name('profile.update');
 
     Route::prefix('peserta')->name('peserta.')->group(function () {
         Route::get('/', [PesertaController::class, 'index'])->name('index');
@@ -48,14 +49,23 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
 });
 
 // =====================================================
-// PENGUNJUNG AREA
+// PENGUNJUNG AREA (Sudah Dirapikan & Digabungkan)
 // =====================================================
 Route::middleware(['auth:web'])->prefix('pengunjung')->name('pengunjung.')->group(function () {
-    // Menambahkan route dashboard
+    
+    // Dashboard Pengunjung
     Route::get('/dashboard', function () {
-        return view('pengunjung.dashboard'); // Pastikan file di resources/views/pengunjung/dashboard.blade.php ada
+        return view('pengunjung.dashboard'); 
     })->name('dashboard');
     
+    // Riwayat Pendaftaran / Transaksi
     Route::get('/riwayat-pendaftaran', [RiwayatController::class, 'index'])->name('riwayat');
-    Route::get('/pembelian-tiket', [pembeliancontroller::class, 'index'])->name('pembelian');
+    
+    // Transaksi Pembelian Tiket (Berdasarkan ID Event)
+    // URL: /pengunjung/pembelian-tiket/{id} | Nama Route: pengunjung.pembelian.index
+    Route::get('/pembelian-tiket/{id}', [PembelianController::class, 'index'])->name('pembelian.index');
+    
+    // Proses Simpan Transaksi ke Database
+    // URL: /pengunjung/pembelian-tiket | Nama Route: pengunjung.pembelian.store
+    Route::post('/pembelian-tiket', [PembelianController::class, 'store'])->name('pembelian.store');
 });
