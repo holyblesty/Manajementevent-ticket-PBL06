@@ -1,281 +1,250 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event Ticket - Pembelian Tiket</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body class="bg-[#fcfbfe] font-sans text-gray-800 antialiased">
+@extends('layouts.app') {{-- Sesuaikan dengan nama file master layout Anda --}}
 
-    <header class="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
-        <div class="max-w-7xl mx-auto px-6 py-3.5 flex items-center justify-between">
-            
-            <div class="flex items-center">
-                <a href="#" class="flex items-center">
-                    <img src="{{ asset('images/logo.jpeg') }}" alt="Logo Event Ticket Header" class="h-11 w-auto object-contain">
-                </a>
-            </div>
-            
-            <div class="flex w-5/12 mx-4">
-                <div class="relative w-full">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                        <i class="fa-solid fa-magnifying-glass text-gray-400 text-sm"></i>
-                    </span>
-                    <input type="text" placeholder="Cari event..." class="w-full pl-9 pr-4 py-2 text-sm border border-gray-200 rounded-l-md bg-gray-50 focus:outline-none focus:ring-1 focus:ring-purple-700 focus:bg-white transition">
-                </div>
-                <button class="bg-[#500c6d] hover:bg-[#3d0852] text-white text-sm px-6 py-2 rounded-r-md font-medium transition">Cari</button>
-            </div>
+@section('title', 'Pembelian Tiket - ' . $event->nama_event)
 
-            <nav class="flex space-x-7 text-sm font-medium text-gray-700">
-                <a href="#" class="hover:text-purple-900 transition">Beranda</a>
-                <a href="#" class="hover:text-purple-900 transition">Acara</a>
-                <a href="#" class="hover:text-purple-900 transition">Tentang kami</a>
-            </nav>
-        </div>
-    </header>
+@section('content')
+<div class="mb-4 text-sm text-gray-500">
+    <a href="#" class="hover:text-purple-800">Beranda</a> &gt; 
+    <a href="#" class="hover:text-purple-800">Acara</a> &gt; 
+    <span class="text-gray-800 font-medium">Pembelian Tiket</span>
+</div>
 
-    <div class="max-w-7xl mx-auto px-6 py-6 flex">
+<h1 class="text-2xl font-bold text-purple-900 mb-6">Pembelian Tiket</h1>
+
+<form action="{{ route('pengunjung.pembelian.store') }}" method="POST" id="form-beli-tiket">
+    @csrf
+    <input type="hidden" name="id_event" value="{{ $event->id_event }}">
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
-        <aside class="w-1/4 pr-6 shrink-0">
-            <div class="flex flex-col items-center text-center pb-6 border-b border-gray-100">
-                <div class="w-20 h-20 rounded-full overflow-hidden ring-4 ring-purple-100 mb-3">
-                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80" alt="Avatar Jesina" class="w-full h-full object-cover">
+        {{-- LEFT & CENTER COLUMN: Info Event, Pembeli, Pilihan Tiket --}}
+        <div class="lg:col-span-2 space-y-6">
+            
+            {{-- Detail Event Card --}}
+            <div class="card p-5 flex flex-col md:flex-row gap-5">
+                <img src="{{ asset('storage/' . $event->foto) }}" alt="Banner Event" class="w-full md:w-48 h-48 object-cover rounded-xl">
+                <div class="flex-1 space-y-3">
+                    <h2 class="text-xl font-bold text-gray-900">{{ $event->nama_event }}</h2>
+                    <p class="text-sm text-gray-600 flex items-center gap-2">
+                        <i class="fa-regular fa-calendar text-purple-700"></i> {{ \Carbon\Carbon::parse($event->tanggal)->translatedFormat('l, d F Y') }} • {{ $event->waktu }}
+                    </p>
+                    <p class="text-sm text-gray-600 flex items-center gap-2">
+                        <i class="fa-solid fa-location-dot text-purple-700"></i> {{ $event->lokasi }}
+                    </p>
+                    <p class="text-xs text-gray-500 leading-relaxed">{{ $event->deskripsi }}</p>
                 </div>
-                <h3 class="font-bold text-gray-900 text-base">Jesina Holy</h3>
-                <span class="text-xs text-purple-600 font-medium mt-1">Pengunjung</span>
             </div>
 
-            <nav class="mt-6 space-y-1 text-sm font-medium text-gray-600">
-                <a href="#" class="flex items-center space-x-3 px-4 py-3 hover:bg-purple-50 hover:text-purple-900 rounded-lg transition">
-                    <i class="fa-solid fa-house text-gray-400"></i> <span>Beranda</span>
-                </a>
-                <a href="#" class="flex items-center space-x-3 px-4 py-3 hover:bg-purple-50 hover:text-purple-900 rounded-lg transition">
-                    <i class="fa-solid fa-ticket text-gray-400"></i> <span>Tiket Saya</span>
-                </a>
-                <a href="#" class="flex items-center space-x-3 px-4 py-3 hover:bg-purple-50 hover:text-purple-900 rounded-lg transition">
-                    <i class="fa-solid fa-clock-rotate-left text-gray-400"></i> <span>Riwayat Pendaftaran</span>
-                </a>
-                <a href="#" class="flex items-center space-x-3 px-4 py-3 hover:bg-purple-50 hover:text-purple-900 rounded-lg transition">
-                    <i class="fa-solid fa-user text-gray-400"></i> <span>Profil</span>
-                </a>
-                <a href="#" class="flex items-center space-x-3 px-4 py-3 text-red-500 hover:bg-red-50 rounded-lg transition pt-8">
-                    <i class="fa-solid fa-right-from-bracket"></i> <span>Keluar</span>
-                </a>
-            </nav>
-        </aside>
-
-        <main class="w-3/4 pl-6 border-l border-gray-100">
-            <nav class="text-[11px] text-gray-400 mb-2 font-medium">
-                <span class="hover:text-gray-600 cursor-pointer">Beranda</span> &nbsp;&gt;&nbsp; 
-                <span class="hover:text-gray-600 cursor-pointer">Acara</span> &nbsp;&gt;&nbsp; 
-                <span class="text-purple-900 font-semibold">Pembelian Tiket</span>
-            </nav>
-
-            <h1 class="text-xl font-bold text-[#310444] mb-5">Pembelian Tiket</h1>
-
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
-                
-                <div class="lg:col-span-2 space-y-5">
-                    
-                    <div class="bg-white border border-gray-100 rounded-xl p-4 flex gap-4 shadow-sm">
-                        <img src="{{ $event['banner'] }}" alt="Banner Event" class="w-44 h-44 object-cover rounded-lg shrink-0">
-                        <div class="flex flex-col justify-center space-y-2">
-                            <h2 class="font-bold text-sm text-gray-900 leading-snug tracking-tight">{{ $event['nama_event'] }}</h2>
-                            <div class="text-[11px] text-gray-500 space-y-1">
-                                <p class="flex items-center"><i class="fa-regular fa-calendar w-4 text-purple-600"></i> <span>{{ $event['hari_tanggal'] }} &nbsp;•&nbsp; {{ $event['jam'] }}</span></p>
-                                <p class="flex items-center"><i class="fa-solid fa-location-dot w-4 text-purple-600"></i> <span>{{ $event['lokasi'] }}</span></p>
-                            </div>
-                            <p class="text-[11px] text-gray-400 leading-relaxed pt-1">{{ $event['deskripsi'] }}</p>
-                        </div>
+            {{-- Informasi Pembeli --}}
+            <div class="card p-5 space-y-4">
+                <h3 class="font-bold text-purple-900 text-base border-b pb-2">Informasi Pembeli</h3>
+                <div class="space-y-3">
+                    <div>
+                        <label class="text-xs font-semibold text-gray-600 mb-1 block">Nama Lengkap</label>
+                        <input type="text" value="{{ $user->name }}" class="input-field bg-gray-50" readonly>
                     </div>
-
-                    <div class="bg-white border border-gray-100 rounded-xl p-5 shadow-sm space-y-4">
-                        <h3 class="font-bold text-xs text-purple-900 uppercase tracking-wider">Informasi Pembeli</h3>
-                        <div class="grid grid-cols-1 gap-3 text-xs">
-                            <div>
-                                <label class="block text-gray-500 mb-1">Nama Lengkap</label>
-                                <input type="text" value="Jesina Holy" class="w-full p-2 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:ring-1 focus:ring-purple-600">
-                            </div>
-                            <div>
-                                <label class="block text-gray-500 mb-1">No. HP</label>
-                                <input type="text" value="08124567890" class="w-full p-2 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:ring-1 focus:ring-purple-600">
-                            </div>
-                            <div>
-                                <label class="block text-gray-500 mb-1">Email</label>
-                                <input type="email" value="jesina@mail.com" class="w-full p-2 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:ring-1 focus:ring-purple-600">
-                            </div>
-                            <div>
-                                <label class="block text-gray-500 mb-1">Alamat</label>
-                                <textarea rows="2" class="w-full p-2 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:ring-1 focus:ring-purple-600">Jl. Malaka No. 12, Bandung, Jawa Barat</textarea>
-                            </div>
-                        </div>
+                    <div>
+                        <label class="text-xs font-semibold text-gray-600 mb-1 block">No. HP</label>
+                        <input type="text" value="{{ $user->no_hp ?? '081234567890' }}" class="input-field bg-gray-50" readonly>
                     </div>
-
-                    <div class="bg-white border border-gray-100 rounded-xl p-5 shadow-sm space-y-4">
-                        <h3 class="font-bold text-xs text-purple-900 uppercase tracking-wider">Pilihan Tiket</h3>
-                        
-                        <div class="grid grid-cols-2 gap-3 text-xs">
-                            <label class="border border-gray-200 rounded-xl p-3 flex flex-col justify-between cursor-pointer hover:bg-purple-50/50 transition">
-                                <div class="flex items-start justify-between">
-                                    <div>
-                                        <p class="font-bold text-gray-900">Early Bird</p>
-                                        <p class="text-purple-700 font-bold mt-0.5">Rp 30.000</p>
-                                    </div>
-                                    <input type="radio" name="ticket_type" class="text-purple-700 focus:ring-purple-500">
-                                </div>
-                                <span class="text-[10px] text-gray-400 mt-3 block">Sisa 10</span>
-                            </label>
-
-                            <label class="border border-gray-200 rounded-xl p-3 flex flex-col justify-between cursor-pointer hover:bg-purple-50/50 transition">
-                                <div class="flex items-start justify-between">
-                                    <div>
-                                        <p class="font-bold text-gray-900">Normal</p>
-                                        <p class="text-purple-700 font-bold mt-0.5">Rp 50.000</p>
-                                    </div>
-                                    <input type="radio" name="ticket_type" class="text-purple-700 focus:ring-purple-500">
-                                </div>
-                                <span class="text-[10px] text-gray-400 mt-3 block">Sisa 32</span>
-                            </label>
-
-                            <label class="border-2 border-purple-700 bg-purple-50/30 rounded-xl p-3 col-span-2 flex flex-col justify-between cursor-pointer transition">
-                                <div class="flex items-start justify-between">
-                                    <div>
-                                        <p class="font-bold text-gray-900">VIP</p>
-                                        <p class="text-purple-700 font-bold mt-0.5">Rp 150.000</p>
-                                        <ul class="text-[10px] text-gray-500 mt-2 space-y-1 list-none">
-                                            <li><i class="fa-solid fa-check text-green-600 mr-1.5"></i> Akses area khusus</li>
-                                            <li><i class="fa-solid fa-check text-green-600 mr-1.5"></i> Tempat duduk prioritas</li>
-                                            <li><i class="fa-solid fa-check text-green-600 mr-1.5"></i> Merchandise eksklusif</li>
-                                        </ul>
-                                    </div>
-                                    <input type="radio" name="ticket_type" checked class="text-purple-700 focus:ring-purple-500 h-4 w-4">
-                                </div>
-                            </label>
-                        </div>
-
-                        <div class="flex items-center justify-between border-t border-gray-100 pt-4">
-                            <span class="text-xs font-bold text-gray-800">Jumlah Tiket</span>
-                            <div class="flex items-center border border-gray-200 rounded-md bg-gray-50 text-xs overflow-hidden">
-                                <button type="button" class="px-2.5 py-1.5 bg-white hover:bg-gray-100 text-gray-500 font-bold border-r border-gray-200">-</button>
-                                <span class="px-4 font-semibold text-gray-800">1</span>
-                                <button type="button" class="px-2.5 py-1.5 bg-white hover:bg-gray-100 text-gray-500 font-bold border-l border-gray-200">+</button>
-                            </div>
-                        </div>
-
+                    <div>
+                        <label class="text-xs font-semibold text-gray-600 mb-1 block">Email</label>
+                        <input type="text" value="{{ $user->email }}" class="input-field bg-gray-50" readonly>
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold text-gray-600 mb-1 block">Alamat</label>
+                        <textarea class="input-field bg-gray-50 resize-none h-20" readonly>{{ $user->alamat ?? 'Jl. Malaka No. 12, Bandung, Jawa Barat' }}</textarea>
                     </div>
                 </div>
-
-                <div class="space-y-5">
-                    
-                    <div class="bg-white border border-gray-100 rounded-xl p-5 shadow-sm space-y-4">
-                        <h3 class="font-bold text-xs text-purple-900 uppercase tracking-wider">Pilih Metode Pembayaran</h3>
-                        <div class="space-y-3.5 text-xs font-medium text-gray-700">
-                            
-                            <label class="flex items-start justify-between cursor-pointer">
-                                <div class="flex items-center space-x-2">
-                                    <input type="radio" name="payment" checked class="text-purple-700 focus:ring-purple-500">
-                                    <span>Transfer Bank</span>
-                                </div>
-                                <div class="flex gap-1 text-[9px] font-bold text-gray-400">
-                                    <span class="border border-gray-200 px-1 py-0.5 rounded bg-gray-50">BCA</span>
-                                    <span class="border border-gray-200 px-1 py-0.5 rounded bg-gray-50">Mandiri</span>
-                                </div>
-                            </label>
-
-                            <label class="flex items-start justify-between cursor-pointer">
-                                <div class="flex items-center space-x-2">
-                                    <input type="radio" name="payment" class="text-purple-700 focus:ring-purple-500">
-                                    <span>Virtual Account</span>
-                                </div>
-                                <div class="flex gap-1 text-[9px] font-bold text-gray-400">
-                                    <span class="border border-gray-200 px-1 py-0.5 rounded bg-gray-50">BNI</span>
-                                    <span class="border border-gray-200 px-1 py-0.5 rounded bg-gray-50">BRI</span>
-                                </div>
-                            </label>
-
-                            <label class="flex items-start justify-between cursor-pointer">
-                                <div class="flex items-center space-x-2">
-                                    <input type="radio" name="payment" class="text-purple-700 focus:ring-purple-500">
-                                    <span>E-Wallet</span>
-                                </div>
-                                <div class="flex gap-1 text-[9px] font-bold text-gray-400">
-                                    <span class="border border-gray-200 px-1 py-0.5 rounded bg-gray-50">GoPay</span>
-                                    <span class="border border-gray-200 px-1 py-0.5 rounded bg-gray-50">OVO</span>
-                                </div>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="bg-white border border-gray-100 rounded-xl p-5 shadow-sm space-y-4">
-                        <h3 class="font-bold text-xs text-purple-900 uppercase tracking-wider">Ringkasan Pesanan</h3>
-                        
-                        <div class="text-xs space-y-2 border-b border-gray-100 pb-3">
-                            <div class="flex justify-between text-gray-500">
-                                <span>Tiket VIP x1</span>
-                                <span class="font-semibold text-gray-800">Rp 150.000</span>
-                            </div>
-                            <div class="flex justify-between text-gray-500">
-                                <span>Biaya layanan</span>
-                                <span class="font-semibold text-gray-800">Rp 5.000</span>
-                            </div>
-                        </div>
-
-                        <div class="flex justify-between items-center text-xs pt-1">
-                            <span class="font-bold text-gray-800">Total</span>
-                            <span class="text-base font-extrabold text-purple-900">Rp 155.000</span>
-                        </div>
-
-                        <div class="space-y-2 pt-2">
-                            <button class="w-full bg-[#4a046c] hover:bg-[#360250] text-white text-xs py-2.5 rounded-lg font-bold transition shadow-sm">Bayar Sekarang</button>
-                            <button class="w-full border border-gray-300 hover:bg-gray-50 text-gray-600 text-xs py-2.5 rounded-lg font-semibold transition">Batal</button>
-                        </div>
-                    </div>
-
-                </div>
-
             </div>
-        </main>
+
+            {{-- Pilihan Tiket --}}
+            <div class="card p-5 space-y-4">
+                <h3 class="font-bold text-purple-900 text-base border-b pb-2">Pilihan Tiket</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    
+                    <label class="border-2 border-gray-200 rounded-xl p-4 flex items-start gap-3 cursor-pointer hover:border-purple-300 transition-all option-tiket">
+                        <input type="radio" name="id_tiket" value="1" data-nama="Early Bird" data-harga="30000" class="mt-1 accent-purple-800" required>
+                        <div>
+                            <span class="font-bold text-gray-800 block text-sm">Early Bird</span>
+                            <span class="text-purple-700 font-bold text-sm">Rp 30.000</span>
+                            <span class="text-xs text-gray-400 block mt-1">Sisa 10</span>
+                        </div>
+                    </label>
+
+                    <label class="border-2 border-gray-200 rounded-xl p-4 flex items-start gap-3 cursor-pointer hover:border-purple-300 transition-all option-tiket">
+                        <input type="radio" name="id_tiket" value="2" data-nama="Normal" data-harga="50000" class="mt-1 accent-purple-800">
+                        <div>
+                            <span class="font-bold text-gray-800 block text-sm">Normal</span>
+                            <span class="text-purple-700 font-bold text-sm">Rp 50.000</span>
+                            <span class="text-xs text-gray-400 block mt-1">Sisa 32</span>
+                        </div>
+                    </label>
+
+                    <label class="border-2 border-gray-200 rounded-xl p-4 flex items-start gap-3 cursor-pointer hover:border-purple-300 transition-all option-tiket col-span-1 md:col-span-2">
+                        <input type="radio" name="id_tiket" value="3" data-nama="VIP" data-harga="150000" class="mt-1 accent-purple-800">
+                        <div class="w-full">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-gray-800 text-sm">VIP</span>
+                                <span class="text-purple-700 font-bold text-sm">Rp 150.000</span>
+                            </div>
+                            <ul class="text-xs text-gray-500 mt-2 space-y-1 list-disc list-inside">
+                                <li>Akses area khusus</li>
+                                <li>Tempat duduk prioritas</li>
+                                <li>Merchandise eksklusif</li>
+                            </ul>
+                        </div>
+                    </label>
+                </div>
+
+                {{-- Jumlah Tiket --}}
+                <div class="flex items-center justify-between pt-4 border-t">
+                    <span class="font-semibold text-sm text-gray-700">Jumlah Tiket</span>
+                    <div class="flex items-center border rounded-xl overflow-hidden bg-gray-50">
+                        <button type="button" id="btn-minus" class="px-3 py-2 hover:bg-gray-200 text-gray-600 font-bold">-</button>
+                        <input type="number" name="jumlah_tiket" id="jumlah-tiket" value="1" min="1" class="w-12 text-center bg-transparent border-none text-sm font-bold focus:outline-none" readonly>
+                        <button type="button" id="btn-plus" class="px-3 py-2 hover:bg-gray-200 text-gray-600 font-bold">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- RIGHT COLUMN: Metode Pembayaran & Ringkasan --}}
+        <div class="space-y-6">
+            
+            {{-- Metode Pembayaran --}}
+            <div class="card p-5 space-y-4">
+                <h3 class="font-bold text-purple-900 text-base border-b pb-2">Pilih Metode Pembayaran</h3>
+                <div class="space-y-3">
+                    <label class="flex items-center justify-between p-3 border rounded-xl cursor-pointer hover:bg-gray-50">
+                        <div class="flex items-center gap-3">
+                            <input type="radio" name="metode_pembayaran" value="Transfer Bank" class="accent-purple-800" required>
+                            <span class="text-sm font-medium text-gray-700">Transfer Bank</span>
+                        </div>
+                        <div class="flex gap-1 text-[10px] font-bold text-gray-500">
+                            <span class="border px-1.5 py-0.5 rounded bg-white">BCA</span>
+                            <span class="border px-1.5 py-0.5 rounded bg-white">Mandiri</span>
+                        </div>
+                    </label>
+
+                    <label class="flex items-center justify-between p-3 border rounded-xl cursor-pointer hover:bg-gray-50">
+                        <div class="flex items-center gap-3">
+                            <input type="radio" name="metode_pembayaran" value="Virtual Account" class="accent-purple-800">
+                            <span class="text-sm font-medium text-gray-700">Virtual Account</span>
+                        </div>
+                        <div class="flex gap-1 text-[10px] font-bold text-gray-500">
+                            <span class="border px-1.5 py-0.5 rounded bg-white">BNI</span>
+                            <span class="border px-1.5 py-0.5 rounded bg-white">BRI</span>
+                        </div>
+                    </label>
+
+                    <label class="flex items-center justify-between p-3 border rounded-xl cursor-pointer hover:bg-gray-50">
+                        <div class="flex items-center gap-3">
+                            <input type="radio" name="metode_pembayaran" value="E-Wallet" class="accent-purple-800">
+                            <span class="text-sm font-medium text-gray-700">E-Wallet</span>
+                        </div>
+                        <div class="flex gap-1 text-[10px] font-bold text-gray-500">
+                            <span class="border px-1.5 py-0.5 rounded bg-white">GoPay</span>
+                            <span class="border px-1.5 py-0.5 rounded bg-white">OVO</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            {{-- Ringkasan Pesanan --}}
+            <div class="card p-5 space-y-4">
+                <h3 class="font-bold text-purple-900 text-base border-b pb-2">Ringkasan Pesanan</h3>
+                <div class="space-y-3 text-sm text-gray-600">
+                    <div class="flex justify-between">
+                        <span id="label-ringkasan-tiket">Tiket x1</span>
+                        <span id="val-ringkasan-tiket" class="font-semibold text-gray-800">Rp 0</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Biaya layanan</span>
+                        <span class="font-semibold text-gray-800">Rp 5.000</span>
+                    </div>
+                    <div class="border-t pt-3 flex justify-between items-center">
+                        <span class="font-bold text-gray-800 text-base">Total</span>
+                        <span id="val-total-harga" class="font-bold text-purple-800 text-lg">Rp 5.000</span>
+                    </div>
+                </div>
+
+                <div class="space-y-2 pt-2">
+                    <button type="submit" class="btn-primary text-sm shadow-md shadow-purple-200">Bayar Sekarang</button>
+                    <a href="{{ route('home') }}" class="btn-outline text-sm text-center block w-full py-2 rounded-xl">Batal</a>
+                </div>
+            </div>
+
+        </div>
     </div>
+</form>
+@endsection
 
-    <footer class="bg-[#201132] text-gray-300 pt-10 pb-4 text-xs mt-12">
-        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8 border-b border-[#2d1a45] pb-8">
-            
-            <div class="space-y-3">
-                <img src="{{ asset('images/footer.jpg') }}" alt="Logo Event Ticket Footer" class="h-12 w-auto object-contain">
-                <p class="text-gray-400 leading-relaxed text-[11px]">EventTicketing adalah platform untuk menemukan dan memesan tiket event terbaik dengan mudah dan cepat.</p>
-            </div>
-            
-            <div>
-                <h4 class="font-bold text-white mb-3 text-[11px] tracking-wider uppercase">Navigasi</h4>
-                <ul class="space-y-2 text-gray-400 text-[11px]">
-                    <li><a href="#" class="hover:text-white transition">Beranda</a></li>
-                    <li><a href="#" class="hover:text-white transition">Acara</a></li>
-                    <li><a href="#" class="hover:text-white transition">Tentang Kami</a></li>
-                    <li><a href="#" class="hover:text-white transition">Kontak Kami</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="font-bold text-white mb-3 text-[11px] tracking-wider uppercase">Kategori</h4>
-                <ul class="space-y-2 text-gray-400 text-[11px]">
-                    <li><a href="#" class="hover:text-white transition">Hiburan</a></li>
-                    <li><a href="#" class="hover:text-white transition">Olahraga</a></li>
-                    <li><a href="#" class="hover:text-white transition">Seminar</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="font-bold text-white mb-3 text-[11px] tracking-wider uppercase">Hubungi Kami</h4>
-                <ul class="space-y-2 text-gray-400 text-[11px]">
-                    <li class="flex items-center"><i class="fa-regular fa-envelope w-5 text-gray-500"></i> Jesinaaa@appmail.com</li>
-                    <li class="flex items-center"><i class="fa-solid fa-phone w-5 text-gray-500"></i> +62 896 3128 7605</li>
-                </ul>
-            </div>
-        </div>
-        <div class="text-center mt-4 text-[10px] text-gray-500">
-            © 2026 Event Ticketing System. All Rights Reserved
-        </div>
-    </footer>
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Selector disesuaikan ke input[name="id_tiket"]
+        const radioTiket = document.querySelectorAll('input[name="id_tiket"]');
+        const inputJumlah = document.getElementById('jumlah-tiket');
+        const btnMinus = document.getElementById('btn-minus');
+        const btnPlus = document.getElementById('btn-plus');
+        
+        const labelRingkasanTiket = document.getElementById('label-ringkasan-tiket');
+        const valRingkasanTiket = document.getElementById('val-ringkasan-tiket');
+        const valTotalHarga = document.getElementById('val-total-harga');
+        
+        let hargaSatuan = 0;
+        const biayaLayanan = 5000;
 
-</body>
-</html>
+        function formatRupiah(angka) {
+            return 'Rp ' + angka.toLocaleString('id-ID');
+        }
+
+        function hitungTotal() {
+            let jumlah = parseInt(inputJumlah.value);
+            
+            if (hargaSatuan === 0) {
+                valRingkasanTiket.innerText = 'Rp 0';
+                valTotalHarga.innerText = formatRupiah(biayaLayanan);
+                return;
+            }
+
+            let subtotalTiket = hargaSatuan * jumlah;
+            let total = subtotalTiket + biayaLayanan;
+
+            // Mengambil nama tiket dari atribut data-nama (Early Bird/Normal/VIP)
+            let selectedRadio = document.querySelector('input[name="id_tiket"]:checked');
+            let namaTiket = selectedRadio ? selectedRadio.getAttribute('data-nama') : '';
+
+            labelRingkasanTiket.innerText = `Tiket (${namaTiket}) x${jumlah}`;
+            valRingkasanTiket.innerText = formatRupiah(subtotalTiket);
+            valTotalHarga.innerText = formatRupiah(total);
+        }
+
+        // Event listener saat ganti jenis tiket
+        radioTiket.forEach(radio => {
+            radio.addEventListener('change', function() {
+                // Beri efek highlight border pada opsi terpilih
+                document.querySelectorAll('.option-tiket').forEach(el => el.classList.remove('border-purple-600', 'bg-purple-50/50'));
+                this.closest('.option-tiket').classList.add('border-purple-600', 'bg-purple-50/50');
+                
+                hargaSatuan = parseInt(this.getAttribute('data-harga'));
+                hitungTotal();
+            });
+        });
+
+        // Event counter tambah/kurang jumlah tiket
+        btnPlus.addEventListener('click', function() {
+            inputJumlah.value = parseInt(inputJumlah.value) + 1;
+            hitungTotal();
+        });
+
+        btnMinus.addEventListener('click', function() {
+            if (parseInt(inputJumlah.value) > 1) {
+                inputJumlah.value = parseInt(inputJumlah.value) - 1;
+                hitungTotal();
+            }
+        });
+    });
+</script>
+@endpush
