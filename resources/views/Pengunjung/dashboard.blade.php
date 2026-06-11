@@ -126,7 +126,7 @@
             <div class="p-5">
 
                 <span class="bg-[#7a4988] text-white text-xs px-3 py-1 rounded-full">
-                    {{ $event->kategori }}
+                    {{ $event->kategoriEvent }}
                 </span>
 
                 <h3 class="text-xl font-bold mt-4 text-[#24112e]">
@@ -147,8 +147,9 @@
 
                 <div class="mt-5">
 
-                    <a href="{{ route('pengunjung.event.show',$event->id_event) }}">
-                       class="block text-center bg-gradient-to-r from-purple-600 to-pink-500 text-white py-3 rounded-xl font-bold">
+                    <a
+                        href="{{ route('pengunjung.event.show', $event->id_event) }}"
+                        class="block text-center bg-gradient-to-r from-purple-600 to-pink-500 text-white py-3 rounded-xl font-bold rounded-xl hover:opacity-90 transition">
                         LIHAT DETAIL
                     </a>
 
