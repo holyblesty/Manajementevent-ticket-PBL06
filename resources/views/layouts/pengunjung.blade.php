@@ -58,16 +58,19 @@
             {{-- MENU --}}
             <div class="flex items-center gap-8">
 
-                <a href="#" class="text-sm font-semibold text-gray-700 hover:text-[#7a4988] no-underline">
+                <a href="{{ route('pengunjung.dashboard') }}"
+                class="text-sm font-bold text-black hover:text-[#7a4988] no-underline">
                     Beranda
                 </a>
 
-                <a href="#" class="text-sm font-semibold text-gray-700 hover:text-[#7a4988] no-underline">
+                <a href="{{ route('pengunjung.dashboard') }}"
+                class="text-sm font-bold text-black hover:text-[#7a4988] no-underline">
                     Acara
                 </a>
 
-                <a href="#" class="text-sm font-semibold text-gray-700 hover:text-[#7a4988] no-underline">
-                    Tentang kami
+                <a href="{{ route('pengunjung.about') }}"
+                class="text-sm font-bold text-black hover:text-[#7a4988] no-underline">
+                    Tentang Kami
                 </a>
 
                @auth
@@ -75,25 +78,23 @@
 <div class="flex items-center gap-3 border-l pl-6">
 
     <div class="flex items-center gap-3">
+       <a href="#"
+   class="flex items-center gap-2 px-2 py-3 rounded-xl text-gray-600 hover:bg-red-50 hover:text-red-500 no-underline">
 
-        <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-[#7a4988]">
+    <svg xmlns="http://www.w3.org/2000/svg"
+         fill="none"
+         viewBox="0 0 24 24"
+         stroke-width="1.5"
+         stroke="currentColor"
+         class="w-5 h-5">
+        <path stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-7.5A2.25 2.25 0 003.75 5.25v13.5A2.25 2.25 0 006 21h7.5a2.25 2.25 0 002.25-2.25V15m-3-3h8.25m0 0l-3-3m3 3l-3 3" />
+    </svg>
 
-            <img src="{{ asset('images/profile-user.jpg') }}"
-                 class="w-full h-full object-cover">
+    <span>Keluar</span>
 
-        </div>
-
-        <div>
-
-            <p class="text-sm font-bold text-[#24112e]">
-                {{ Auth::user()->name }}
-            </p>
-
-            <p class="text-xs text-[#7a4988]">
-                Pengunjung
-            </p>
-
-        </div>
+</a>
 
     </div>
 
@@ -168,11 +169,9 @@
 
                 </a>
 
-                <a href="#"
-                   class="flex items-center gap-2 px-2 py-3 rounded-xl text-gray-600 hover:bg-[#f9f5fc] hover:text-[#7a4988] no-underline">
-
+                <a href="{{ route('pengunjung.riwayat') }}"
+                    class="flex items-center gap-2 px-2 py-3 rounded-xl">
                     🕒 Riwayat Pendaftaran
-
                 </a>
 
                 <a href="#"
@@ -182,12 +181,6 @@
 
                 </a>
 
-                <a href="#"
-                   class="flex items-center gap-2 px-2 py-3 rounded-xl text-gray-600 hover:bg-red-50 hover:text-red-500 no-underline">
-
-                    🚪 Keluar
-
-                </a>
 
             </nav>
 
