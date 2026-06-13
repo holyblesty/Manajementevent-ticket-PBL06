@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\PesertaController;
 use App\Http\Controllers\Admin\StatistikController;
 use App\Http\Controllers\Pengunjung\DashboardController as PengunjungDashboardController;
 use App\Http\Controllers\Pengunjung\EventController;
+use App\Http\Controllers\Pengunjung\PendaftaranEventController;
 use App\Http\Controllers\Pengunjung\RiwayatController;
 
 /*
@@ -62,24 +63,22 @@ Route::prefix('pengunjung')->name('pengunjung.')->middleware('auth:web')->group(
     Route::get('/dashboard',[PengunjungDashboardController::class, 'index'])->name('dashboard');
     
     // Halaman Event
-    Route::get('/event', function () {
-        return view('Pengunjung.show');
-    })->name('event');
+     Route::get('/event/{id}',[EventController::class,'show'])->name('pengunjung.event.show');
    
     // Detail Event
     Route::get('/pengunjung/event/{id}',[EventController::class,'show'])->name('event.show');
 
-    // Detail Tiket
-    Route::get('/detail-tiket', function () {
-        return view('Pengunjung.detail-tiket');
-    })->name('detail-tiket');
+    // Daftar Event
+    Route::post('/pengunjung/daftar-event',[EventController::class,'daftarEvent'])->name('pengunjung.daftar-event');
+
+    // Pendaftaran Event
+    Route::get(
+        '/event/{id}/daftar',
+        [PendaftaranEventController::class, 'create']
+    )->name('pengunjung.event.daftar');
+   
 
     // Riwayat
-    Route::get('/riwayat', function () {
-        return view('Pengunjung.riwayat');
-    })->name('riwayat');
-
-    // Riwayat Pemesanan
     Route::get('/riwayat', function () {
         return view('Pengunjung.riwayat');
     })->name('riwayat');
