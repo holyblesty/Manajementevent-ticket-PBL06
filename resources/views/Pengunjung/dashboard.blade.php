@@ -12,7 +12,7 @@
     </h1>
 
     <p class="text-white/80 mt-2">
-        Selamat datang kembali! Temukan event menarik dan dapatkan pengalaman terbaik.
+        Selamat datang kembali! Temukan event menarik dan dapatkan pengalaman terbaik mu.
     </p>
 
 </div>
