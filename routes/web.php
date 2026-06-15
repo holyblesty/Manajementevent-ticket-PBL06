@@ -49,15 +49,3 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
         Route::post('/checkin-individu/{eventId}/{regId}', [PesertaController::class, 'checkInIndividu'])->name('checkin_individu');
     });
 });
-
-// =====================================================
-// PENGUNJUNG AREA
-// =====================================================
-Route::middleware(['auth:web'])->prefix('pengunjung')->name('pengunjung.')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('pengunjung.dashboard');
-    })->name('dashboard');
-    
-    Route::get('/riwayat-pendaftaran', [RiwayatController::class, 'index'])->name('riwayat');
-    Route::get('/pembelian-tiket', [PembelianController::class, 'index'])->name('pembelian');
-});
