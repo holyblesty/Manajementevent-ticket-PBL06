@@ -6,8 +6,8 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Admin\AcaraController;
 use App\Http\Controllers\Admin\PesertaController;
 use App\Http\Controllers\Admin\StatistikController;
-use App\Http\Controllers\pengunjung\RiwayatController;
-use App\Http\Controllers\pengunjung\pembeliancontroller;
+use App\Http\Controllers\Pengunjung\RiwayatController; // Kapitalisasi huruf P
+use App\Http\Controllers\Pengunjung\PembelianController; // Kapitalisasi P
 
 // Halaman Utama
 Route::get('/', function () {
@@ -18,8 +18,6 @@ Route::get('/', function () {
 // AUTENTIKASI
 // =====================================================
 Route::middleware('guest')->group(function () {
-    Route::get('/login', fn() => redirect()->route('home'));
-    Route::get('/register', fn() => redirect()->route('home'));
     Route::post('/login', [AuthController::class, 'login'])->name('login');
     Route::post('/register', [AuthController::class, 'register'])->name('register');
 });
@@ -33,9 +31,14 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
     Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('dashboard');
     Route::get('/statistik', [StatistikController::class, 'index'])->name('statistik');
     
-    Route::resource('acara', AcaraController::class);
-    Route::get('/acara/{id_event}/tiket', [AcaraController::class, 'tiket'])->name('acara.tiket');
-    Route::put('/acara/{id_event}/tiket/update', [AcaraController::class, 'updateTiket'])->name('acara.tiket.update');
+    // Perbaikan: Resource sudah benar
+    Route::resource('acara', AcaraController::class)->except(['show']);
+    
+    // Route spesifik tiket untuk acara
+    Route::prefix('acara/{id_event}')->group(function () {
+        Route::get('/tiket', [AcaraController::class, 'tiket'])->name('acara.tiket');
+        Route::put('/tiket/update', [AcaraController::class, 'updateTiket'])->name('acara.tiket.update');
+    });
 
     Route::get('/profile', [AdminDashboard::class, 'profile'])->name('profile');
     Route::put('/profile/update', [AdminDashboard::class, 'updateProfile'])->name('profile.update');
@@ -51,11 +54,10 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
 // PENGUNJUNG AREA
 // =====================================================
 Route::middleware(['auth:web'])->prefix('pengunjung')->name('pengunjung.')->group(function () {
-    // Menambahkan route dashboard
     Route::get('/dashboard', function () {
-        return view('pengunjung.dashboard'); // Pastikan file di resources/views/pengunjung/dashboard.blade.php ada
+        return view('pengunjung.dashboard');
     })->name('dashboard');
     
     Route::get('/riwayat-pendaftaran', [RiwayatController::class, 'index'])->name('riwayat');
-    Route::get('/pembelian-tiket', [pembeliancontroller::class, 'index'])->name('pembelian');
+    Route::get('/pembelian-tiket', [PembelianController::class, 'index'])->name('pembelian');
 });

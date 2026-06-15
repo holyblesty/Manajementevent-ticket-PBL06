@@ -49,15 +49,23 @@
                     </select>
                     
                     {{-- DROPDOWN BULAN --}}
-                    <select name="bulan" onchange="this.form.submit()" 
-                        class="bg-gray-100 border border-gray-300 px-3 py-2 rounded-xl text-xs font-bold text-gray-700 outline-none hover:bg-gray-200 transition cursor-pointer w-44 shadow-sm">
-                        <option value="Mei" {{ request('bulan', 'Mei') == 'Mei' ? 'selected' : '' }}>
-                            Pilih Bulan : Mei
-                        </option>
-                        <option value="Juni" {{ request('bulan') == 'Juni' ? 'selected' : '' }}>
-                            Pilih Bulan : Juni
-                        </option>
-                    </select>
+   <select name="bulan" onchange="this.form.submit()" 
+    class="bg-gray-100 border border-gray-300 px-3 py-2 rounded-xl text-xs font-bold text-gray-700 outline-none hover:bg-gray-200 transition cursor-pointer w-44 shadow-sm">
+    
+    @php
+        $bulanList = [
+            'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 
+            'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+        ];
+    @endphp
+
+    <option value="">Pilih Bulan</option>
+    @foreach($bulanList as $b)
+        <option value="{{ $b }}" {{ request('bulan') == $b ? 'selected' : '' }}>
+            {{ $b }}
+        </option>
+    @endforeach
+</select>
                 </form>
             </div>
 
@@ -135,7 +143,7 @@
 
             {{-- Nama Bulan di Bawah --}}
             <div class="text-center font-black text-xl text-[#24112e] uppercase italic tracking-widest pt-2">
-                {{ $selectedMonth }}
+          
             </div>
         </div>
 

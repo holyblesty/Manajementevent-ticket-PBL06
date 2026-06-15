@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Event;
+use App\Models\KategoriEvent; // Import model yang benar
+use App\Models\Tiket;
 
 class AcaraController extends Controller
 {
@@ -19,14 +21,15 @@ class AcaraController extends Controller
 
     public function create()
     {
-        return view('admin.create');
+        $kategoris = KategoriEvent::all(); // Ambil data kategori untuk dropdown
+        return view('admin.create', compact('kategoris'));
     }
 
     public function store(Request $request) 
     {
         $request->validate([
-            'judul'      => 'required',
-            'id_kategori' => 'required',
+            'judul'       => 'required|string|max:255',
+            'id_kategori' => 'required|exists:kategori_events,id_kategori',
             'poster'      => 'required|image|mimes:jpeg,png,jpg|max:5120'
         ]);
 
@@ -42,7 +45,7 @@ class AcaraController extends Controller
             'id_kategori'   => $request->id_kategori,
             'kapasitas'     => 0, 
             'kuota_tersedia'=> 0, 
-            'status_event'  => 'draft',
+            'status_event'  => $request->status_event,
             'poster'        => $imageName,
             'id_admin'      => Auth::id()
         ]);
@@ -53,77 +56,86 @@ class AcaraController extends Controller
     public function edit(int $id_event) 
     {
         $event = Event::where('id_event', $id_event)->firstOrFail();
-        return view('admin.edit', compact('event'));
+        $kategoris = KategoriEvent::all(); // Kirim data kategori ke view
+        return view('admin.edit', compact('event', 'kategoris'));
     }
 
-    public function update(Request $request, int $id_event) 
-    {
-// Kita samakan aturan validasinya dengan method store (create)
+   public function update(Request $request, int $id_event) 
+{
     $request->validate([
-        'judul'       => 'required',
-        'poster'      => 'nullable|image|mimes:jpeg,png,jpg|max:5120' // nullable karena poster boleh tidak diganti
-    ], [
-        'judul.required'       => 'Judul event wajib diisi.',
-        'poster.image'         => 'File harus berupa gambar.',
-        'poster.mimes'         => 'Format poster harus jpeg, png, atau jpg.',
-        'poster.max'           => 'Ukuran poster tidak boleh lebih dari 5MB.',
+        'judul'        => 'required|string|max:255',
+        'deskripsi'    => 'required|string',
+        'id_kategori'  => 'required|exists:kategori_events,id_kategori',
+        'status_event' => 'required|in:draft,open', // Sesuaikan dengan opsi di form Anda
+        'poster'       => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
+        'lokasi'       => 'required|string|max:255',
+        'tanggal'      => 'nullable|date', 
     ]);
 
-        $event = Event::where('id_event', $id_event)->firstOrFail();
-        $data = $request->except(['poster']);
+    $event = Event::where('id_event', $id_event)->firstOrFail();
 
-        if ($request->hasFile('poster')) {
-            if ($event->poster && File::exists(public_path('images/' . $event->poster))) {
-                File::delete(public_path('images/' . $event->poster));
-            }
-            $imageName = time() . '.' . $request->poster->extension();
-            $request->poster->move(public_path('images'), $imageName);
-            $data['poster'] = $imageName;
-        }
+    // Update field dasar
+    $event->judul        = $request->judul;
+    $event->deskripsi    = $request->deskripsi;
+    $event->id_kategori  = $request->id_kategori;
+    $event->status_event = $request->status_event;
+    $event->lokasi       = $request->lokasi;
 
-        $event->update($data);
-        return redirect()->route('admin.dashboard')->with('success', 'Data acara berhasil diupdate!');
+    // UPDATE TANGGAL HANYA JIKA DIISI (Mencegah tanggal jadi kosong/terhapus)
+    if ($request->filled('tanggal')) {
+        $event->tanggal = $request->tanggal;
     }
 
-    public function tiket(int $id_event) 
+    // Handle poster
+    if ($request->hasFile('poster')) {
+        if ($event->poster && File::exists(public_path('images/' . $event->poster))) {
+            File::delete(public_path('images/' . $event->poster));
+        }
+        $imageName = time() . '.' . $request->poster->extension();
+        $request->poster->move(public_path('images'), $imageName);
+        $event->poster = $imageName;
+    }
+
+    $event->save();
+
+    return redirect()->route('admin.dashboard')->with('success', 'Data acara berhasil diupdate!');
+}
+public function tiket(int $id_event) 
     {
         $event = Event::with('tiket')->where('id_event', $id_event)->firstOrFail();
         $tiketData = $event->tiket->keyBy('jenis_tiket'); 
-        
         return view('admin.tiket', compact('event', 'tiketData'));
     }
-public function updateTiket(Request $request, int $id_event)
-{
-    
-    // 1. Cek apakah ada data yang diterima
-    if (!$request->has('tiket')) {
-        dd("Data tidak terkirim dari form!");
-    }
 
-    try {
-        $event = Event::where('id_event', $id_event)->firstOrFail();
-
-        foreach ($request->tiket as $data) {
-            // Kita gunakan create manual untuk testing apakah query-nya bermasalah
-            \App\Models\Tiket::updateOrCreate(
-                ['jenis_tiket' => $data['nama'], 'id_event' => $id_event],
-                [
-                    'harga'          => $data['harga'] ?? 0,
-                    'kuota_total'    => $data['kuota'] ?? 0,
-                    'kuota_tersedia' => $data['kuota'] ?? 0
-                ]
-            );
+    public function updateTiket(Request $request, int $id_event)
+    {
+        if (!$request->has('tiket')) {
+            return back()->withErrors(['msg' => 'Data tiket tidak lengkap!']);
         }
 
-        $event->update(['kapasitas' => $request->kapasitas]);
+        try {
+            $totalKuotaBaru = 0;
 
-        return redirect()->route('admin.dashboard')->with('success', 'Tiket berhasil diupdate!');
-    } catch (\Exception $e) {
-        // Tampilkan error database apa pun yang terjadi
-        dd($e->getMessage()); 
+            foreach ($request->tiket as $data) {
+                Tiket::updateOrCreate(
+                    ['jenis_tiket' => $data['nama'], 'id_event' => $id_event],
+                    [
+                        'harga'          => $data['harga'] ?? 0,
+                        'kuota_total'    => $data['kuota'] ?? 0,
+                        'kuota_tersedia' => $data['kuota'] ?? 0
+                    ]
+                );
+
+                $totalKuotaBaru += (int)($data['kuota'] ?? 0);
+            }
+
+            Event::where('id_event', $id_event)->update(['kapasitas' => $totalKuotaBaru]);
+
+            return redirect()->route('admin.dashboard')->with('success', 'Tiket dan kapasitas berhasil diupdate!');
+        } catch (\Exception $e) {
+            return back()->withErrors(['msg' => 'Gagal mengupdate tiket: ' . $e->getMessage()]);
+        }
     }
-}
-
     public function destroy(int $id_event)
     {
         $event = Event::where('id_event', $id_event)->firstOrFail();

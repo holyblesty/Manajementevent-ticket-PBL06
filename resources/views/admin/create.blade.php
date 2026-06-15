@@ -39,7 +39,13 @@
 
     <input type="hidden" name="kapasitas" value="0">
     <input type="hidden" name="kuota_tersedia" value="0">
-    <input type="hidden" name="status_event" value="draft">
+    <div>
+    <label class="block mb-2 text-[10px] font-black uppercase text-gray-400 tracking-widest">Status Acara <span class="text-red-500">*</span></label>
+    <select name="status_event" class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-xs font-bold text-gray-500 outline-none cursor-pointer shadow-sm focus:border-[#7a4988]">
+        <option value="draft" {{ old('status_event') == 'draft' ? 'selected' : '' }}>Draft</option>
+        <option value="open" {{ old('status_event') == 'open' ? 'selected' : '' }}>Terbuka</option>
+    </select>
+</div>
     
 
             {{-- ERROR HANDLING AREA --}}
