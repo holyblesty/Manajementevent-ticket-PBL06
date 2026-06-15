@@ -6,10 +6,17 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Admin\AcaraController;
 use App\Http\Controllers\Admin\PesertaController;
 use App\Http\Controllers\Admin\StatistikController;
-use App\Http\Controllers\Pengunjung\RiwayatController; // Kapitalisasi huruf P
-use App\Http\Controllers\Pengunjung\PembelianController; // Kapitalisasi P
+use App\Http\Controllers\Pengunjung\DashboardController as PengunjungDashboardController;
+use App\Http\Controllers\Pengunjung\EventController;
+use App\Http\Controllers\Pengunjung\PendaftaranEventController;
+use App\Http\Controllers\Pengunjung\RiwayatController;
 
-// Halaman Utama
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+*/
+
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
@@ -48,4 +55,53 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
         Route::get('/detail/{id}', [PesertaController::class, 'detail'])->name('detail');
         Route::post('/checkin-individu/{eventId}/{regId}', [PesertaController::class, 'checkInIndividu'])->name('checkin_individu');
     });
+});
+
+
+    
+// ================= PENGUNJUNG AREA =================
+Route::prefix('pengunjung')->name('pengunjung.')->middleware('auth:web')->group(function () {
+
+    // Dashboard
+    Route::get('/dashboard',[PengunjungDashboardController::class, 'index'])->name('dashboard');
+    
+    // Halaman Event
+     Route::get('/event/{id}',[EventController::class,'show'])->name('pengunjung.event.show');
+   
+    // Detail Event
+    Route::get('/pengunjung/event/{id}',[EventController::class,'show'])->name('event.show');
+
+    // Daftar Event
+    Route::post('/pengunjung/daftar-event',[EventController::class,'daftarEvent'])->name('pengunjung.daftar-event');
+
+    // Pendaftaran Event
+    Route::get(
+        '/event/{id}/daftar',
+        [PendaftaranEventController::class, 'create']
+    )->name('pengunjung.event.daftar');
+   
+
+    // Riwayat
+    Route::get('/riwayat', function () {
+        return view('Pengunjung.riwayat');
+    })->name('riwayat');
+
+    // Profil Pengunjung
+    Route::get('/profil', function () {
+        return view('Pengunjung.profil');
+    })->name('profil');
+
+    // Halaman Informasi Umum
+    Route::get('/about', function () {
+        return view('Pengunjung.about');
+    })->name('about');
+
+    Route::get('/contact', function () {
+        return view('Pengunjung.contact');
+    })->name('contact');
+
+    // Halaman Pembelian Tiket
+    Route::get('/pembelian-tiket', function () {
+        return view('Pengunjung.pembelian-tiket');
+    })->name('pembelian');
 });
