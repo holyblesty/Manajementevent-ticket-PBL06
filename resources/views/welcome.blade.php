@@ -43,7 +43,7 @@
             </div>
             
             <nav class="flex flex-wrap items-center justify-center md:justify-end gap-4 md:gap-8 w-full md:w-auto">
-                <a class="text-sm font-medium text-black hover:text-purplePrimary transition-colors" href="{{ url('/') }}">Beranda</a>
+              
                 <a class="text-sm font-medium text-black hover:text-purplePrimary transition-colors" href="#">Acara</a>
                 <a class="text-sm font-medium text-black hover:text-purplePrimary transition-colors" href="#">Tentang kami</a>
                 
@@ -98,57 +98,50 @@
         </div>
     </section>
 
-    <section class="container mx-auto px-4 mt-4" x-data="{ activeSlide: 0, slides: [0, 1, 2] }" x-init="setInterval(() => activeSlide = activeSlide === slides.length - 1 ? 0 : activeSlide + 1, 4000)">
-        <div class="relative overflow-hidden rounded-lg shadow-sm bg-gray-100 h-[360px]">
+    <section class="container mx-auto px-4 mt-4" 
+    x-data="{ activeSlide: 0, slides: {{ $latestEvents->count() }} }" 
+    x-init="setInterval(() => activeSlide = (activeSlide + 1) % slides, 5000)">
+    
+    <div class="relative overflow-hidden rounded-xl shadow-lg bg-gray-200 h-[300px] md:h-[400px]">
+        
+        @foreach($latestEvents as $index => $event)
+        <div class="absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out" 
+             x-show="activeSlide === {{ $index }}" 
+             x-transition:enter="transition-opacity duration-700" 
+             x-transition:enter-start="opacity-0" 
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition-opacity duration-700"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0">
             
-            <div class="absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out" x-show="activeSlide === 0" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
-                <img src="https://via.placeholder.com/1200x400/7a4988/ffffff?text=BASKETBALL+CHAMPIONSHIP+2026" class="w-full h-full object-cover" alt="Turnamen Basket">
-                <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
-                <div class="absolute bottom-12 left-[6%] max-w-lg hidden md:block text-left">
-                    <span class="bg-purpleHover text-purplePrimary text-xs font-bold px-3 py-1.5 rounded mb-3 inline-block">OLAHRAGA</span>
-                    <h2 class="text-3xl font-bold text-white mb-2">Turnamen Basket Polibatam 2026</h2>
-                    <p class="text-gray-300 text-xs mb-4"><i class="fa-regular fa-calendar me-2"></i>09-06-26 | <i class="fa-solid fa-location-dot me-2"></i>Lapangan Politeknik</p>
-                    <a href="#" class="bg-purpleAccent text-white text-xs font-bold px-4 py-2.5 rounded shadow-sm hover:bg-purplePrimary transition-colors inline-block">Pesan Tiket Sekarang <i class="fa-solid fa-arrow-right ms-1"></i></a>
-                </div>
-            </div>
-
-            <div class="absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out" x-show="activeSlide === 1" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
-                <img src="https://via.placeholder.com/1200x400/9e7bb5/ffffff?text=HARMONI+KAMPUS+MUSIC+FESTIVAL" class="w-full h-full object-cover" alt="Festival Musik">
-                <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
-                <div class="absolute bottom-12 left-[6%] max-w-lg hidden md:block text-left">
-                    <span class="bg-purplePrimary text-white text-xs font-bold px-3 py-1.5 rounded mb-3 inline-block">HIBURAN</span>
-                    <h2 class="text-3xl font-bold text-white mb-2">Harmoni Kampus Music Festival</h2>
-                    <p class="text-gray-300 text-xs mb-4"><i class="fa-regular fa-calendar me-2"></i>15-07-26 | <i class="fa-solid fa-location-dot me-2"></i>Depan Gedung Techno</p>
-                    <a href="#" class="bg-purplePrimary text-white text-xs font-bold px-4 py-2.5 rounded shadow-sm hover:bg-purpleAccent transition-colors inline-block">Pesan Tiket Sekarang <i class="fa-solid fa-arrow-right ms-1"></i></a>
-                </div>
-            </div>
-
-            <div class="absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out" x-show="activeSlide === 2" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
-                <img src="https://via.placeholder.com/1200x400/333333/ffffff?text=AI+FUTURE+FORUM+2026" class="w-full h-full object-cover" alt="Seminar AI">
-                <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
-                <div class="absolute bottom-12 left-[6%] max-w-lg hidden md:block text-left">
-                    <span class="bg-purpleHover text-purplePrimary text-xs font-bold px-3 py-1.5 rounded mb-3 inline-block">SEMINAR</span>
-                    <h2 class="text-3xl font-bold text-white mb-2">National AI Forum: Masa Depan Kita</h2>
-                    <p class="text-gray-300 text-xs mb-4"><i class="fa-regular fa-calendar me-2"></i>28-05-26 | <i class="fa-solid fa-location-dot me-2"></i>Auditorium Gedung Utama</p>
-                    <a href="#" class="bg-purpleAccent text-white text-xs font-bold px-4 py-2.5 rounded shadow-sm hover:bg-purplePrimary transition-colors inline-block">Pesan Tiket Sekarang <i class="fa-solid fa-arrow-right ms-1"></i></a>
-                </div>
-            </div>
-
-            <button class="absolute top-0 bottom-0 left-0 z-10 flex items-center justify-center w-[5%] text-purpleHover text-2xl font-bold hover:text-purpleAccent" @click="activeSlide = activeSlide === 0 ? slides.length - 1 : activeSlide - 1">
-                <i class="fa-solid fa-chevron-left"></i>
-            </button>
-            <button class="absolute top-0 bottom-0 right-0 z-10 flex items-center justify-center w-[5%] text-purpleHover text-2xl font-bold hover:text-purpleAccent" @click="activeSlide = activeSlide === slides.length - 1 ? 0 : activeSlide + 1">
-                <i class="fa-solid fa-chevron-right"></i>
-            </button>
-
-            <div class="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 space-x-2">
-                <template x-for="(slide, index) in slides" :key="index">
-                    <button class="w-3 h-3 rounded-full transition-colors duration-300" :class="activeSlide === index ? 'bg-purplePrimary' : 'bg-gray-400/60'" @click="activeSlide = index"></button>
-                </template>
+            <img src="{{ asset('images/' . $event->poster) }}" 
+                 class="absolute inset-0 w-full h-full object-cover object-center" 
+                 alt="{{ $event->judul }}">
+            
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+            
+            <div class="absolute bottom-0 left-0 w-full p-6 md:p-12 md:max-w-2xl text-left">
+                <span class="bg-purplePrimary text-white text-[10px] md:text-xs font-bold px-3 py-1 rounded mb-2 inline-block">EVENT TERBARU</span>
+                <h2 class="text-2xl md:text-4xl font-bold text-white mb-2 leading-tight">{{ $event->judul }}</h2>
+                <p class="text-gray-200 text-xs md:text-sm mb-4">
+                    <i class="fa-regular fa-calendar me-2"></i>{{ \Carbon\Carbon::parse($event->tanggal)->format('d M Y') }} | 
+                    <i class="fa-solid fa-location-dot me-2"></i>{{ $event->lokasi }}
+                </p>
+                <a href="#" class="bg-purpleAccent hover:bg-purplePrimary text-white text-xs font-bold px-5 py-2.5 rounded shadow-sm transition-colors inline-block">
+                    Detail Acara <i class="fa-solid fa-arrow-right ms-1"></i>
+                </a>
             </div>
         </div>
-    </section>
+        @endforeach
 
+        <button class="absolute top-1/2 left-4 z-20 bg-black/30 hover:bg-black/50 text-white w-10 h-10 rounded-full flex items-center justify-center transition" @click="activeSlide = activeSlide === 0 ? slides - 1 : activeSlide - 1">
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <button class="absolute top-1/2 right-4 z-20 bg-black/30 hover:bg-black/50 text-white w-10 h-10 rounded-full flex items-center justify-center transition" @click="activeSlide = (activeSlide + 1) % slides">
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
+    </div>
+</section>
     <section class="container mx-auto px-4 text-center my-12">
         <p class="text-sm font-bold tracking-widest text-gray-700 uppercase mb-6">KATEGORI ACARA</p>
         <div class="flex flex-wrap justify-center gap-8 md:gap-16">
@@ -174,46 +167,44 @@
         <hr class="mt-12 border-gray-200 opacity-60">
     </section>
 
-    <section class="container mx-auto px-4 mb-16">
-        <h2 class="text-2xl md:text-3xl font-bold text-black mt-10 mb-6">ACARA YANG SEDANG BERLANGSUNG</h2>
-        
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <div class="relative rounded-lg overflow-hidden shadow-md group hover:-translate-y-1 transition-transform duration-300">
-                <img src="https://via.placeholder.com/300x420/7a4988/ffffff?text=SPORT+EVENT" class="w-full h-[380px] object-cover" alt="Sport Event">
-                <div class="absolute bottom-0 left-0 right-0 bg-black text-white p-3 text-center">
-                    <div class="text-xs font-bold uppercase mb-1">20 MEI , 16:00</div>
-                    <p class="text-[11px] uppercase truncate"><i class="fa-solid fa-location-dot me-1"></i>LAPANGAN POLITEKNIK</p>
-                </div>
+ <section class="container mx-auto px-4 mb-16">
+    <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 mt-10 mb-8 tracking-tight">
+        ACARA YANG SEDANG BERLANGSUNG
+    </h2>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+        @forelse($events as $event)
+        <div class="group relative rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-100 bg-white">
+            
+            <div class="overflow-hidden h-[300px]">
+                <img src="{{ asset('images/' . $event->poster) }}"
+                     class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                     alt="{{ $event->judul }}">
             </div>
 
-            <div class="relative rounded-lg overflow-hidden shadow-md group hover:-translate-y-1 transition-transform duration-300">
-                <img src="https://via.placeholder.com/300x420/9e7bb5/ffffff?text=FESTIVAL+BAND" class="w-full h-[380px] object-cover" alt="Festival Band">
-                <div class="absolute bottom-0 left-0 right-0 bg-black text-white p-3 text-center">
-                    <div class="text-xs font-bold uppercase mb-1">28 MEI , 13:00</div>
-                    <p class="text-[11px] uppercase truncate"><i class="fa-solid fa-location-dot me-1"></i>DEPAN TECHNO</p>
-                </div>
-            </div>
+            <div class="p-5">
+                <span class="text-[10px] font-black text-accent uppercase tracking-widest">Event</span>
+                
+                <h3 class="font-bold text-lg text-slate-900 mt-1 mb-3 leading-snug group-hover:text-hover transition-colors">
+                    {{ $event->judul }}
+                </h3>
 
-            <div class="relative rounded-lg overflow-hidden shadow-md group hover:-translate-y-1 
-            transition-transform duration-300">
-                <img src="https://via.placeholder.com/300x420/333333/ffffff?text=AI+FORUM" 
-                class="w-full h-[380px] object-cover" alt="AI Forum">
-                <div class="absolute bottom-0 left-0 right-0 bg-black text-white p-3 text-center">
-                    <div class="text-xs font-bold uppercase mb-1">28 MEI , 13:00</div>
-                    <p class="text-[11px] uppercase truncate"><i class="fa-solid fa-location-dot me-1"></i>GEDUNG UTAMA</p>
+                <div class="flex items-center text-[11px] text-gray-500 mb-1 font-medium">
+                    <i class="fa-regular fa-calendar me-2 text-accent"></i>
+                    {{ \Carbon\Carbon::parse($event->tanggal)->format('d M Y') }}
                 </div>
-            </div>
 
-            <div class="relative rounded-lg overflow-hidden shadow-md group hover:-translate-y-1 
-            transition-transform duration-300">
-                <img src="https://via.placeholder.com/300x420/7a4988/ffffff?text=FUTSAL+CHAMP" 
-                class="w-full h-[380px] object-cover" alt="Futsal Kampus">
-                <div class="absolute bottom-0 left-0 right-0 bg-black text-white p-3 text-center">
-                    <div class="text-xs font-bold uppercase mb-1">30 MEI , 08:00</div>
-                    <p class="text-[11px] uppercase truncate"><i class="fa-solid fa-location-dot me-1"></i>LAPANGAN POLITEKNIK</p>
+                <div class="flex items-center text-[11px] text-gray-500 font-medium">
+                    <i class="fa-solid fa-location-dot me-2 text-accent"></i>
+                    <span class="truncate">{{ $event->lokasi }}</span>
                 </div>
             </div>
         </div>
+        @empty
+        <p class="text-gray-500 italic">Belum ada acara yang tersedia saat ini.</p>
+        @endforelse
+    </div>
+</section>
 
         <div class="text-center mt-12">
             <a href="#" class="bg-purplePrimary text-white text-sm font-bold px-8 py-2.5 
