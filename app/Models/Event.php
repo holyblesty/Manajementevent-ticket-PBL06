@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Tiket;
 use App\Models\Menghadiri;
 use App\Models\Pemesanan;
+use Carbon\Carbon;
 
 class Event extends Model
 {
@@ -90,5 +91,32 @@ class Event extends Model
         return $this->poster
             ? asset('storage/posters/' . $this->poster)
             : asset('images/default-event.jpg');
+    }
+
+    /**
+     * =========================================================================
+     * FITUR TAMBAHAN: DINAMIS ACCESSOR UNTUK STATUS EVENT
+     * =========================================================================
+     * Mengubah status menjadi 'closed' secara otomatis di program jika waktu 
+     * sekarang sudah melewati batas tanggal dan jam selesai event.
+     */
+    public function getStatusEventAttribute($value): string
+    {
+        // Pastikan tgl_selesai diformat ke string Y-m-d dahulu sebelum digabung jam
+        $tanggalSelesai = $this->tgl_selesai ? $this->tgl_selesai->format('Y-m-d') : null;
+        $jamSelesai = $this->jam_selesai;
+
+        if ($tanggalSelesai && $jamSelesai) {
+            // Gabungkan menjadi satu objek Carbon utuh
+            $waktuAkhirEvent = Carbon::parse($tanggalSelesai . ' ' . $jamSelesai);
+
+            // Jika waktu komputer/server sekarang sudah melewati akhir acara, paksa status jadi 'closed'
+            if (Carbon::now()->greaterThan($waktuAkhirEvent)) {
+                return 'closed';
+            }
+        }
+
+        // Jika belum lewat, return status asli dari database ('draft' atau 'open')
+        return $value;
     }
 }
