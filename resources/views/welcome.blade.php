@@ -35,15 +35,12 @@
     <header class="container mx-auto px-4 py-4">
         <div class="flex flex-col md:flex-row items-center justify-between gap-4">
             <div class="flex items-center justify-center md:justify-start w-full md:w-auto">
-              <a href="{{ url('/') }}" class="flex items-center">
-    <img src="{{ asset('images/logo.jpeg') }}"
-         alt="EventTicket Logo"
-         class="h-10 w-auto">
-</a>
+                <a href="{{ url('/') }}" class="flex items-center">
+                    <img src="{{ asset('images/logo.jpeg') }}" alt="EventTicket Logo" class="h-10 w-auto">
+                </a>
             </div>
             
             <nav class="flex flex-wrap items-center justify-center md:justify-end gap-4 md:gap-8 w-full md:w-auto">
-              
                 <a class="text-sm font-medium text-black hover:text-purplePrimary transition-colors" href="#">Acara</a>
                 <a class="text-sm font-medium text-black hover:text-purplePrimary transition-colors" href="#">Tentang kami</a>
                 
@@ -124,7 +121,7 @@
                 <span class="bg-purplePrimary text-white text-[10px] md:text-xs font-bold px-3 py-1 rounded mb-2 inline-block">EVENT TERBARU</span>
                 <h2 class="text-2xl md:text-4xl font-bold text-white mb-2 leading-tight">{{ $event->judul }}</h2>
                 <p class="text-gray-200 text-xs md:text-sm mb-4">
-                    <i class="fa-regular fa-calendar me-2"></i>{{ \Carbon\Carbon::parse($event->tanggal)->format('d M Y') }} | 
+                    <i class="fa-regular fa-calendar me-2"></i>{{ $event->tgl_mulai ? $event->tgl_mulai->format('d-m-y') : '-' }} | 
                     <i class="fa-solid fa-location-dot me-2"></i>{{ $event->lokasi }}
                 </p>
                 <a href="#" class="bg-purpleAccent hover:bg-purplePrimary text-white text-xs font-bold px-5 py-2.5 rounded shadow-sm transition-colors inline-block">
@@ -142,6 +139,7 @@
         </button>
     </div>
 </section>
+
     <section class="container mx-auto px-4 text-center my-12">
         <p class="text-sm font-bold tracking-widest text-gray-700 uppercase mb-6">KATEGORI ACARA</p>
         <div class="flex flex-wrap justify-center gap-8 md:gap-16">
@@ -167,44 +165,43 @@
         <hr class="mt-12 border-gray-200 opacity-60">
     </section>
 
- <section class="container mx-auto px-4 mb-16">
-    <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 mt-10 mb-8 tracking-tight">
-        ACARA YANG SEDANG BERLANGSUNG
-    </h2>
+    <section class="container mx-auto px-4 mb-16">
+        <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 mt-10 mb-8 tracking-tight">
+            ACARA YANG SEDANG BERLANGSUNG
+        </h2>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-        @forelse($events as $event)
-        <div class="group relative rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-100 bg-white">
-            
-            <div class="overflow-hidden h-[300px]">
-                <img src="{{ asset('images/' . $event->poster) }}"
-                     class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
-                     alt="{{ $event->judul }}">
-            </div>
-
-            <div class="p-5">
-                <span class="text-[10px] font-black text-accent uppercase tracking-widest">Event</span>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            @forelse($events as $event)
+            <div class="group relative rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-100 bg-white">
                 
-                <h3 class="font-bold text-lg text-slate-900 mt-1 mb-3 leading-snug group-hover:text-hover transition-colors">
-                    {{ $event->judul }}
-                </h3>
-
-                <div class="flex items-center text-[11px] text-gray-500 mb-1 font-medium">
-                    <i class="fa-regular fa-calendar me-2 text-accent"></i>
-                    {{ \Carbon\Carbon::parse($event->tanggal)->format('d M Y') }}
+                <div class="overflow-hidden h-[300px]">
+                    <img src="{{ asset('images/' . $event->poster) }}"
+                         class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                         alt="{{ $event->judul }}">
                 </div>
 
-                <div class="flex items-center text-[11px] text-gray-500 font-medium">
-                    <i class="fa-solid fa-location-dot me-2 text-accent"></i>
-                    <span class="truncate">{{ $event->lokasi }}</span>
+                <div class="p-5">
+                    <span class="text-[10px] font-black text-purplePrimary uppercase tracking-widest">Event</span>
+                    
+                    <h3 class="font-bold text-lg text-slate-900 mt-1 mb-3 leading-snug group-hover:text-purplePrimary transition-colors">
+                        {{ $event->judul }}
+                    </h3>
+
+                    <div class="flex items-center text-[11px] text-gray-500 mb-1 font-medium">
+                        <i class="fa-regular fa-calendar me-2 text-purplePrimary"></i>
+                        {{ $event->tgl_mulai ? $event->tgl_mulai->format('d-m-y') : '-' }}
+                    </div>
+
+                    <div class="flex items-center text-[11px] text-gray-500 font-medium">
+                        <i class="fa-solid fa-location-dot me-2 text-purplePrimary"></i>
+                        <span class="truncate">{{ $event->lokasi }}</span>
+                    </div>
                 </div>
             </div>
+            @empty
+            <p class="text-gray-500 italic col-span-full text-center py-6">Belum ada acara yang tersedia saat ini.</p>
+            @endforelse
         </div>
-        @empty
-        <p class="text-gray-500 italic">Belum ada acara yang tersedia saat ini.</p>
-        @endforelse
-    </div>
-</section>
 
         <div class="text-center mt-12">
             <a href="#" class="bg-purplePrimary text-white text-sm font-bold px-8 py-2.5 
@@ -216,15 +213,14 @@
             py-2.5 rounded-lg shadow hover:bg-purpleAccent transition-colors inline-block">Kontak kami</a>
         </div>
     </section>
-<footer class="w-full">
-    @include('components.footer')
-</footer>
-    <div id="loginModal" class="fixed inset-0 z-50 flex items-center justify-center 
-    hidden bg-black/50 backdrop-blur-sm">
-        <div class="bg-white w-[90%] sm:w-[420px] p-8 rounded-xl shadow-2xl relative 
-        transition-all duration-300 border border-gray-100">
-            <button onclick="closeModal('loginModal')" class="absolute top-4 right-4 
-            text-gray-400 hover:text-gray-600 text-xl font-bold cursor-pointer">&times;</button>
+
+    <footer class="w-full">
+        @include('components.footer')
+    </footer>
+
+    <div id="loginModal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black/50 backdrop-blur-sm">
+        <div class="bg-white w-[90%] sm:w-[420px] p-8 rounded-xl shadow-2xl relative transition-all duration-300 border border-gray-100">
+            <button onclick="closeModal('loginModal')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl font-bold cursor-pointer">&times;</button>
             
             <h3 class="text-2xl font-bold text-center text-gray-800 uppercase tracking-wide mb-4">Masuk Ke Akun</h3>
             
@@ -264,12 +260,9 @@
         </div>
     </div>
 
-
     <div id="registerModal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black/50 backdrop-blur-sm">
-        <div class="bg-white w-[90%] sm:w-[440px] p-7 rounded-xl shadow-2xl relative max-h-[92vh] 
-        overflow-y-auto no-scrollbar border border-gray-100">
-            <button onclick="closeModal('registerModal')" 
-            class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl font-bold cursor-pointer">&times;</button>
+        <div class="bg-white w-[90%] sm:w-[440px] p-7 rounded-xl shadow-2xl relative max-h-[92vh] overflow-y-auto no-scrollbar border border-gray-100">
+            <button onclick="closeModal('registerModal')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl font-bold cursor-pointer">&times;</button>
             
             <h3 class="text-2xl font-bold text-center text-gray-800 uppercase tracking-wide mb-4">DAFTAR AKUN</h3>
             
@@ -329,15 +322,11 @@
 
                 <div class="mb-5">
                     <label class="block text-gray-700 text-xs font-semibold mb-1">Alamat Rumah</label>
-                    <textarea name="alamat" rows="2" class="w-full px-3.5 py-2 text-sm border b
-                    order-gray-200 rounded-lg focus:outline-none focus:border-purplePrimary" 
-                    placeholder="Isi alamat rumah anda">{{ old('alamat') }}</textarea>
+                    <textarea name="alamat" rows="2" class="w-full px-3.5 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:border-purplePrimary" placeholder="Isi alamat rumah anda">{{ old('alamat') }}</textarea>
                 </div>
                 
                 <div class="text-center">
-                    <button type="submit" class="w-full py-2.5 bg-purpleAccent 
-                    hover:bg-purplePrimary text-white font-medium rounded-lg transition 
-                    shadow-md shadow-purpleAccent/20 text-sm cursor-pointer">
+                    <button type="submit" class="w-full py-2.5 bg-purpleAccent hover:bg-purplePrimary text-white font-medium rounded-lg transition shadow-md shadow-purpleAccent/20 text-sm cursor-pointer">
                         Buat Akun Baru
                     </button>
                 </div>
@@ -350,7 +339,6 @@
             </p>
         </div>
     </div>
-
 
     <script>
         function openModal(modalId) {
@@ -371,17 +359,15 @@
             if (event.target.id === 'registerModal') closeModal('registerModal');
         }
 
-        // Trik Jitu: Otomatis memunculkan kembali pop-up modal jika terjadi eror input saat reload halaman
         document.addEventListener("DOMContentLoaded", function() {
             @if($errors->any())
                 @if(old('email') || old('name'))
-                    openModal('registerModal'); // Tampilkan modal register jika yang eror form register
+                    openModal('registerModal');
                 @else
-                    openModal('loginModal'); // Tampilkan modal login jika yang eror form login
+                    openModal('loginModal');
                 @endif
             @endif
         });
     </script>
-
 </body>
 </html>
