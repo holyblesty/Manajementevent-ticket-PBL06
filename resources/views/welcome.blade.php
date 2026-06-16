@@ -32,11 +32,12 @@
 </head>
 <body class="bg-white text-black antialiased">
 
- <header class="container mx-auto px-4 py-4">
-    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
-        <div class="flex items-center justify-center md:justify-start w-full md:w-auto">
-            <a href="{{ url('/') }}" class="flex items-center">
-                <img src="{{ asset('images/logo.jpeg') }}" alt="EventTicket Logo" class="h-10 w-auto">
+ <header class="container mx-auto px-6 py-6">
+    <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="flex items-center w-full md:w-auto">
+            <a href="{{ url('/') }}" class="flex items-center gap-3 group">
+                <img src="{{ asset('images/logo.jpeg') }}" alt="EventTicket Logo" class="h-16 w-16 object-contain shadow-sm rounded-xl transition-transform group-hover:scale-105">
+                <span class="text-2xl font-black text-purpleDark tracking-tighter">EVENT<span class="text-purplePrimary">TICKET</span></span>
             </a>
         </div>
         
@@ -90,15 +91,17 @@
     @endif
 
     <section class="bg-purplePrimary py-3">
-        <div class="container mx-auto px-4">
-            <div class="max-w-2xl mx-auto relative">
-                <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                    <i class="fa-solid fa-magnifying-glass text-gray-400"></i>
-                </span>
-                <input type="text" class="w-full bg-white text-sm text-black pl-10 pr-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-purpleHover" placeholder="Mencari acara/kegiatan (otomatis)">
-            </div>
-        </div>
-    </section>
+    <div class="container mx-auto px-4">
+        <form action="{{ route('pengunjung.search') }}" method="GET" class="max-w-2xl mx-auto relative">
+            <button type="submit" class="absolute inset-y-0 left-0 flex items-center pl-3">
+                <i class="fa-solid fa-magnifying-glass text-gray-400"></i>
+            </button>
+            <input type="text" name="keyword" 
+                   class="w-full bg-white text-sm text-black pl-10 pr-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-purpleHover" 
+                   placeholder="Cari acara berdasarkan judul atau lokasi...">
+        </form>
+    </div>
+</section>
 
     <section class="container mx-auto px-4 mt-4" 
     x-data="{ activeSlide: 0, slides: {{ $latestEvents->count() }} }" 

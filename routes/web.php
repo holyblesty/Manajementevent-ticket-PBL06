@@ -21,7 +21,7 @@ use App\Http\Controllers\Pengunjung\PendaftaranEventController;
 Route::get('/', [PageController::class, 'index'])->name('home');
 Route::get('/about', [PageController::class, 'about'])->name('pengunjung.about');
 Route::get('/contact', [PageController::class, 'contact'])->name('pengunjung.contact');
-
+Route::get('/search', [PageController::class, 'search'])->name('pengunjung.search');
 // =====================================================
 // AUTENTIKASI
 // =====================================================
@@ -68,10 +68,12 @@ Route::prefix('pengunjung')->name('pengunjung.')->middleware('auth:web')->group(
     // Dashboard Pengunjung
     Route::get('/dashboard', [PengunjungDashboardController::class, 'index'])->name('dashboard');
 
+
     // Halaman Event Pengunjung
     Route::get('/event/{id}', [EventController::class, 'show'])->name('event.show');
     Route::post('/daftar-event', [EventController::class, 'daftarEvent'])->name('daftar-event');
     Route::get('/event/{id}/daftar', [PendaftaranEventController::class, 'create'])->name('event.daftar');
+
 
     // Riwayat & Profil
     Route::get('/riwayat', function () {
