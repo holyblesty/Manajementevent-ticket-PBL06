@@ -43,8 +43,9 @@
                     <div>
                         <h3 class="text-3xl font-black text-gray-800 group-hover:text-[#7a4988] transition mb-3 uppercase">{{ $event->judul }}</h3>
                         <p class="text-gray-500 text-lg font-bold flex items-center gap-4">
-                            {{ $event->tanggal ? \Carbon\Carbon::parse($event->tanggal)->format('d M Y') : '-' }} 
-                            <span class="bg-gray-100 text-gray-600 px-4 py-1.5 rounded-lg text-sm font-black uppercase tracking-wider border border-gray-200">{{ $namaTampil }}</span>
+                            {{-- Perbaikan: Mengubah ke tgl_mulai dan format dd-mm-yy agar sinkron --}}
+                            {{ $event->tgl_mulai ? $event->tgl_mulai->format('d-m-y') : '' }} 
+                            <span class="bg-purple-50 text-[#7a4988] px-4 py-1.5 rounded-lg text-sm font-black uppercase tracking-wider border border-purple-100">{{ $namaTampil }}</span>
                         </p>
                     </div>
                 </div>
