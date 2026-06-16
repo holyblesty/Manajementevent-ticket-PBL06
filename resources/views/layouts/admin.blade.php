@@ -24,9 +24,9 @@
     
     <a href="#" class="transition-colors text-gray-600 hover:text-[#7a4988] cursor-not-allowed opacity-50" style="text-decoration: none !important;">Acara</a>
     
-    <a href="{{ route('pengunjung.about') }}" class="transition-colors text-gray-600 hover:text-[#7a4988]" style="text-decoration: none !important;">Tentang kami</a>
+    <a href="{{ route('pengunjung.tentang') }}" class="transition-colors text-gray-600 hover:text-[#7a4988]" style="text-decoration: none !important;">Tentang kami</a>
     
-    <a href="{{ route('pengunjung.contact') }}" class="transition-colors text-gray-600 hover:text-[#7a4988]" style="text-decoration: none !important;">Kontak Kami</a>
+    <a href="{{ route('pengunjung.kontak') }}" class="transition-colors text-gray-600 hover:text-[#7a4988]" style="text-decoration: none !important;">Kontak Kami</a>
     <div class="flex items-center space-x-3 border-l border-gray-200 pl-6">
                         @auth('admin')
                             {{-- Jika Sudah Login Admin --}}
