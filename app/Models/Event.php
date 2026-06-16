@@ -42,6 +42,13 @@ class Event extends Model
         'tgl_mulai' => 'date',
         'tgl_selesai' => 'date',
     ];
+    // Tambahkan ini agar Laravel otomatis mencari tgl_mulai sebagai acuan urutan
+    protected static function booted()
+    {
+        static::addGlobalScope('order_by_date', function ($builder) {
+            $builder->orderBy('tgl_mulai', 'asc');
+        });
+    }
 
     // Relasi ke Kategori
     public function kategori()
@@ -100,7 +107,7 @@ class Event extends Model
      * Mengubah status menjadi 'closed' secara otomatis di program jika waktu 
      * sekarang sudah melewati batas tanggal dan jam selesai event.
      */
-    public function getStatusEventAttribute($value): string
+    public function getStatusEventAttribute(?string $value): string
     {
         // Pastikan tgl_selesai diformat ke string Y-m-d dahulu sebelum digabung jam
         $tanggalSelesai = $this->tgl_selesai ? $this->tgl_selesai->format('Y-m-d') : null;
