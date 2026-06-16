@@ -119,58 +119,18 @@ class AcaraController extends Controller
     }
 
     /**
-     * Proses simpan TIKET BARU.
-     */
-    public function storeTiket(Request $request, int $id_event)
-    {
-        $request->validate([
-            'jenis_tiket' => 'required|string|max:255',
-            'kuota_tiket' => 'required|integer|min:0',
-            'harga_tiket' => [
-                'required',
-                'numeric',
-                'min:0',
-                function ($attribute, $value, $fail) use ($request) {
-                    if ($request->kuota_tiket == 0 && $value > 0) {
-                        $fail('Masa tidak ada kuota tapi diberi harga? Kuota tiket harus diisi lebih dari 0 jika tiket berbayar!');
-                    }
-                },
-            ],
-        ]);
-
-        \App\Models\Tiket::create([
-            'id_event'    => $id_event,
-            'jenis_tiket' => $request->jenis_tiket,
-            'harga_tiket' => $request->harga_tiket,
-            'kuota_tiket' => $request->kuota_tiket,
-        ]);
-
-        // Sinkronisasi total kapasitas ke tabel events
-        $event = Event::where('id_event', $id_event)->firstOrFail();
-        $totalKapasitas = \App\Models\Tiket::where('id_event', $id_event)->sum('kuota_tiket');
-        $event->update([
-            'kapasitas' => $totalKapasitas,
-            'kuota_tersedia' => $totalKapasitas
-        ]);
-
-        return redirect()->route('admin.acara.tiket', $id_event)
-            ->with('success', 'Tiket baru berhasil ditambahkan dengan aman!');
-    }
-
-    /**
-     * Proses UPDATE TIKET SECARA MASSAL (Early Bird, Normal, VIP).
+     * Proses UPDATE TIKET MASSAL.
      */
     public function updateTiket(Request $request, int $id_event)
     {
-        // 1. Validasi struktur array dasar (jenis_tiket tidak di-required karena readonly)
         $request->validate([
             'tiket' => 'required|array',
             'tiket.*.nama' => 'nullable|string',
             'tiket.*.harga' => 'required|numeric|min:0',
             'tiket.*.kuota' => 'required|integer|min:0',
+            'tiket.*.deskripsi' => 'nullable|string',
         ]);
 
-        // 2. Logika Dosen: Kuota 0 Wajib Harga 0. Kuota > 0 Boleh Harga 0 (Free)
         foreach ($request->tiket as $key => $data) {
             $kuota = intval($data['kuota']);
             $harga = floatval($data['harga']);
@@ -182,7 +142,6 @@ class AcaraController extends Controller
             }
         }
 
-        // 3. Jika lolos validasi, update ke database menggunakan updateOrCreate
         $totalKapasitas = 0;
         foreach ($request->tiket as $key => $data) {
             \App\Models\Tiket::updateOrCreate(
@@ -191,14 +150,15 @@ class AcaraController extends Controller
                     'jenis_tiket' => $data['nama']
                 ],
                 [
-                    'harga_tiket' => $data['harga'],
-                    'kuota_tiket' => $data['kuota'],
+                    'harga' => $data['harga'],
+                    'kuota_total' => $data['kuota'],
+                    'kuota_tersedia' => $data['kuota'],
+                    'deskripsi_tiket' => $data['deskripsi'] ?? null,
                 ]
             );
             $totalKapasitas += $data['kuota'];
         }
 
-        // 4. Sinkronisasi total kapasitas ke tabel 'events'
         $event = Event::where('id_event', $id_event)->firstOrFail();
         $event->update([
             'kapasitas' => $totalKapasitas,
@@ -206,30 +166,30 @@ class AcaraController extends Controller
         ]);
 
         return redirect()->route('admin.dashboard')
-            ->with('success', 'Pengaturan kapasitas tiket berhasil diperbarui!');
+            ->with('success', 'Pengaturan tiket dan kapasitas berhasil diperbarui!');
     }
 
     /**
-     * Proses HAPUS TIKET (Menjaga sinkronisasi total kapasitas event).
+     * Menghapus data Event beserta file posternya (Mengatasi Error Call to undefined method destroy).
      */
-    public function destroyTiket(int $id_tiket)
+    public function destroy(int $id_event)
     {
-        $tiket = \App\Models\Tiket::where('id_tiket', $id_tiket)->firstOrFail();
-        $id_event = $tiket->id_event;
-
-        // Hapus data tiket
-        $tiket->delete();
-
-        // Hitung ulang total kapasitas event setelah tiket ini dihapus
+        // 1. Cari data event berdasarkan id_event
         $event = Event::where('id_event', $id_event)->firstOrFail();
-        $totalKapasitas = \App\Models\Tiket::where('id_event', $id_event)->sum('kuota_tiket') ?? 0;
 
-        $event->update([
-            'kapasitas' => $totalKapasitas,
-            'kuota_tersedia' => $totalKapasitas
-        ]);
+        // 2. Hapus file gambar poster dari folder public/images (biar tidak memenuhi storage)
+        if ($event->poster && File::exists(public_path('images/' . $event->poster))) {
+            File::delete(public_path('images/' . $event->poster));
+        }
 
-        return redirect()->route('admin.acara.tiket', $id_event)
-            ->with('success', 'Tiket berhasil dihapus, kapasitas event diperbarui!');
+        // 3. Hapus terlebih dahulu data tiket yang terikat dengan event ini (menghindari error foreign key constraint)
+        \App\Models\Tiket::where('id_event', $id_event)->delete();
+
+        // 4. Hapus data event utama
+        $event->delete();
+
+        // 5. Kembalikan ke dashboard dengan pesan sukses
+        return redirect()->route('admin.dashboard')
+            ->with('success', 'Event beserta data tiketnya berhasil dihapus permanen!');
     }
 }
