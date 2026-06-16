@@ -41,8 +41,8 @@
         </div>
         
         <nav class="flex flex-wrap items-center justify-center md:justify-end gap-4 md:gap-8 w-full md:w-auto">
-            <a class="text-sm font-medium text-black hover:text-purplePrimary transition-colors" href="#">Acara</a>
-            <a class="text-sm font-medium text-black hover:text-purplePrimary transition-colors" href="#">Tentang kami</a>
+        <a class="text-sm font-medium text-black hover:text-purplePrimary transition-colors" href="{{ route('pengunjung.about') }}">Tentang kami</a>
+        <a class="text-sm font-medium text-black hover:text-purplePrimary transition-colors" href="{{ route('pengunjung.contact') }}">Kontak Kami</a>
             
             @if(Auth::guard('admin')->check())
                 {{-- Jika Login sebagai Admin --}}
