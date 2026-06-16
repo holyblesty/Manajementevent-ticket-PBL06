@@ -22,6 +22,7 @@ Route::get('/', [PageController::class, 'index'])->name('home');
 Route::get('/about', [PageController::class, 'tentang'])->name('pengunjung.tentang');
 Route::get('/contact', [PageController::class, 'kontak'])->name('pengunjung.kontak');
 Route::get('/search', [PageController::class, 'search'])->name('pengunjung.search');
+
 // =====================================================
 // AUTENTIKASI
 // =====================================================
@@ -68,13 +69,11 @@ Route::prefix('pengunjung')->name('pengunjung.')->middleware('auth:web')->group(
     // Dashboard Pengunjung
     Route::get('/dashboard', [PengunjungDashboardController::class, 'index'])->name('dashboard');
 
-
     // Halaman Event Pengunjung
     Route::get('/event/{id}', [EventController::class, 'show'])->name('event.show');
     Route::post('/daftar-event', [EventController::class, 'daftarEvent'])->name('daftar-event');
+    // GUNAKAN BARIS YANG BENAR INI:
     Route::get('/event/{id}/daftar', [PendaftaranEventController::class, 'create'])->name('event.daftar');
-
-
     // Riwayat & Profil
     Route::get('/riwayat', function () {
         return view('Pengunjung.riwayat');
