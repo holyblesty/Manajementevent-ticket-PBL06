@@ -15,7 +15,7 @@ class AcaraController extends Controller
     {
         $kategoris = KategoriEvent::all();
 
-        return view('admin.create', compact('kategoris'));
+        return view('admin.tambah', compact('kategoris'));
     }
 
     public function store(Request $request)
