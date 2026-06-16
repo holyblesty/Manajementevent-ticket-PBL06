@@ -41,21 +41,35 @@
                 <div class="form-container space-y-6">
                     <div>
                         <label class="block mb-2 text-[10px] font-black uppercase text-[#7a4988] tracking-widest">Judul Event</label>
-                        <input type="text" name="judul" value="{{ $event->judul }}" class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-sm font-bold text-gray-700 outline-none">
+                        <input type="text" name="judul" value="{{ old('judul', $event->judul) }}" class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-sm font-bold text-gray-700 outline-none">
                     </div>
 
                     <div>
                         <label class="block mb-2 text-[10px] font-black uppercase text-[#7a4988] tracking-widest">Deskripsi Event</label>
-                        <textarea name="deskripsi" rows="6" class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-sm font-medium text-gray-700 outline-none">{{ $event->deskripsi }}</textarea>
+                        <textarea name="deskripsi" rows="4" class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-sm font-medium text-gray-700 outline-none">{{ old('deskripsi', $event->deskripsi) }}</textarea>
                     </div>
 
                     <div class="grid grid-cols-2 gap-6">
-                       <div>
-    <label class="block mb-2 text-[10px] font-black uppercase text-gray-400 tracking-widest">Tanggal</label>
-    <input type="date" name="tanggal" 
-           value="{{ old('tanggal', $event->tanggal ? \Carbon\Carbon::parse($event->tanggal)->format('Y-m-d') : '') }}" 
-           class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-xs font-bold text-gray-500 outline-none">
-</div>
+                        <div>
+                            <label class="block mb-2 text-[10px] font-black uppercase text-[#7a4988] tracking-widest">Tanggal Mulai</label>
+                            <input type="date" name="tgl_mulai" value="{{ old('tgl_mulai', $event->tgl_mulai ? $event->tgl_mulai->format('Y-m-d') : '') }}" class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-xs font-bold text-gray-500 outline-none">
+                        </div>
+
+                        <div>
+                            <label class="block mb-2 text-[10px] font-black uppercase text-[#7a4988] tracking-widest">Tanggal Selesai</label>
+                            <input type="date" name="tgl_selesai" value="{{ old('tgl_selesai', $event->tgl_selesai ? $event->tgl_selesai->format('Y-m-d') : '') }}" class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-xs font-bold text-gray-500 outline-none">
+                        </div>
+                        
+                        <div>
+                            <label class="block mb-2 text-[10px] font-black uppercase text-[#7a4988] tracking-widest">Jam Mulai</label>
+                            <input type="time" name="jam_mulai" value="{{ old('jam_mulai', substr($event->jam_mulai ?? '', 0, 5)) }}" class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-xs font-bold text-gray-500 outline-none">
+                        </div>
+
+                        <div>
+                            <label class="block mb-2 text-[10px] font-black uppercase text-[#7a4988] tracking-widest">Jam Selesai</label>
+                            <input type="time" name="jam_selesai" value="{{ old('jam_selesai', substr($event->jam_selesai ?? '', 0, 5)) }}" class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-xs font-bold text-gray-500 outline-none">
+                        </div>
+
                         <div>
                             <label class="block mb-2 text-[10px] font-black uppercase text-[#7a4988] tracking-widest">Status Event</label>
                             <select name="status_event" class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-xs font-bold text-gray-500 outline-none cursor-pointer">
@@ -63,18 +77,20 @@
                                 <option value="open" {{ $event->status_event == 'open' ? 'selected' : '' }}>Open</option>
                             </select>
                         </div>
+
                         <div>
-                            <label class="block mb-2 text-[10px] font-black uppercase text-gray-400 tracking-widest">Kategori</label>
+                            <label class="block mb-2 text-[10px] font-black uppercase text-[#7a4988] tracking-widest">Kategori</label>
                             <select name="id_kategori" class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-xs font-bold text-gray-500 outline-none cursor-pointer">
-                                <option value="1" {{ $event->id_kategori == 1 ? 'selected' : '' }}>Olahraga</option>
-                                <option value="2" {{ $event->id_kategori == 2 ? 'selected' : '' }}>Seminar</option>
-                                <option value="3" {{ $event->id_kategori == 3 ? 'selected' : '' }}>Hiburan</option>
+                                @foreach($kategoris as $kategori)
+                                    <option value="{{ $kategori->id_kategori }}" {{ $event->id_kategori == $kategori->id_kategori ? 'selected' : '' }}>{{ $kategori->nama_kategori }}</option>
+                                @endforeach
                             </select>
                         </div>
-                        <div>
-                            <label class="block mb-2 text-[10px] font-black uppercase text-[#7a4988] tracking-widest">Lokasi</label>
-                            <input type="text" name="lokasi" value="{{ $event->lokasi }}" class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-sm font-bold text-gray-700 outline-none">
-                        </div>
+                    </div>
+
+                    <div class="mt-6">
+                        <label class="block mb-2 text-[10px] font-black uppercase text-[#7a4988] tracking-widest">Lokasi</label>
+                        <input type="text" name="lokasi" value="{{ old('lokasi', $event->lokasi) }}" class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-sm font-bold text-gray-700 outline-none">
                     </div>
                 </div>
 
@@ -85,7 +101,6 @@
                         <img id="poster_preview" src="{{ asset('images/' . $event->poster) }}" class="absolute inset-0 w-full h-full object-cover z-30">
                     </div>
                 </div>
-
             </div>
 
             <div class="mt-12 flex justify-end gap-3 pt-8 border-t-2 border-gray-50">

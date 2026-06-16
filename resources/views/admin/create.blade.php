@@ -6,21 +6,17 @@
     <title>Tambah Event Baru - Admin</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
     <style>
         @keyframes swush {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
-        .no-underline { text-decoration: none !important; }
-        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-        input[type=number] { -moz-appearance: textfield; }
     </style>
 </head>
-<body style="margin: 0; min-height: 100vh; background: linear-gradient(-45deg, #2b1238, #7a4988, #4b1d52, #9e7bb5); background-size: 400% 400%; animation: swush 10s ease infinite;" class="flex flex-col items-center py-10 font-sans antialiased text-gray-900">
+<body style="background: linear-gradient(-45deg, #2b1238, #7a4988, #4b1d52, #9e7bb5); background-size: 400% 400%; animation: swush 10s ease infinite;" class="min-h-screen py-10 font-sans antialiased text-gray-900">
 
-    <div class="bg-white w-full max-w-[1100px] rounded-[2.5rem] shadow-2xl overflow-hidden mb-10 mx-4 border border-gray-100">
+    <div class="bg-white w-full max-w-[1100px] rounded-[2.5rem] shadow-2xl overflow-hidden mb-10 mx-auto border border-gray-100">
         
         <div class="bg-[#24112e] p-8 text-white border-b-4 border-[#7a4988] flex justify-between items-end">
             <div>
@@ -28,143 +24,113 @@
                 <p class="text-[10px] text-[#be93d4] font-bold mt-1 uppercase tracking-[0.3em]">Detail Informasi & Media Acara</p>
             </div>
             <div class="hidden md:block bg-[#7a4988]/20 px-4 py-2 rounded-xl border border-[#7a4988]/30">
-                <p class="text-[10px] font-black uppercase tracking-widest text-[#be93d4]">
-                    <span class="text-white text-lg leading-none mr-1">*</span> Wajib diisi
-                </p>
+                <p class="text-[10px] font-black uppercase tracking-widest text-[#be93d4]">* Wajib diisi</p>
             </div>
         </div>
 
-       <form action="{{ route('admin.acara.store') }}" method="POST" enctype="multipart/form-data" class="p-10">
-    @csrf
+        <form action="{{ route('admin.acara.store') }}" method="POST" enctype="multipart/form-data" class="p-10">
+            @csrf
+            <input type="hidden" name="kapasitas" value="0">
+            <input type="hidden" name="kuota_tersedia" value="0">
 
-    <input type="hidden" name="kapasitas" value="0">
-    <input type="hidden" name="kuota_tersedia" value="0">
-    <div>
-    <label class="block mb-2 text-[10px] font-black uppercase text-gray-400 tracking-widest">Status Acara <span class="text-red-500">*</span></label>
-    <select name="status_event" class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-xs font-bold text-gray-500 outline-none cursor-pointer shadow-sm focus:border-[#7a4988]">
-        <option value="draft" {{ old('status_event') == 'draft' ? 'selected' : '' }}>Draft</option>
-        <option value="open" {{ old('status_event') == 'open' ? 'selected' : '' }}>Terbuka</option>
-    </select>
-</div>
-    
-
-            {{-- ERROR HANDLING AREA --}}
             @if ($errors->any())
                 <div class="mb-8 p-6 bg-red-50 border-l-8 border-red-600 rounded-r-2xl shadow-sm">
-                    <p class="text-[10px] font-black text-red-700 uppercase tracking-widest mb-3">Terjadi Kesalahan:</p>
-                    <ul class="list-disc list-inside text-xs font-bold text-red-500 space-y-1">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
+                    <ul class="list-disc list-inside text-xs font-bold text-red-500">
+                        @foreach ($errors->all() as $error) <li>{{ $error }}</li> @endforeach
                     </ul>
                 </div>
             @endif
 
-            <div class="flex flex-row items-start gap-12">
-                
-                <div class="flex-[2.5] space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="md:col-span-2 space-y-6">
                     <div>
-                        <label class="block mb-2 text-[10px] font-black uppercase text-[#7a4988] tracking-widest">Judul Event <span class="text-red-500">*</span></label>
-                        <input type="text" name="judul" value="{{ old('judul') }}" placeholder="Masukkan nama event..." 
-                               class="w-full p-4 bg-gray-50 border-2 {{ $errors->has('judul') ? 'border-red-500' : 'border-gray-100' }} rounded-2xl text-sm font-bold text-gray-700 focus:border-[#7a4988] outline-none transition-all shadow-sm">
+                        <label class="block mb-2 text-[10px] font-black uppercase text-gray-400">Status Acara *</label>
+                        <select name="status_event" class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-xs font-bold text-gray-500 focus:border-[#7a4988] outline-none">
+                            <option value="draft">Draft</option>
+                            <option value="open">Terbuka</option>
+                        </select>
                     </div>
 
                     <div>
-                        <label class="block mb-2 text-[10px] font-black uppercase text-[#7a4988] tracking-widest">Deskripsi <span class="text-red-500">*</span></label>
-                        <textarea name="deskripsi" rows="6" placeholder="Jelaskan detail acaranya..." 
-                                  class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-sm font-medium text-gray-700 focus:border-[#7a4988] outline-none transition-all leading-relaxed shadow-sm">{{ old('deskripsi') }}</textarea>
+                        <label class="block mb-2 text-[10px] font-black uppercase text-[#7a4988]">Judul Event *</label>
+                        <input type="text" name="judul" value="{{ old('judul') }}" class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-sm font-bold text-gray-700 focus:border-[#7a4988] outline-none">
                     </div>
 
-                    <div class="grid grid-cols-2 gap-6">
+                    <div>
+                        <label class="block mb-2 text-[10px] font-black uppercase text-[#7a4988]">Deskripsi *</label>
+                        <textarea name="deskripsi" rows="5" class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-sm font-medium text-gray-700 focus:border-[#7a4988] outline-none">{{ old('deskripsi') }}</textarea>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block mb-2 text-[10px] font-black uppercase text-gray-400 tracking-widest">Tanggal <span class="text-red-500">*</span></label>
-                            <input type="date" name="tanggal" value="{{ old('tanggal') }}" 
-                                   class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-xs font-bold text-gray-500 outline-none shadow-sm">
+                            <label class="block mb-2 text-[10px] font-black uppercase text-gray-400">Tgl Mulai *</label>
+                            <input type="date" name="tgl_mulai" class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-xs font-bold text-gray-500 outline-none">
                         </div>
                         <div>
-<div>
-    <label class="block mb-2 text-[10px] font-black uppercase text-gray-400 tracking-widest">Kategori <span class="text-red-500">*</span></label>
-    <select name="id_kategori" required class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-xs font-bold text-gray-500 outline-none cursor-pointer shadow-sm">
-        <option value="">Pilih Kategori</option>
-        <option value="1" {{ old('id_kategori') == '1' ? 'selected' : '' }}>Olahraga</option>
-        <option value="2" {{ old('id_kategori') == '2' ? 'selected' : '' }}>Seminar</option>
-        <option value="3" {{ old('id_kategori') == '3' ? 'selected' : '' }}>Hiburan</option>
-    </select>
-</div>
+                            <label class="block mb-2 text-[10px] font-black uppercase text-gray-400">Tgl Selesai *</label>
+                            <input type="date" name="tgl_selesai" class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-xs font-bold text-gray-500 outline-none">
                         </div>
-                    </div>
-
-                    <div>
-                        <label class="block mb-2 text-[10px] font-black uppercase text-[#7a4988] tracking-widest">Lokasi <span class="text-red-500">*</span></label>
-                        <input type="text" name="lokasi" value="{{ old('lokasi') }}" placeholder="Tempat acara..." 
-                               class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-sm font-bold text-gray-700 focus:border-[#7a4988] outline-none shadow-sm">
+                        <div>
+                            <label class="block mb-2 text-[10px] font-black uppercase text-[#7a4988]">Jam Mulai (WIB) *</label>
+                            <input type="time" name="jam_mulai" class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-xs font-bold text-gray-500 outline-none">
+                        </div>
+                        <div>
+                            <label class="block mb-2 text-[10px] font-black uppercase text-[#7a4988]">Jam Selesai (WIB) *</label>
+                            <input type="time" name="jam_selesai" class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-xs font-bold text-gray-500 outline-none">
+                        </div>
                     </div>
                 </div>
 
-                <div class="flex-1 min-w-[280px] space-y-6">
+                <div class="space-y-6">
                     <div>
-                        <label class="block mb-2 text-[10px] font-black uppercase text-[#7a4988] tracking-widest text-center">Poster Event <span class="text-red-500">*</span></label>
-                        <div class="bg-gray-50 border-2 {{ $errors->has('poster') ? 'border-red-500' : 'border-dashed border-gray-200' }} rounded-[2rem] h-[400px] flex flex-col items-center justify-center relative text-center group overflow-hidden cursor-pointer hover:border-[#7a4988] transition-all shadow-inner">
+                        <label class="block mb-2 text-[10px] font-black uppercase text-[#7a4988] text-center">Poster Event *</label>
+                        <div class="group bg-gray-50 border-2 border-dashed border-gray-200 rounded-[2rem] h-[300px] flex items-center justify-center relative cursor-pointer hover:border-[#7a4988] transition-all overflow-hidden">
                             <input type="file" name="poster" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-50" onchange="previewImage(this)">
-                            
-                            <div id="placeholder_view" class="z-10 flex flex-col items-center group-hover:scale-110 transition-transform duration-300">
-                                <div class="bg-purple-100 p-5 rounded-2xl mb-4 text-[#7a4988] shadow-sm">
-                                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                </div>
-                                <p class="text-[10px] font-black text-[#24112e] uppercase tracking-widest px-4">Upload Poster</p>
+                            <div id="placeholder_view" class="text-center flex flex-col items-center justify-center space-y-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-300 group-hover:text-[#7a4988]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M7 4v16M17 4v16M3 8h18M3 16h18M5 4h14a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2z"/></svg>
+                                <span class="text-gray-400 text-xs font-bold uppercase">Pilih Poster</span>
                             </div>
-
-                            <img id="image_preview" src="#" class="hidden absolute inset-0 w-full h-full object-cover z-30">
+                            <img id="image_preview" src="#" class="hidden absolute inset-0 w-full h-full object-cover rounded-[2rem] z-30">
                         </div>
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 text-[10px] font-black uppercase text-gray-400">Kategori *</label>
+                        <select name="id_kategori" required class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-xs font-bold text-gray-500 outline-none">
+                            <option value="">Pilih Kategori</option>
+                            @foreach($kategoris as $kategori)
+                             <option value="{{ $kategori->id_kategori }}">{{ $kategori->nama_kategori }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 text-[10px] font-black uppercase text-gray-400">Lokasi *</label>
+                        <input type="text" name="lokasi" class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-xs font-bold text-gray-500 outline-none">
                     </div>
                 </div>
             </div>
 
-            <div class="mt-12 flex justify-end gap-3 pt-8 border-t-2 border-gray-50">
-                <a href="{{ route('admin.acara.index') }}" class="px-8 py-4 bg-white text-gray-400 rounded-2xl font-black text-[10px] uppercase tracking-widest border-2 border-gray-100 hover:bg-gray-50 transition no-underline">Batal</a>
-                <button type="submit" class="px-12 py-4 bg-[#24112e] text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-black transition shadow-xl hover:-translate-y-1 border-none cursor-pointer">Simpan Acara</button>
+            <div class="mt-10 flex justify-end gap-3 pt-8 border-t-2 border-gray-50">
+                <a href="{{ route('admin.acara.index') }}" class="px-8 py-4 bg-white text-gray-400 rounded-2xl font-black text-[10px] uppercase tracking-widest border-2 border-gray-100">Batal</a>
+                <button type="submit" class="px-12 py-4 bg-[#24112e] text-white rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl">Simpan Acara</button>
             </div>
         </form>
     </div>
 
-     <script>
-    // 1. Script untuk Preview Gambar
-    function previewImage(input) {
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const img = document.getElementById('image_preview');
-                const placeholder = document.getElementById('placeholder_view');
-                img.src = e.target.result;
-                img.classList.remove('hidden');
-                placeholder.classList.add('hidden');
-            }
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-
-    // 2. Script untuk Navigasi Enter ke Kolom Berikutnya atau Submit
-    document.addEventListener("DOMContentLoaded", function() {
-        const form = document.querySelector('form');
-        // Mengambil semua input, select, dan textarea yang terlihat/bisa diisi
-        const formFields = Array.from(form.querySelectorAll('input:not([type="hidden"]), select, textarea'));
-
-        formFields.forEach((field, index) => {
-            field.addEventListener('keydown', function(event) {
-                if (event.key === 'Enter') {
-                    event.preventDefault(); // Mencegah submit dini
-
-                    // Jika bukan field terakhir, pindah ke field berikutnya
-                    if (index < formFields.length - 1) {
-                        formFields[index + 1].focus();
-                    } else {
-                        // Jika sudah di field terakhir, lakukan submit form
-                        form.submit();
-                    }
+    <script>
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = document.getElementById('image_preview');
+                    img.src = e.target.result;
+                    img.classList.remove('hidden');
+                    document.getElementById('placeholder_view').classList.add('hidden');
                 }
-            });
-        });
-    });
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
     </script>
 </body>
 </html>

@@ -24,23 +24,22 @@ class Event extends Model
     protected $fillable = [
         'judul',
         'deskripsi',
-        'tanggal',
+        'tgl_mulai',
+        'tgl_selesai',
         'jam_mulai',
         'jam_selesai',
         'lokasi',
         'id_kategori',
-        'kapasitas',
-        'kuota_tersedia',
         'status_event',
-        'jenis',
         'poster',
         'id_admin',
+        'kapasitas',
+        'kuota_tersedia'
     ];
 
     protected $casts = [
-        'tanggal' => 'date',
-        'jam_mulai' => 'datetime:H:i',
-        'jam_selesai' => 'datetime:H:i',
+        'tgl_mulai' => 'date',
+        'tgl_selesai' => 'date',
     ];
 
     // Relasi ke Kategori
