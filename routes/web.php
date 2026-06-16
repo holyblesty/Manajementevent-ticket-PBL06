@@ -19,8 +19,8 @@ use App\Http\Controllers\Pengunjung\PendaftaranEventController;
 
 // Halaman Publik
 Route::get('/', [PageController::class, 'index'])->name('home');
-Route::get('/about', [PageController::class, 'about'])->name('about');
-Route::get('/contact', [PageController::class, 'contact'])->name('contact');
+Route::get('/about', [PageController::class, 'about'])->name('pengunjung.about');
+Route::get('/contact', [PageController::class, 'contact'])->name('pengunjung.contact');
 
 // =====================================================
 // AUTENTIKASI
@@ -42,7 +42,7 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
     // CRUD Utama untuk Acara
     Route::resource('acara', AcaraController::class)->except(['show']);
 
-    // Manajemen Tiket Massal (Sudah Sinkron dengan Tiket Blade & AcaraController)
+    // Manajemen Tiket Massal
     Route::prefix('acara/{id_event}')->group(function () {
         Route::get('/tiket', [AcaraController::class, 'tiket'])->name('acara.tiket');
         Route::put('/tiket/update', [AcaraController::class, 'updateTiket'])->name('acara.tiket.update');
