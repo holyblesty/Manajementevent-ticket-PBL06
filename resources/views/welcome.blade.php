@@ -150,33 +150,42 @@
 
     <section class="container mx-auto px-4 text-center my-12">
         <p class="text-sm font-bold tracking-widest text-gray-700 uppercase mb-6">KATEGORI ACARA</p>
-        <div class="flex flex-wrap justify-center gap-8 md:gap-16">
-            <div class="flex flex-col items-center">
-                <div class="w-28 h-28 border-2 border-purplePrimary rounded-full flex items-center justify-center bg-white shadow-sm hover:scale-105 transition-transform duration-200 cursor-pointer">
-                    <i class="fa-solid fa-basketball text-4xl text-purplePrimary"></i>
-                </div>
-                <span class="text-sm font-medium text-gray-700 mt-3">Olahraga</span>
-            </div>
-            <div class="flex flex-col items-center">
-                <div class="w-28 h-28 border-2 border-purplePrimary rounded-full flex items-center justify-center bg-white shadow-sm hover:scale-105 transition-transform duration-200 cursor-pointer">
-                    <i class="fa-solid fa-masks-theater text-4xl text-purplePrimary"></i>
-                </div>
-                <span class="text-sm font-medium text-gray-700 mt-3">Hiburan</span>
-            </div>
-            <div class="flex flex-col items-center">
-                <div class="w-28 h-28 border-2 border-purplePrimary rounded-full flex items-center justify-center bg-white shadow-sm hover:scale-105 transition-transform duration-200 cursor-pointer">
-                    <i class="fa-solid fa-chalkboard-user text-4xl text-purplePrimary"></i>
-                </div>
-                <span class="text-sm font-medium text-gray-700 mt-3">Seminar</span>
-            </div>
+     <div class="flex flex-wrap justify-center gap-8 md:gap-16">
+    <a href="{{ route('pengunjung.search') }}?keyword=Olahraga" class="flex flex-col items-center group">
+        <div class="w-28 h-28 border-2 border-purplePrimary rounded-full flex items-center justify-center bg-white shadow-sm group-hover:scale-105 group-hover:bg-purplePrimary transition-all duration-300">
+            <i class="fa-solid fa-basketball text-4xl text-purplePrimary group-hover:text-white transition-colors"></i>
         </div>
+        <span class="text-sm font-medium text-gray-700 mt-3 group-hover:text-purplePrimary font-bold">Olahraga</span>
+    </a>
+
+    <a href="{{ route('pengunjung.search') }}?keyword=Hiburan" class="flex flex-col items-center group">
+        <div class="w-28 h-28 border-2 border-purplePrimary rounded-full flex items-center justify-center bg-white shadow-sm group-hover:scale-105 group-hover:bg-purplePrimary transition-all duration-300">
+            <i class="fa-solid fa-masks-theater text-4xl text-purplePrimary group-hover:text-white transition-colors"></i>
+        </div>
+        <span class="text-sm font-medium text-gray-700 mt-3 group-hover:text-purplePrimary font-bold">Hiburan</span>
+    </a>
+
+    <a href="{{ route('pengunjung.search') }}?keyword=Seminar" class="flex flex-col items-center group">
+        <div class="w-28 h-28 border-2 border-purplePrimary rounded-full flex items-center justify-center bg-white shadow-sm group-hover:scale-105 group-hover:bg-purplePrimary transition-all duration-300">
+            <i class="fa-solid fa-chalkboard-user text-4xl text-purplePrimary group-hover:text-white transition-colors"></i>
+        </div>
+        <span class="text-sm font-medium text-gray-700 mt-3 group-hover:text-purplePrimary font-bold">Seminar</span>
+    </a>
+</div>
         <hr class="mt-12 border-gray-200 opacity-60">
     </section>
 
-    <section class="container mx-auto px-4 mb-16">
-        <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 mt-10 mb-8 tracking-tight">
+ <section class="container mx-auto px-4 mb-16">
+    <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 mt-10 mb-8 tracking-tight flex items-center">
+        @isset($keyword)
+            HASIL PENCARIAN: "{{ $keyword }}"
+            <a href="{{ route('home') }}" class="ml-4 text-xs font-bold text-red-500 hover:text-red-700 bg-red-50 px-4 py-1.5 rounded-full transition-all border border-red-200">
+                <i class="fa-solid fa-xmark mr-1"></i> Batalkan Filter
+            </a>
+        @else
             ACARA YANG SEDANG BERLANGSUNG
-        </h2>
+        @endisset
+    </h2>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
             @forelse($events as $event)
@@ -217,8 +226,10 @@
             <div class="text-sm text-gray-600 max-w-lg mx-auto leading-relaxed mb-3 mt-2">
                 Ingin membuat acara atau kegiatan baru? hubungi admin untuk informasi lebih lanjut melalui kontak kami
             </div>
-            <a href="#" class="bg-purplePrimary text-white text-sm font-bold px-6 
-            py-2.5 rounded-lg shadow hover:bg-purpleAccent transition-colors inline-block">Kontak kami</a>
+            <a href="{{ route('pengunjung.contact') }}" 
+             class="bg-purplePrimary text-white text-sm font-bold px-6 py-2.5 rounded-lg shadow hover:bg-purpleAccent transition-colors inline-block">
+             Kontak kami
+            </a>
         </div>
     </section>
 
