@@ -42,8 +42,8 @@
         </div>
         
         <nav class="flex flex-wrap items-center justify-center md:justify-end gap-4 md:gap-8 w-full md:w-auto">
-        <a class="text-sm font-medium text-black hover:text-purplePrimary transition-colors" href="{{ route('pengunjung.about') }}">Tentang kami</a>
-        <a class="text-sm font-medium text-black hover:text-purplePrimary transition-colors" href="{{ route('pengunjung.contact') }}">Kontak Kami</a>
+        <a class="text-sm font-medium text-black hover:text-purplePrimary transition-colors" href="{{ route('pengunjung.tentang') }}">Tentang kami</a>
+        <a class="text-sm font-medium text-black hover:text-purplePrimary transition-colors" href="{{ route('pengunjung.kontak') }}">Kontak Kami</a>
             
             @if(Auth::guard('admin')->check())
                 {{-- Jika Login sebagai Admin --}}
@@ -226,7 +226,7 @@
             <div class="text-sm text-gray-600 max-w-lg mx-auto leading-relaxed mb-3 mt-2">
                 Ingin membuat acara atau kegiatan baru? hubungi admin untuk informasi lebih lanjut melalui kontak kami
             </div>
-            <a href="{{ route('pengunjung.contact') }}" 
+            <a href="{{ route('pengunjung.kontak') }}" 
              class="bg-purplePrimary text-white text-sm font-bold px-6 py-2.5 rounded-lg shadow hover:bg-purpleAccent transition-colors inline-block">
              Kontak kami
             </a>

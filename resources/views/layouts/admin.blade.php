@@ -18,13 +18,16 @@
                     <img src="{{ asset('images/logo.jpeg') }}" alt="Logo" class="h-12 w-auto">
                 </div>
                 
-                {{-- NAVIGASI KANAN --}}
-                <div class="flex items-center space-x-6 text-sm font-semibold">
-                    <a href="{{ url('/') }}" class="transition-colors text-gray-600 hover:text-[#7a4988]" style="text-decoration: none !important;">Beranda</a>
-                    <a href="#" class="transition-colors text-gray-600 hover:text-[#7a4988]" style="text-decoration: none !important;">Acara</a>
-                    <a href="#" class="transition-colors text-gray-600 hover:text-[#7a4988]" style="text-decoration: none !important;">Tentang kami</a>
-                    
-                    <div class="flex items-center space-x-3 border-l border-gray-200 pl-6">
+               {{-- NAVIGASI KANAN --}}
+<div class="flex items-center space-x-6 text-sm font-semibold">
+    <a href="{{ route('home') }}" class="transition-colors text-gray-600 hover:text-[#7a4988]" style="text-decoration: none !important;">Beranda</a>
+    
+    <a href="#" class="transition-colors text-gray-600 hover:text-[#7a4988] cursor-not-allowed opacity-50" style="text-decoration: none !important;">Acara</a>
+    
+    <a href="{{ route('pengunjung.about') }}" class="transition-colors text-gray-600 hover:text-[#7a4988]" style="text-decoration: none !important;">Tentang kami</a>
+    
+    <a href="{{ route('pengunjung.contact') }}" class="transition-colors text-gray-600 hover:text-[#7a4988]" style="text-decoration: none !important;">Kontak Kami</a>
+    <div class="flex items-center space-x-3 border-l border-gray-200 pl-6">
                         @auth('admin')
                             {{-- Jika Sudah Login Admin --}}
                             <span class="text-[#7a4988] font-black uppercase text-xs">Halo, Admin {{ Auth::guard('admin')->user()->username }}!</span>

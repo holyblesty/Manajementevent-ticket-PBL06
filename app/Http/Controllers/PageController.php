@@ -51,13 +51,13 @@ class PageController extends Controller
         return view('welcome', compact('events', 'latestEvents', 'keyword'));
     }
 
-    public function about()
+    public function tentang()
     {
-        return view('about');
+        return view('tentang');
     }
 
-    public function contact()
+    public function kontak()
     {
-        return view('contact');
+        return view('kontak');
     }
 }

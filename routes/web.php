@@ -19,8 +19,8 @@ use App\Http\Controllers\Pengunjung\PendaftaranEventController;
 
 // Halaman Publik
 Route::get('/', [PageController::class, 'index'])->name('home');
-Route::get('/about', [PageController::class, 'about'])->name('pengunjung.about');
-Route::get('/contact', [PageController::class, 'contact'])->name('pengunjung.contact');
+Route::get('/about', [PageController::class, 'tentang'])->name('pengunjung.tentang');
+Route::get('/contact', [PageController::class, 'kontak'])->name('pengunjung.kontak');
 Route::get('/search', [PageController::class, 'search'])->name('pengunjung.search');
 // =====================================================
 // AUTENTIKASI
