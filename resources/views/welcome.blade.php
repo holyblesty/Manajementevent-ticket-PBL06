@@ -32,43 +32,48 @@
 </head>
 <body class="bg-white text-black antialiased">
 
-    <header class="container mx-auto px-4 py-4">
-        <div class="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div class="flex items-center justify-center md:justify-start w-full md:w-auto">
-                <a href="{{ url('/') }}" class="flex items-center">
-                    <img src="{{ asset('images/logo.jpeg') }}" alt="EventTicket Logo" class="h-10 w-auto">
-                </a>
-            </div>
-            
-            <nav class="flex flex-wrap items-center justify-center md:justify-end gap-4 md:gap-8 w-full md:w-auto">
-                <a class="text-sm font-medium text-black hover:text-purplePrimary transition-colors" href="#">Acara</a>
-                <a class="text-sm font-medium text-black hover:text-purplePrimary transition-colors" href="#">Tentang kami</a>
-                
-                @guest
-                    <button onclick="openModal('loginModal')" class="bg-purpleHover text-white text-xs font-bold px-5 py-2 rounded shadow hover:bg-purpleAccent transition-colors text-center min-w-[80px] cursor-pointer">Masuk</button>
-                    <button onclick="openModal('registerModal')" class="bg-purpleAccent text-white text-xs font-bold px-5 py-2 rounded shadow hover:bg-purplePrimary transition-colors text-center min-w-[80px] cursor-pointer">Daftar</button>
-                @endguest
-
-                @auth
-                    <div class="flex items-center gap-3">
-                        <span class="text-sm font-medium text-gray-700">Halo, <strong class="text-purplePrimary">{{ Auth::user()->name }}</strong>!</span>
-                        
-                        @if(Auth::user()->role === 'admin')
-                            <a href="{{ route('admin.dashboard') }}" class="bg-purpleAccent text-white text-xs font-bold px-4 py-2 rounded shadow hover:bg-purplePrimary transition-colors text-center">Dashboard Admin</a>
-                        @else
-                            <a href="{{ route('pengunjung.dashboard') }}" class="bg-purpleAccent text-white text-xs font-bold px-4 py-2 rounded shadow hover:bg-purplePrimary transition-colors text-center">Menu Saya</a>
-                        @endif
-
-                        <form action="{{ route('logout') }}" method="POST" class="inline">
-                            @csrf
-                            <button type="submit" class="border border-red-300 text-red-600 hover:bg-red-50 text-xs font-bold px-4 py-2 rounded transition-colors cursor-pointer">Keluar</button>
-                        </form>
-                    </div>
-                @endauth
-            </nav>
+ <header class="container mx-auto px-4 py-4">
+    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="flex items-center justify-center md:justify-start w-full md:w-auto">
+            <a href="{{ url('/') }}" class="flex items-center">
+                <img src="{{ asset('images/logo.jpeg') }}" alt="EventTicket Logo" class="h-10 w-auto">
+            </a>
         </div>
-    </header>
+        
+        <nav class="flex flex-wrap items-center justify-center md:justify-end gap-4 md:gap-8 w-full md:w-auto">
+            <a class="text-sm font-medium text-black hover:text-purplePrimary transition-colors" href="#">Acara</a>
+            <a class="text-sm font-medium text-black hover:text-purplePrimary transition-colors" href="#">Tentang kami</a>
+            
+            @if(Auth::guard('admin')->check())
+                {{-- Jika Login sebagai Admin --}}
+                <div class="flex items-center gap-3">
+                    <span class="text-sm font-medium text-gray-700">Halo, <strong class="text-purplePrimary">Admin {{ Auth::guard('admin')->user()->username }}</strong>!</span>
+                    <a href="{{ route('admin.dashboard') }}" class="bg-purpleAccent text-white text-xs font-bold px-4 py-2 rounded shadow hover:bg-purplePrimary transition-colors text-center">Dashboard Admin</a>
+                    <form action="{{ route('logout') }}" method="POST" class="inline">
+                        @csrf
+                        <button type="submit" class="border border-red-300 text-red-600 hover:bg-red-50 text-xs font-bold px-4 py-2 rounded transition-colors cursor-pointer">Keluar</button>
+                    </form>
+                </div>
 
+            @elseif(Auth::guard('web')->check())
+                {{-- Jika Login sebagai Pengunjung Biasa --}}
+                <div class="flex items-center gap-3">
+                    <span class="text-sm font-medium text-gray-700">Halo, <strong class="text-purplePrimary">{{ Auth::user()->name }}</strong>!</span>
+                    <a href="{{ route('pengunjung.dashboard') }}" class="bg-purpleAccent text-white text-xs font-bold px-4 py-2 rounded shadow hover:bg-purplePrimary transition-colors text-center">Menu Saya</a>
+                    <form action="{{ route('logout') }}" method="POST" class="inline">
+                        @csrf
+                        <button type="submit" class="border border-red-300 text-red-600 hover:bg-red-50 text-xs font-bold px-4 py-2 rounded transition-colors cursor-pointer">Keluar</button>
+                    </form>
+                </div>
+
+            @else
+                {{-- Jika Belum Login Sama Sekali --}}
+                <button onclick="openModal('loginModal')" class="bg-purpleHover text-white text-xs font-bold px-5 py-2 rounded shadow hover:bg-purpleAccent transition-colors text-center min-w-[80px] cursor-pointer">Masuk</button>
+                <button onclick="openModal('registerModal')" class="bg-purpleAccent text-white text-xs font-bold px-5 py-2 rounded shadow hover:bg-purplePrimary transition-colors text-center min-w-[80px] cursor-pointer">Daftar</button>
+            @endif
+        </nav>
+        </div>
+</header>
     @if(session('success'))
         <div class="container mx-auto px-4 mt-2">
             <div class="p-4 bg-green-100 text-green-700 rounded-lg text-sm font-semibold text-center shadow-sm">
