@@ -68,7 +68,7 @@
                     Acara
                 </a>
 
-                <a href="{{ route('pengunjung.about') }}"
+                <a href="{{ route('pengunjung.tentang') }}"
                 class="text-sm font-bold text-black hover:text-[#7a4988] no-underline">
                     Tentang Kami
                 </a>
