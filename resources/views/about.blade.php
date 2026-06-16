@@ -1,30 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About - Sistem Event</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center p-6">
+@extends('layouts.app') 
 
-    <div class="max-w-md w-full bg-white shadow-lg rounded-xl p-8 text-center border border-gray-100">
-        <h1 class="text-3xl font-bold text-purple-600 mb-4 tracking-tight">
-            About
-        </h1>
-
-        <div class="h-1 w-12 bg-purple-500 mx-auto mb-6 rounded-full"></div>
-
-        <p class="text-gray-700 leading-relaxed mb-8 font-medium">
-            Sistem Manajemen Event & Ticketing
+@section('content')
+<div class="container mx-auto px-4 py-16">
+    <div class="max-w-4xl mx-auto text-center">
+        <h1 class="text-5xl font-black text-purplePrimary mb-6 uppercase">Tentang Kami</h1>
+        <div class="w-24 h-2 bg-purpleAccent mx-auto mb-10 rounded-full"></div>
+        
+        <p class="text-xl text-gray-700 leading-relaxed mb-8">
+            <strong>EventTicket</strong> hadir sebagai solusi modern untuk pengelolaan dan pemesanan tiket acara. 
+            Kami berkomitmen menghubungkan penyelenggara acara futsal, musik, hingga seminar dengan audiens yang tepat secara efisien.
         </p>
 
-        <div class="text-center">
-            <a href="/" class="inline-block bg-purple-500 hover:bg-purple-600 text-white font-semibold px-6 py-2 rounded-lg shadow-md transition duration-300">
-                Kembali ke Beranda
-            </a>
+        <div class="grid md:grid-cols-3 gap-8 mt-12">
+            <div class="p-6 border border-purple-100 rounded-2xl bg-purple-50">
+                <i class="fa-solid fa-bolt text-4xl text-purplePrimary mb-4"></i>
+                <h3 class="font-bold text-lg">Cepat & Mudah</h3>
+                <p class="text-sm mt-2">Pemesanan tiket dalam hitungan detik.</p>
+            </div>
+            <div class="p-6 border border-purple-100 rounded-2xl bg-purple-50">
+                <i class="fa-solid fa-shield-halved text-4xl text-purplePrimary mb-4"></i>
+                <h3 class="font-bold text-lg">Terpercaya</h3>
+                <p class="text-sm mt-2">Keamanan data peserta adalah prioritas.</p>
+            </div>
+            <div class="p-6 border border-purple-100 rounded-2xl bg-purple-50">
+                <i class="fa-solid fa-users text-4xl text-purplePrimary mb-4"></i>
+                <h3 class="font-bold text-lg">User-Centric</h3>
+                <p class="text-sm mt-2">Didesain untuk kenyamanan pengguna.</p>
+            </div>
         </div>
     </div>
-
-</body>
-</html>
+</div>
+@endsection

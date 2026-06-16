@@ -1,36 +1,30 @@
-@vite(['resources/css/app.css', 'resources/js/app.js'])
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact - Sistem Event</title>
-</head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center p-6">
+@extends('layouts.app')
 
-    <div class="max-w-md w-full bg-white shadow-lg rounded-xl p-8 text-center border border-gray-100">
-        
-        <h1 class="text-3xl font-bold text-purple-600 mb-4 tracking-tight">
-            Contact Us
-        </h1>
-
-        <div class="h-1 w-12 bg-purple-500 mx-auto mb-6 rounded-full"></div>
-
-        <p class="text-gray-700 leading-relaxed mb-2 font-medium">
-            Email:
-        </p>
-
-        <p class="text-purple-600 font-semibold mb-8">
-            event@gmail.com
-        </p>
-
-        <div class="text-center">
-            <a href="/" class="inline-block bg-purple-500 hover:bg-purple-600 text-white font-semibold px-6 py-2 rounded-lg shadow-md transition duration-300">
-                Kembali ke Beranda
-            </a>
+@section('content')
+<div class="container mx-auto px-4 py-16">
+    <h1 class="text-5xl font-black text-purplePrimary text-center mb-16 uppercase">Hubungi Kami</h1>
+    
+    <div class="max-w-2xl mx-auto bg-white p-10 rounded-3xl shadow-xl border border-gray-100">
+        <div class="space-y-8">
+            <div class="flex items-center gap-6">
+                <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center">
+                    <i class="fa-solid fa-envelope text-2xl text-purplePrimary"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-400 uppercase text-xs">Email</h4>
+                    <p class="text-xl font-bold">Jesinaaurora@gmail.com</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-6">
+                <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center">
+                    <i class="fa-solid fa-phone text-2xl text-purplePrimary"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-400 uppercase text-xs">WhatsApp</h4>
+                    <p class="text-xl font-bold">+62 895 3128 7505</p>
+                </div>
+            </div>
         </div>
-
     </div>
-
-</body>
-</html>
+</div>
+@endsection
