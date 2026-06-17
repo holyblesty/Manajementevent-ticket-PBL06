@@ -7,17 +7,12 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Admin\AcaraController;
 use App\Http\Controllers\Admin\PesertaController;
 use App\Http\Controllers\Admin\StatistikController;
-<<<<<<< HEAD
-use App\Http\Controllers\pengunjung\RiwayatController;
-use App\Http\Controllers\pengunjung\PembelianController; // Pastikan menggunakan PascalCase
-=======
 use App\Http\Controllers\Pengunjung\DashboardController as PengunjungDashboardController;
 use App\Http\Controllers\Pengunjung\EventController;
 use App\Http\Controllers\Pengunjung\PendaftaranEventController;
 use App\Http\Controllers\Pengunjung\RiwayatController;
 use App\Http\Controllers\Pengunjung\PembelianController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
->>>>>>> 1f4122ef3935aa3335b294cf6c8a5a43b2316de8
 
 /*
 |--------------------------------------------------------------------------
@@ -44,9 +39,6 @@ Route::middleware('guest')->group(function () {
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // =====================================================
-<<<<<<< HEAD
-// ADMIN AREA (Tidak Ada Perubahan)
-=======
 // PASSWORD RESET (Fitur Baru)
 // =====================================================
 Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
@@ -55,7 +47,6 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // =====================================================
 // ADMIN AREA
->>>>>>> 1f4122ef3935aa3335b294cf6c8a5a43b2316de8
 // =====================================================
 Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('dashboard');
@@ -96,8 +87,6 @@ Route::middleware(['auth:web'])->prefix('pengunjung')->name('pengunjung.')->grou
     // Proses Simpan Transaksi ke Database
     // URL: /pengunjung/pembelian-tiket | Nama Route: pengunjung.pembelian.store
     Route::post('/pembelian-tiket', [PembelianController::class, 'store'])->name('pembelian.store');
-<<<<<<< HEAD
-=======
 
 
     // =========================================================================
@@ -173,5 +162,4 @@ Route::middleware(['auth:web'])->prefix('pengunjung')->name('pengunjung.')->grou
     })->name('profil.password.update');
     
     // =========================================================================
->>>>>>> 1f4122ef3935aa3335b294cf6c8a5a43b2316de8
 });
