@@ -94,7 +94,7 @@
                             </div>
 
                             <div class="font-semibold">
-                                {{ $event->kuota_tersedia }} Peserta
+                                {{ $event->kuota_aktual }} Peserta
                             </div>
 
                         </div>
@@ -103,15 +103,11 @@
                      {{-- CTA --}}
                 <div class="mt-8">
 
-                    @if($event->kuota_tersedia > 0)
+                    @if($event->kuota_aktual > 0)
 
-                        <button
-                            class="w-full lg:w-auto px-8 py-4 rounded-xl bg-[#7a4988] text-white font-semibold hover:bg-[#693b76]">
-
+                        <a href="{{ route('pengunjung.pendaftaran.create', $event->id_event) }}">
                             Daftar Sekarang
-
-                        </button>
-
+                        </a>
                     @else
 
                         <button
