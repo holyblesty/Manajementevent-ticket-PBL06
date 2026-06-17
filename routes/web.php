@@ -10,6 +10,8 @@ use App\Http\Controllers\Admin\StatistikController;
 use App\Http\Controllers\Pengunjung\DashboardController as PengunjungDashboardController;
 use App\Http\Controllers\Pengunjung\EventController;
 use App\Http\Controllers\Pengunjung\PendaftaranEventController;
+use App\Http\Controllers\Pengunjung\RiwayatController;
+use App\Http\Controllers\Pengunjung\PembelianController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 
 /*
@@ -28,6 +30,8 @@ Route::get('/search', [PageController::class, 'search'])->name('pengunjung.searc
 // AUTENTIKASI
 // =====================================================
 Route::middleware('guest')->group(function () {
+    Route::get('/login', fn() => redirect()->route('home'));
+    Route::get('/register', fn() => redirect()->route('home'));
     Route::post('/login', [AuthController::class, 'login'])->name('login');
     Route::post('/register', [AuthController::class, 'register'])->name('register');
 });
@@ -47,21 +51,15 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('dashboard');
     Route::get('/statistik', [StatistikController::class, 'index'])->name('statistik');
+    
+    Route::resource('acara', AcaraController::class);
+    Route::get('/acara/{id_event}/tiket', [AcaraController::class, 'tiket'])->name('acara.tiket');
+    Route::put('/acara/{id_event}/tiket/update', [AcaraController::class, 'updateTiket'])->name('acara.tiket.update');
 
-    // CRUD Utama untuk Acara
-    Route::resource('acara', AcaraController::class)->except(['show']);
+    $adminDashboardClass = AdminDashboard::class;
+    Route::get('/profile', [$adminDashboardClass, 'profile'])->name('profile');
+    Route::put('/profile/update', [$adminDashboardClass, 'updateProfile'])->name('profile.update');
 
-    // Manajemen Tiket Massal
-    Route::prefix('acara/{id_event}')->group(function () {
-        Route::get('/tiket', [AcaraController::class, 'tiket'])->name('acara.tiket');
-        Route::put('/tiket/update', [AcaraController::class, 'updateTiket'])->name('acara.tiket.update');
-    });
-
-    // Profil Admin
-    Route::get('/profile', [AdminDashboard::class, 'profile'])->name('profile');
-    Route::put('/profile/update', [AdminDashboard::class, 'updateProfile'])->name('profile.update');
-
-    // Manajemen Peserta & Check-In
     Route::prefix('peserta')->name('peserta.')->group(function () {
         Route::get('/', [PesertaController::class, 'index'])->name('index');
         Route::get('/detail/{id}', [PesertaController::class, 'detail'])->name('detail');
@@ -70,28 +68,98 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
 });
 
 // =====================================================
-// PENGUNJUNG AREA 
+// PENGUNJUNG AREA (Sudah Dirapikan & Digabungkan)
 // =====================================================
-Route::prefix('pengunjung')->name('pengunjung.')->middleware('auth:web')->group(function () {
-
+Route::middleware(['auth:web'])->prefix('pengunjung')->name('pengunjung.')->group(function () {
+    
     // Dashboard Pengunjung
-    Route::get('/dashboard', [PengunjungDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', function () {
+        return view('pengunjung.dashboard'); 
+    })->name('dashboard');
+    
+    // Riwayat Pendaftaran / Transaksi
+    Route::get('/riwayat-pendaftaran', [RiwayatController::class, 'index'])->name('riwayat');
+    
+    // Transaksi Pembelian Tiket (Berdasarkan ID Event)
+    // URL: /pengunjung/pembelian-tiket/{id} | Nama Route: pengunjung.pembelian.index
+    Route::get('/pembelian-tiket/{id}', [PembelianController::class, 'index'])->name('pembelian.index');
+    
+    // Proses Simpan Transaksi ke Database
+    // URL: /pengunjung/pembelian-tiket | Nama Route: pengunjung.pembelian.store
+    Route::post('/pembelian-tiket', [PembelianController::class, 'store'])->name('pembelian.store');
 
-    // Halaman Event Pengunjung
-    Route::get('/event/{id}', [EventController::class, 'show'])->name('event.show');
-    Route::post('/daftar-event', [EventController::class, 'daftarEvent'])->name('daftar-event');
-    // GUNAKAN BARIS YANG BENAR INI:
-    Route::get('/event/{id}/daftar', [PendaftaranEventController::class, 'create'])->name('event.daftar');
-    // Riwayat & Profil
-    Route::get('/riwayat', function () {
-        return view('Pengunjung.riwayat');
-    })->name('riwayat');
+
+    // =========================================================================
+    // FITUR PROFIL PENGUNJUNG (SESUAI MOCKUP TAB & ALUR EDIT SATU MINGGU SEKALI)
+    // =========================================================================
+    
+    // 1. Tampilan Utama Profil (Read-Only sesuai Data Riil Database)
     Route::get('/profil', function () {
-        return view('Pengunjung.profil');
+        return view('pengunjung.profil');
     })->name('profil');
 
-    // Halaman Pembelian Tiket
-    Route::get('/pembelian-tiket', function () {
-        return view('Pengunjung.pembelian-tiket');
-    })->name('pembelian');
+    // 2. Form Alihan Mengubah Informasi Profil
+    Route::get('/profil/edit', function () {
+        // Menggunakan \App\Models\User karena data login merujuk ke tabel users kelompok Anda
+        $user = \App\Models\User::findOrFail(\Illuminate\Support\Facades\Auth::id());
+        
+        // Logika Pengaman: Cek jika user pernah update data dalam kurun waktu 7 hari terakhir
+        $bisaUpdate = true;
+        $sisaHari = 0;
+        if ($user->updated_at && $user->updated_at->diffInDays(now()) < 7) {
+            $bisaUpdate = false;
+            $sisaHari = 7 - $user->updated_at->diffInDays(now());
+        }
+
+        return view('pengunjung.profil-edit', compact('user', 'bisaUpdate', 'sisaHari'));
+    })->name('profil.edit');
+
+    // 3. Proses Validasi & Simpan Perubahan Informasi Profil (Sisi Server)
+    Route::put('/profil/update', function (\Illuminate\Http\Request $request) {
+        $user = \App\Models\User::findOrFail(\Illuminate\Support\Facades\Auth::id());
+
+        // Antisipasi lapis kedua jika user menembak route langsung tanpa lewat tombol form
+        if ($user->updated_at && $user->updated_at->diffInDays(now()) < 7) {
+            return redirect()->route('pengunjung.profil')->with('error', 'Anda hanya dapat mengubah informasi profil sekali seminggu.');
+        }
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'no_hp' => 'nullable|string|max:15',
+            'alamat' => 'nullable|string',
+        ]);
+
+        $user->name = $request->name;
+        $user->no_hp = $request->no_hp;
+        $user->alamat = $request->alamat;
+        
+        // Memaksa sistem memperbarui record timestamp updated_at ke waktu sekarang sebagai acuan hitungan hari
+        $user->touch(); 
+        $user->save();
+
+        return redirect()->route('pengunjung.profil')->with('success', 'Informasi pribadi Anda berhasil diperbarui!');
+    })->name('profil.update');
+
+    // 4. Form Alihan Mengubah Kata Sandi / Password (Bebas Kapan Saja)
+    Route::get('/profil/password', function () {
+        return view('pengunjung.profil-password');
+    })->name('profil.password');
+
+    // 5. Proses Enkripsi Hash & Update Password Baru ke Database
+    Route::put('/profil/password/update', function (\Illuminate\Http\Request $request) {
+        $request->validate([
+            'password' => 'required|string|min:8|confirmed', // 'confirmed' otomatis mencocokkan input password_confirmation
+        ], [
+            'password.confirmed' => 'Konfirmasi ulang kata sandi baru tidak cocok.',
+            'password.min' => 'Keamanan kata sandi minimal harus berisi 8 karakter.'
+        ]);
+
+        $user = \App\Models\User::findOrFail(\Illuminate\Support\Facades\Auth::id());
+        $user->password = \Illuminate\Support\Facades\Hash::make($request->password);
+        $user->save();
+
+        return redirect()->route('pengunjung.profil')->with('success', '🔒 Kata sandi Anda berhasil diperbarui!');
+    })->name('profil.password.update');
+    
+    // =========================================================================
 });
