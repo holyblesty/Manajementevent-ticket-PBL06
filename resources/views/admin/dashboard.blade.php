@@ -20,14 +20,13 @@
     </div>
     
     <div class="bg-white/10 border border-white/20 px-8 py-5 rounded-2xl">
-    <p class="text-xs font-black uppercase tracking-[0.3em] text-[#be93d4] mb-2 text-center">
-        Administrator
-    </p>
-
-    <p class="text-2xl font-black text-white text-center">
-        {{ Auth::guard('admin')->check() ? Auth::guard('admin')->user()->username : 'Admin' }}
-    </p>
-</div>
+        <p class="text-xs font-black uppercase tracking-[0.3em] text-[#be93d4] mb-2 text-center">
+            Administrator
+        </p>
+        <p class="text-2xl font-black text-white text-center">
+            {{ Auth::guard('admin')->check() ? Auth::guard('admin')->user()->username : 'Admin' }}
+        </p>
+    </div>
 </div>
 
 <div class="mb-8">
@@ -64,7 +63,8 @@
                 <tr>
                     <th class="px-6 py-5 text-center">Poster</th>
                     <th class="px-6 py-5">Judul Acara</th>
-                    <th class="px-6 py-5">Tanggal Acara</th>
+                    <th class="px-6 py-5">Status</th>
+                    <th class="px-6 py-5">Waktu Acara</th>
                     <th class="px-6 py-5">Lokasi</th>
                     <th class="px-6 py-5 text-center">Kategori</th>
                     <th class="px-6 py-5 text-center">Kapasitas</th>
@@ -79,9 +79,41 @@
                             <img src="{{ $event->poster ? asset('images/' . $event->poster) : asset('images/default.jpg') }}" class="w-full h-full object-cover">
                         </div>
                     </td>
-                    <td class="px-6 py-5 font-bold text-xl text-gray-800 judul-acara">{{ $event->judul }}</td>
-                    <td class="px-6 py-5 text-lg text-gray-500 font-medium whitespace-nowrap">
-                        {{ $event->tanggal ? date('d-m-y', strtotime($event->tanggal)) : '-' }}
+                    <td class="px-6 py-5">
+                        <div class="font-bold text-xl text-gray-800 judul-acara">{{ $event->judul }}</div>
+                        <div class="text-l text-gray-400 font-medium mt-1 line-clamp-2 max-w-[200px]">
+                            {{ $event->deskripsi }}
+                        </div>
+                    </td>
+                    <td class="px-6 py-5 text-center">
+                        @php
+                            $waktuSelesaiEvent = $event->tgl_selesai ? strtotime($event->tgl_selesai->format('Y-m-d') . ' ' . ($event->jam_selesai ?? '23:59:59')) : time();
+                            $status = ($event->status_event == 'draft') ? 'draft' : 
+                                      (($waktuSelesaiEvent < time()) ? 'closed' : 'open');
+                            
+                            $badgeClass = [
+                                'draft' => 'bg-gray-100 text-gray-600 border-gray-200',
+                                'open'  => 'bg-green-50 text-green-700 border-green-200',
+                                'closed'=> 'bg-red-50 text-red-700 border-red-200'
+                            ][$status];
+                        @endphp
+                        <span class="status-label inline-block px-4 py-1.5 text-xs font-black uppercase tracking-widest rounded-full border {{ $badgeClass }}">
+                            {{ $status }}
+                        </span>
+                    </td>
+                    <td class="px-6 py-5 text-gray-500 whitespace-nowrap">
+                        <div class="flex flex-col gap-1">
+                            <div class="flex items-center text-sm font-bold text-gray-700">
+                                <span class="bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded text-[10px] uppercase font-black tracking-wider mr-2">Mulai</span>
+                                {{ $event->tgl_mulai ? $event->tgl_mulai->format('d-m-y') : '-' }}
+                                <span class="text-xs font-medium text-gray-400 ml-2">({{ substr($event->jam_mulai ?? '-', 0, 5) }})</span>
+                            </div>
+                            <div class="flex items-center text-sm font-bold text-gray-600">
+                                <span class="bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded text-[10px] uppercase font-black tracking-wider mr-2">Akhir</span>
+                                {{ $event->tgl_selesai ? $event->tgl_selesai->format('d-m-y') : '-' }}
+                                <span class="text-xs font-medium text-gray-400 ml-2">({{ substr($event->jam_selesai ?? '-', 0, 5) }})</span>
+                            </div>
+                        </div>
                     </td>
                     <td class="px-6 py-5">
                         <div class="flex items-center gap-2 text-lg text-gray-600 font-medium">
@@ -89,13 +121,13 @@
                         </div>
                     </td>
                     <td class="px-6 py-5 text-center">
-                       <span class="... kategori-label">
-    @if(is_array($event->kategori) || is_object($event->kategori))
-        {{ $event->kategori['nama_kategori'] ?? ($event->kategori->nama_kategori ?? '-') }}
-    @else
-        {{ $event->kategori ?? '-' }}
-    @endif
-</span>
+                        <span class="kategori-label font-bold text-gray-700">
+                            @if(is_array($event->kategori) || is_object($event->kategori))
+                                {{ $event->kategori['nama_kategori'] ?? ($event->kategori->nama_kategori ?? '-') }}
+                            @else
+                                {{ $event->kategori ?? '-' }}
+                            @endif
+                        </span>
                     </td>
                     <td class="px-6 py-5 text-center">
                         <div class="inline-flex items-center justify-center bg-gray-100 px-5 py-3 rounded-md border border-gray-200">

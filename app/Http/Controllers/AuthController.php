@@ -34,7 +34,7 @@ class AuthController extends Controller
         // Coba Login User
         if (Auth::guard('web')->attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
-            return redirect()->intended(route('home'));
+            return redirect()->intended(route('pengunjung.dashboard'));
         }
 
         return back()->withInput()->withErrors(['username' => 'Username atau password salah.']);

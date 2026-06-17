@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Tiket;
 use App\Models\Menghadiri;
 use App\Models\Pemesanan;
+use Carbon\Carbon;
 
 class Event extends Model
 {
@@ -21,30 +22,36 @@ class Event extends Model
     // Pastikan timestamps aktif
     public $timestamps = true;
 
-protected $fillable = [
-    'judul',
-    'deskripsi',
-    'tanggal',
-    'jam_mulai',
-    'jam_selesai',
-    'lokasi',
-    'id_kategori',
-    'kapasitas',
-    'kuota_tersedia', // Tambahkan ini
-    'status_event',   // Tambahkan ini
-    'jenis',
-    'poster',
-    'id_admin',
-];
-
-    protected $casts = [
-        'tanggal' => 'date',
-        'jam_mulai' => 'datetime:H:i',
-        'jam_selesai' => 'datetime:H:i',
+    protected $fillable = [
+        'judul',
+        'deskripsi',
+        'tgl_mulai',
+        'tgl_selesai',
+        'jam_mulai',
+        'jam_selesai',
+        'lokasi',
+        'id_kategori',
+        'status_event',
+        'poster',
+        'id_admin',
+        'kapasitas',
+        'kuota_tersedia'
     ];
 
+    protected $casts = [
+        'tgl_mulai' => 'date',
+        'tgl_selesai' => 'date',
+    ];
+    // Tambahkan ini agar Laravel otomatis mencari tgl_mulai sebagai acuan urutan
+    protected static function booted()
+    {
+        static::addGlobalScope('order_by_date', function ($builder) {
+            $builder->orderBy('tgl_mulai', 'asc');
+        });
+    }
+
     // Relasi ke Kategori
-public function kategori()
+    public function kategori()
     {
         return $this->belongsTo(KategoriEvent::class, 'id_kategori', 'id_kategori');
     }
@@ -55,18 +62,18 @@ public function kategori()
         return $this->hasMany(Tiket::class, 'id_event', 'id_event');
     }
 
-public function pemesanan()
-{
-    // Ini artinya: Event punya banyak tiket, dan setiap tiket punya banyak pesanan
-    return $this->hasManyThrough(
-        Pemesanan::class, // Target akhir
-        Tiket::class,     // Model perantara
-        'id_event',       // Foreign key di tabel 'tiket'
-        'id_tiket',       // Foreign key di tabel 'pemesanan'
-        'id_event',       // Local key di tabel 'events'
-        'id_tiket'        // Local key di tabel 'tiket'
-    );
-}
+    public function pemesanan()
+    {
+        // Ini artinya: Event punya banyak tiket, dan setiap tiket punya banyak pesanan
+        return $this->hasManyThrough(
+            Pemesanan::class, // Target akhir
+            Tiket::class,     // Model perantara
+            'id_event',       // Foreign key di tabel 'tiket'
+            'id_tiket',       // Foreign key di tabel 'pemesanan'
+            'id_event',       // Local key di tabel 'events'
+            'id_tiket'        // Local key di tabel 'tiket'
+        );
+    }
 
     public function participants()
     {
@@ -91,5 +98,32 @@ public function pemesanan()
         return $this->poster
             ? asset('storage/posters/' . $this->poster)
             : asset('images/default-event.jpg');
+    }
+
+    /**
+     * =========================================================================
+     * FITUR TAMBAHAN: DINAMIS ACCESSOR UNTUK STATUS EVENT
+     * =========================================================================
+     * Mengubah status menjadi 'closed' secara otomatis di program jika waktu 
+     * sekarang sudah melewati batas tanggal dan jam selesai event.
+     */
+    public function getStatusEventAttribute(?string $value): string
+    {
+        // Pastikan tgl_selesai diformat ke string Y-m-d dahulu sebelum digabung jam
+        $tanggalSelesai = $this->tgl_selesai ? $this->tgl_selesai->format('Y-m-d') : null;
+        $jamSelesai = $this->jam_selesai;
+
+        if ($tanggalSelesai && $jamSelesai) {
+            // Gabungkan menjadi satu objek Carbon utuh
+            $waktuAkhirEvent = Carbon::parse($tanggalSelesai . ' ' . $jamSelesai);
+
+            // Jika waktu komputer/server sekarang sudah melewati akhir acara, paksa status jadi 'closed'
+            if (Carbon::now()->greaterThan($waktuAkhirEvent)) {
+                return 'closed';
+            }
+        }
+
+        // Jika belum lewat, return status asli dari database ('draft' atau 'open')
+        return $value;
     }
 }

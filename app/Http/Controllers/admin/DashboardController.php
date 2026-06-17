@@ -11,9 +11,6 @@ use Illuminate\Support\Facades\File;
 
 class DashboardController extends Controller
 {
-    /**
-     * Menampilkan dashboard utama admin.
-     */
     public function index(Request $request)
     {
         $selectedCategory = $request->query('kategori');
@@ -26,34 +23,28 @@ class DashboardController extends Controller
         }
 
         if ($search) {
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('judul', 'LIKE', '%' . $search . '%')
-                  ->orWhere('lokasi', 'LIKE', '%' . $search . '%');
+                    ->orWhere('lokasi', 'LIKE', '%' . $search . '%');
             });
         }
 
         $eventObjects = $query->latest()->get();
-        $admin = Auth::guard('admin')->user(); // Ambil data admin
+        $admin = Auth::guard('admin')->user();
 
         return view('admin.dashboard', [
             'events' => $eventObjects,
             'selectedCategory' => $selectedCategory,
-            'admin' => $admin // Tambahkan koma di sini agar tidak error
+            'admin' => $admin
         ]);
     }
 
-    /**
-     * Menampilkan halaman profil admin.
-     */
     public function profile()
     {
         $admin = Auth::guard('admin')->user();
         return view('admin.profile', compact('admin'));
     }
 
-    /**
-     * Mengupdate profil admin.
-     */
     public function updateProfile(Request $request)
     {
         /** @var \App\Models\Admin $admin */
