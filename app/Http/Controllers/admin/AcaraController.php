@@ -7,134 +7,198 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Event;
+use App\Models\KategoriEvent;
 
 class AcaraController extends Controller
 {
+
     public function index()
     {
-        $events = Event::all();
-        $selectedCategory = request('kategori', ''); 
-        return view('admin.dashboard', compact('events', 'selectedCategory'));
-    }
+        // Ambil semua data acara dari database
+        $events = \App\Models\Event::latest()->get();
 
+        // Kembalikan ke view (pastikan nama view-nya sesuai dengan file-mu)
+        return view('admin.acara.index', compact('events'));
+    }
     public function create()
     {
-        return view('admin.create');
+        $kategoris = KategoriEvent::all();
+
+        return view('admin.tambah', compact('kategoris'));
     }
 
-    public function store(Request $request) 
+    public function store(Request $request)
     {
         $request->validate([
-            'judul'      => 'required',
-            'id_kategori' => 'required',
-            'poster'      => 'required|image|mimes:jpeg,png,jpg|max:5120'
+            'judul' => 'required|string|max:255',
+            'deskripsi' => 'required|string',
+            'id_kategori' => 'required|exists:kategori_events,id_kategori',
+            'poster' => 'required|image|mimes:jpeg,png,jpg|max:5120',
+            'tgl_mulai' => 'required|date',
+            'tgl_selesai' => 'required|date|after_or_equal:tgl_mulai',
+            'jam_mulai' => 'required',
+            'jam_selesai' => 'required|after:jam_mulai',
+            'lokasi' => 'required|string',
+            'status_event' => 'required|in:draft,open',
         ]);
 
         $imageName = time() . '.' . $request->poster->extension();
         $request->poster->move(public_path('images'), $imageName);
 
         Event::create([
-            'judul'         => $request->judul,
-            'deskripsi'     => $request->deskripsi,
-            'tanggal'       => $request->tanggal,
-            'waktu_acara'   => $request->waktu_acara ?? '00:00:00',
-            'lokasi'        => $request->lokasi,
-            'id_kategori'   => $request->id_kategori,
-            'kapasitas'     => 0, 
-            'kuota_tersedia'=> 0, 
-            'status_event'  => 'draft',
-            'poster'        => $imageName,
-            'id_admin'      => Auth::id()
+            'judul' => $request->judul,
+            'deskripsi' => $request->deskripsi,
+            'tgl_mulai' => $request->tgl_mulai,
+            'tgl_selesai' => $request->tgl_selesai,
+            'jam_mulai' => $request->jam_mulai,
+            'jam_selesai' => $request->jam_selesai,
+            'kapasitas' => 0,
+            'kuota_tersedia' => 0,
+            'lokasi' => $request->lokasi,
+            'id_kategori' => $request->id_kategori,
+            'status_event' => $request->status_event,
+            'poster' => $imageName,
+            'id_admin' => Auth::id(),
         ]);
 
-        return redirect()->route('admin.dashboard')->with('success', 'Event berhasil ditambah!');
+        return redirect()->route('admin.dashboard')
+            ->with('success', 'Event berhasil ditambah!');
     }
 
-    public function edit(int $id_event) 
+    public function edit(int $id_event)
     {
         $event = Event::where('id_event', $id_event)->firstOrFail();
-        return view('admin.edit', compact('event'));
+        $kategoris = KategoriEvent::all();
+
+        return view('admin.edit', compact('event', 'kategoris'));
     }
 
-    public function update(Request $request, int $id_event) 
+    public function update(Request $request, int $id_event)
     {
-// Kita samakan aturan validasinya dengan method store (create)
-    $request->validate([
-        'judul'       => 'required',
-        'poster'      => 'nullable|image|mimes:jpeg,png,jpg|max:5120' // nullable karena poster boleh tidak diganti
-    ], [
-        'judul.required'       => 'Judul event wajib diisi.',
-        'poster.image'         => 'File harus berupa gambar.',
-        'poster.mimes'         => 'Format poster harus jpeg, png, atau jpg.',
-        'poster.max'           => 'Ukuran poster tidak boleh lebih dari 5MB.',
-    ]);
+        $request->validate([
+            'judul' => 'required|string|max:255',
+            'deskripsi' => 'required|string',
+            'jam_mulai' => 'required',
+            'jam_selesai' => 'required|after:jam_mulai',
+            'tgl_mulai' => 'required|date',
+            'tgl_selesai' => 'required|date|after_or_equal:tgl_mulai',
+            'lokasi' => 'required|string',
+            'id_kategori' => 'required|exists:kategori_events,id_kategori',
+            'status_event' => 'required|in:draft,open',
+        ]);
 
         $event = Event::where('id_event', $id_event)->firstOrFail();
-        $data = $request->except(['poster']);
+
+        $event->update([
+            'judul' => $request->judul,
+            'deskripsi' => $request->deskripsi,
+            'tgl_mulai' => $request->tgl_mulai,
+            'tgl_selesai' => $request->tgl_selesai,
+            'jam_mulai' => $request->jam_mulai,
+            'jam_selesai' => $request->jam_selesai,
+            'lokasi' => $request->lokasi,
+            'id_kategori' => $request->id_kategori,
+            'status_event' => $request->status_event,
+        ]);
 
         if ($request->hasFile('poster')) {
             if ($event->poster && File::exists(public_path('images/' . $event->poster))) {
                 File::delete(public_path('images/' . $event->poster));
             }
+
             $imageName = time() . '.' . $request->poster->extension();
             $request->poster->move(public_path('images'), $imageName);
-            $data['poster'] = $imageName;
+
+            $event->update([
+                'poster' => $imageName
+            ]);
         }
 
-        $event->update($data);
-        return redirect()->route('admin.dashboard')->with('success', 'Data acara berhasil diupdate!');
+        return redirect()->route('admin.dashboard')
+            ->with('success', 'Event berhasil diupdate!');
     }
 
-    public function tiket(int $id_event) 
+    /**
+     * Menampilkan halaman kelola tiket berdasarkan id_event.
+     */
+    public function tiket(int $id_event)
     {
         $event = Event::with('tiket')->where('id_event', $id_event)->firstOrFail();
-        $tiketData = $event->tiket->keyBy('jenis_tiket'); 
-        
-        return view('admin.tiket', compact('event', 'tiketData'));
-    }
-public function updateTiket(Request $request, int $id_event)
-{
-    
-    // 1. Cek apakah ada data yang diterima
-    if (!$request->has('tiket')) {
-        dd("Data tidak terkirim dari form!");
+        return view('admin.tiket', compact('event'));
     }
 
-    try {
-        $event = Event::where('id_event', $id_event)->firstOrFail();
+    /**
+     * Proses UPDATE TIKET MASSAL.
+     */
+    public function updateTiket(Request $request, int $id_event)
+    {
+        $request->validate([
+            'tiket' => 'required|array',
+            'tiket.*.nama' => 'nullable|string',
+            'tiket.*.harga' => 'required|numeric|min:0',
+            'tiket.*.kuota' => 'required|integer|min:0',
+            'tiket.*.deskripsi' => 'nullable|string',
+        ]);
 
-        foreach ($request->tiket as $data) {
-            // Kita gunakan create manual untuk testing apakah query-nya bermasalah
-            \App\Models\Tiket::updateOrCreate(
-                ['jenis_tiket' => $data['nama'], 'id_event' => $id_event],
-                [
-                    'harga'          => $data['harga'] ?? 0,
-                    'kuota_total'    => $data['kuota'] ?? 0,
-                    'kuota_tersedia' => $data['kuota'] ?? 0
-                ]
-            );
+        foreach ($request->tiket as $key => $data) {
+            $kuota = intval($data['kuota']);
+            $harga = floatval($data['harga']);
+
+            if ($kuota === 0 && $harga > 0) {
+                return redirect()->back()
+                    ->withErrors(["tiket.{$key}.harga" => "Gagal! Tier {$data['nama']} tidak memiliki kuota (0), maka harga wajib Rp 0."])
+                    ->withInput();
+            }
         }
 
-        $event->update(['kapasitas' => $request->kapasitas]);
+        $totalKapasitas = 0;
+        foreach ($request->tiket as $key => $data) {
+            \App\Models\Tiket::updateOrCreate(
+                [
+                    'id_event' => $id_event,
+                    'jenis_tiket' => $data['nama']
+                ],
+                [
+                    'harga' => $data['harga'],
+                    'kuota_total' => $data['kuota'],
+                    'kuota_tersedia' => $data['kuota'],
+                    'deskripsi_tiket' => $data['deskripsi'] ?? null,
+                ]
+            );
+            $totalKapasitas += $data['kuota'];
+        }
 
-        return redirect()->route('admin.dashboard')->with('success', 'Tiket berhasil diupdate!');
-    } catch (\Exception $e) {
-        // Tampilkan error database apa pun yang terjadi
-        dd($e->getMessage()); 
+        $event = Event::where('id_event', $id_event)->firstOrFail();
+        $event->update([
+            'kapasitas' => $totalKapasitas,
+            'kuota_tersedia' => $totalKapasitas
+        ]);
+
+        return redirect()->route('admin.dashboard')
+            ->with('success', 'Pengaturan tiket dan kapasitas berhasil diperbarui!');
     }
-}
 
+    /**
+     * Menghapus data Event beserta file posternya (Mengatasi Error Call to undefined method destroy).
+     */
     public function destroy(int $id_event)
     {
+        // 1. Cari data event berdasarkan id_event
         $event = Event::where('id_event', $id_event)->firstOrFail();
-        $event->tiket()->delete();
 
+        // 2. Hapus file gambar poster dari folder public/images (biar tidak memenuhi storage)
         if ($event->poster && File::exists(public_path('images/' . $event->poster))) {
             File::delete(public_path('images/' . $event->poster));
         }
 
+        // 3. Hapus terlebih dahulu data tiket yang terikat dengan event ini (menghindari error foreign key constraint)
+        \App\Models\Tiket::where('id_event', $id_event)->delete();
+
+        // 4. Hapus data event utama
         $event->delete();
 
-        return redirect()->route('admin.dashboard')->with('success', 'Event berhasil dihapus!');
+        // 5. Kembalikan ke dashboard dengan pesan sukses
+        return redirect()->route('admin.dashboard')
+            ->with('success', 'Event beserta data tiketnya berhasil dihapus permanen!');
     }
 }

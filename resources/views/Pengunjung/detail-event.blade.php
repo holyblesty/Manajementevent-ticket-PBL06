@@ -1,303 +1,187 @@
 @extends('layouts.pengunjung')
 
-@section('title', 'Detail Event')
+@section('title', $event->judul)
 
 @section('content')
 
-{{-- BREADCRUMB --}}
-<div class="flex items-center gap-2 text-sm text-gray-400 mb-6">
+{{-- Breadcrumb --}}
+<div class="flex flex-wrap items-center gap-2 text-sm text-gray-400 mb-6">
 
     <span>Beranda</span>
     <span>›</span>
 
-    <span>Acara</span>
+    <span>Event</span>
     <span>›</span>
 
-    <span class="text-[#7a4988] font-semibold">
+    <span class="font-semibold text-[#7a4988]">
         Detail Event
     </span>
 
 </div>
 
-<div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+<div class="grid grid-cols-1 gap-8">
 
-    {{-- LEFT CONTENT --}}
-    <div class="xl:col-span-2">
+    {{-- HERO SECTION --}}
+    <div class="bg-white rounded-3xl shadow-sm border p-6">
 
-        {{-- EVENT HEADER --}}
-        <div class="flex flex-col lg:flex-row gap-6">
+        <div class="grid lg:grid-cols-2 gap-8">
 
-            {{-- IMAGE --}}
-            <div class="w-full lg:w-72">
+            {{-- Poster --}}
+            <div>
 
-                <img src="{{ asset('images/basket.png') }}"
-                     class="w-full h-72 object-cover rounded-2xl shadow-sm">
+                <img
+                    src="{{ asset('images/'.$event->poster) }}"
+                    alt="{{ $event->judul }}"
+                    class="w-full rounded-2xl object-cover shadow">
 
             </div>
 
-            {{-- INFO --}}
-            <div class="flex-1">
+            {{-- Informasi --}}
+            <div class="flex flex-col justify-between">
 
-                <h1 class="text-4xl font-bold text-[#24112e]">
-                    TURNAMEN BASKET 2026
-                </h1>
+                <div>
 
-                <p class="mt-4 text-gray-500 leading-relaxed">
+                    <h1 class="text-3xl lg:text-5xl font-bold text-gray-900">
+                        {{ strtoupper($event->judul) }}
+                    </h1>
 
-                    Turnamen olahraga antar tim untuk menjunjung sportivitas,
-                    kebersamaan, dan semangat kompetisi yang sehat.
+                    <p class="mt-4 text-gray-500 leading-relaxed">
+                        {{ $event->deskripsi }}
+                    </p>
 
-                </p>
+                    <div class="grid sm:grid-cols-2 gap-4 mt-8">
 
-                {{-- DETAIL --}}
-                <div class="mt-6 space-y-4">
+                        <div class="bg-gray-50 rounded-xl p-4">
 
-                    <div class="flex items-center gap-3 text-gray-600">
+                            <div class="text-xs text-gray-500">
+                                Tanggal
+                            </div>
 
-                        <span>📅</span>
+                            <div class="font-semibold">
+                                {{ \Carbon\Carbon::parse($event->tanggal)->translatedFormat('l, d F Y') }}
+                            </div>
 
-                        <span>Sabtu, 15 Maret 2026</span>
+                        </div>
+
+                        <div class="bg-gray-50 rounded-xl p-4">
+
+                            <div class="text-xs text-gray-500">
+                                Waktu
+                            </div>
+
+                            <div class="font-semibold">
+                                {{ \Carbon\Carbon::parse($event->waktu_acara)->format('H:i') }} WIB
+                            </div>
+
+                        </div>
+
+                        <div class="bg-gray-50 rounded-xl p-4">
+
+                            <div class="text-xs text-gray-500">
+                                Lokasi
+                            </div>
+
+                            <div class="font-semibold">
+                                {{ $event->lokasi }}
+                            </div>
+
+                        </div>
+
+                        <div class="bg-gray-50 rounded-xl p-4">
+
+                            <div class="text-xs text-gray-500">
+                                Kuota Tersedia
+                            </div>
+
+                            <div class="font-semibold">
+                                {{ $event->kuota_tersedia }} Peserta
+                            </div>
+
+                        </div>
 
                     </div>
+                     {{-- CTA --}}
+                <div class="mt-8">
 
-                    <div class="flex items-center gap-3 text-gray-600">
+                    @if($event->kuota_tersedia > 0)
 
-                        <span>🕒</span>
+                        <button
+                            class="w-full lg:w-auto px-8 py-4 rounded-xl bg-[#7a4988] text-white font-semibold hover:bg-[#693b76]">
 
-                        <span>08.00 - 17.00 WIB</span>
+                            Daftar Sekarang
 
-                    </div>
+                        </button>
 
-                    <div class="flex items-center gap-3 text-gray-600">
+                    @else
 
-                        <span>📍</span>
+                        <button
+                            disabled
+                            class="w-full lg:w-auto px-8 py-4 rounded-xl bg-gray-300 text-white">
 
-                        <span>GOR Bandung</span>
+                            Kuota Penuh
 
-                    </div>
+                        </button>
 
-                    <div class="flex items-center gap-3 text-gray-600">
+                </div>
 
-                        <span>🎫</span>
-
-                        <span>Ticket: 1x Early Bird</span>
-
-                    </div>
+                    @endif
 
                 </div>
 
             </div>
-
-        </div>
-
-        {{-- TAB --}}
-        <div class="mt-10 border-b border-gray-200">
-
-            <div class="flex items-center gap-10">
-
-                <button class="pb-4 border-b-2 border-[#7a4988] text-[#7a4988] font-semibold">
-                    Deskripsi
-                </button>
-
-                <button class="pb-4 text-gray-500 hover:text-[#7a4988]">
-                    Susunan Acara
-                </button>
-
-                <button class="pb-4 text-gray-500 hover:text-[#7a4988]">
-                    Pembicara
-                </button>
-
-                <button class="pb-4 text-gray-500 hover:text-[#7a4988]">
-                    Lokasi
-                </button>
-
-            </div>
-
-        </div>
-
-        {{-- CONTENT --}}
-        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 mt-6">
-
-            <p class="text-gray-600 leading-relaxed">
-
-                Turnamen ini menjadi wadah bagi para atlet untuk menunjukkan
-                kemampuan terbaik mereka serta mempererat hubungan antar komunitas olahraga.
-
-                Saksikan pertandingan seru dan dukung tim favorit Anda!
-
-            </p>
-
-            <h3 class="mt-8 text-xl font-bold text-[#7a4988]">
-                Yang akan Anda dapatkan:
-            </h3>
-
-            <ul class="mt-5 space-y-4 text-gray-600">
-
-                <li>✔️ Akses semua pertandingan</li>
-                <li>✔️ Sertifikat partisipasi</li>
-                <li>✔️ Souvenir eksklusif</li>
-                <li>✔️ Doorprize menarik</li>
-                <li>✔️ Fasilitas nyaman dan lengkap</li>
-
-            </ul>
 
         </div>
 
     </div>
 
-    {{-- RIGHT SIDEBAR --}}
-    <div>
+    {{-- DESKRIPSI EVENT --}}
+    <div class="bg-white rounded-3xl border shadow-sm p-8">
 
-        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+        <h2 class="text-2xl font-bold mb-5">
+            Tentang Event
+        </h2>
 
-            <h2 class="text-xl font-bold text-[#24112e] mb-6">
-                Pilih Tiket
-            </h2>
+        <p class="text-gray-600 leading-loose whitespace-pre-line">
+            {{ $event->deskripsi }}
+        </p>
 
-            {{-- EARLY BIRD --}}
-            <div class="border-2 border-[#7a4988] rounded-2xl p-5 mb-4">
+    </div>
 
-                <div class="flex items-start justify-between">
+    {{-- INFORMASI TAMBAHAN --}}
+    <div class="grid md:grid-cols-3 gap-6">
 
-                    <div>
+        <div class="bg-white p-6 rounded-2xl border">
 
-                        <div class="flex items-center gap-3">
+            <h3 class="font-bold mb-3">
+                Status Event
+            </h3>
 
-                            <input type="radio" checked>
+            <span
+                class="px-3 py-1 rounded-full text-sm bg-green-100 text-green-700">
 
-                            <span class="font-bold text-[#24112e]">
-                                Early Bird
-                            </span>
+                {{ ucfirst($event->status_event) }}
 
-                        </div>
+            </span>
 
-                        <h3 class="mt-2 text-2xl font-bold text-[#7a4988]">
-                            Rp 100.000
-                        </h3>
+        </div>
 
-                        <p class="text-sm text-gray-500 mt-2">
-                            Akses semua sesi
-                        </p>
+        <div class="bg-white p-6 rounded-2xl border">
 
-                    </div>
+            <h3 class="font-bold mb-3">
+                Kapasitas
+            </h3>
 
-                    <span class="text-sm text-gray-400">
-                        Sisa 50
-                    </span>
+            <p>{{ $event->kapasitas }} Peserta</p>
 
-                </div>
+        </div>
 
-            </div>
+        <div class="bg-white p-6 rounded-2xl border">
 
-            {{-- NORMAL --}}
-            <div class="border border-gray-200 rounded-2xl p-5 mb-4">
+            <h3 class="font-bold mb-3">
+                Sisa Kuota
+            </h3>
 
-                <div class="flex items-start justify-between">
-
-                    <div>
-
-                        <div class="flex items-center gap-3">
-
-                            <input type="radio">
-
-                            <span class="font-bold text-[#24112e]">
-                                Normal
-                            </span>
-
-                        </div>
-
-                        <h3 class="mt-2 text-2xl font-bold text-[#24112e]">
-                            Rp 150.000
-                        </h3>
-
-                        <p class="text-sm text-gray-500 mt-2">
-                            Akses semua sesi
-                        </p>
-
-                    </div>
-
-                    <span class="text-sm text-gray-400">
-                        Sisa 120
-                    </span>
-
-                </div>
-
-            </div>
-
-            {{-- VIP --}}
-            <div class="border border-gray-200 rounded-2xl p-5">
-
-                <div class="flex items-start justify-between">
-
-                    <div>
-
-                        <div class="flex items-center gap-3">
-
-                            <input type="radio">
-
-                            <span class="font-bold text-[#24112e]">
-                                VIP
-                            </span>
-
-                        </div>
-
-                        <h3 class="mt-2 text-2xl font-bold text-[#24112e]">
-                            Rp 250.000
-                        </h3>
-
-                        <p class="text-sm text-gray-500 mt-2">
-                            Lunch & souvenir eksklusif
-                        </p>
-
-                    </div>
-
-                    <span class="text-sm text-gray-400">
-                        Sisa 30
-                    </span>
-
-                </div>
-
-            </div>
-
-            {{-- JUMLAH --}}
-            <div class="mt-8">
-
-                <label class="block text-sm font-semibold text-gray-600 mb-3">
-                    Jumlah Tiket
-                </label>
-
-                <input type="number"
-                       value="1"
-                       class="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#7a4988] focus:outline-none">
-
-            </div>
-
-            {{-- TOTAL --}}
-            <div class="flex items-center justify-between mt-8">
-
-                <span class="text-gray-600 font-semibold">
-                    Total Pembayaran
-                </span>
-
-                <span class="text-2xl font-bold text-[#7a4988]">
-                    Rp 100.000
-                </span>
-
-            </div>
-
-            {{-- BUTTON --}}
-            <button class="w-full mt-6 bg-[#7a4988] text-white py-4 rounded-xl font-bold hover:bg-[#693b76] transition">
-
-                Beli Sekarang
-
-            </button>
-
-            {{-- TICKET --}}
-            <div class="mt-6 border-2 border-dashed border-gray-300 rounded-2xl h-28 flex items-center justify-center text-gray-400">
-
-                🎫 Ticket Preview
-
-            </div>
+            <p>{{ $event->kuota_tersedia }} Peserta</p>
 
         </div>
 

@@ -27,7 +27,17 @@
             <p class="text-xs text-[#be93d4] font-bold mt-1 uppercase tracking-widest">{{ $event->judul }}</p>
         </div>
 
-        <form action="{{ route('admin.acara.tiket.update', $event->id_event) }}" method="POST" class="p-8">
+        @if ($errors->any())
+            <div class="mx-8 mt-6 p-4 bg-red-50 border-2 border-red-200 rounded-2xl text-xs font-bold text-red-600">
+                <ul class="list-disc list-inside">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <form id="formTiket" action="{{ route('admin.acara.tiket.update', $event->id_event) }}" method="POST" class="p-8">
             @csrf
             @method('PUT')
 
@@ -54,30 +64,36 @@
                 </div>
 
                 @foreach(['early_bird' => 'Early Bird', 'normal' => 'Normal', 'vip' => 'VIP'] as $key => $label)
-                <div class="bg-white p-5 rounded-2xl border-2 border-gray-100 grid grid-cols-1 md:grid-cols-3 gap-4 items-end hover:border-[#be93d4] transition-all shadow-sm">
+                @php
+                    $hargaLama = $event->tiket->where('jenis_tiket', $label)->first()->harga_tiket ?? 0;
+                    $kuotaLama = $event->tiket->where('jenis_tiket', $label)->first()->kuota_tiket ?? 0;
+                @endphp
+                <div class="tier-card bg-white p-5 rounded-2xl border-2 border-gray-100 grid grid-cols-1 md:grid-cols-3 gap-4 items-end hover:border-[#be93d4] transition-all shadow-sm">
                     <div>
                         <label class="block text-[9px] font-black uppercase text-[#7a4988] mb-2 tracking-widest">Tier Tiket</label>
                         <input type="text" value="{{ $label }}" readonly class="w-full p-3 border-2 border-gray-100 rounded-xl text-xs font-black text-gray-400 uppercase bg-gray-50 cursor-not-allowed outline-none">
-                        <input type="hidden" name="tiket[{{$key}}][nama]" value="{{ $label }}">
+                        <input type="hidden" name="tiket[{{$key}}][nama]" value="{{ $label }}" class="tier-name">
                     </div>
 
                     <div>
                         <label class="block text-[9px] font-black uppercase text-gray-400 mb-2 tracking-widest">Harga Per Tiket (Rp)</label>
                         <input type="number" 
                                name="tiket[{{$key}}][harga]" 
-                               value="{{ $tiketData[$label]->harga ?? 0 }}" 
+                               value="{{ $hargaLama }}" 
                                min="0" 
-                               class="w-full p-3 border-2 border-gray-100 rounded-xl text-xs font-black text-gray-800 outline-none focus:border-[#7a4988] transition-all">
+                               class="harga-input w-full p-3 border-2 border-gray-100 rounded-xl text-xs font-black text-gray-800 outline-none focus:border-[#7a4988] transition-all"
+                               oninput="checkKuotaConstraint(this)">
+                        <small class="error-msg text-[9px] text-red-500 font-bold uppercase mt-1 hidden">Kuota masih 0, harga tidak boleh diisi!</small>
                     </div>
 
                     <div>
                         <label class="block text-[9px] font-black uppercase text-gray-400 mb-2 tracking-widest">Kuota</label>
                         <input type="number" 
                                name="tiket[{{$key}}][kuota]" 
-                               value="{{ $tiketData[$label]->kuota_total ?? 0 }}" 
+                               value="{{ $kuotaLama }}" 
                                min="0" 
                                class="kuota-input w-full p-3 border-2 border-[#7a4988] bg-white rounded-xl text-sm font-black text-center text-[#7a4988] outline-none focus:ring-4 focus:ring-purple-100 transition-all" 
-                               oninput="validateInput(this); updateTotal()">
+                               oninput="validateInput(this); checkKuotaConstraint(this); updateTotal()">
                     </div>
                 </div>
                 @endforeach
@@ -85,7 +101,7 @@
 
             <div class="mt-10 flex justify-end gap-3 pt-6 border-t-2 border-gray-50">
                 <a href="{{ route('admin.dashboard') }}" class="px-8 py-3 bg-white text-gray-400 rounded-xl font-black text-[10px] uppercase tracking-widest border-2 border-gray-100 hover:bg-gray-50 transition no-underline">Batal</a>
-                <button type="submit" class="px-10 py-3 bg-[#24112e] text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-black transition shadow-lg hover:-translate-y-1 border-none cursor-pointer">Simpan Pengaturan</button>
+                <button type="button" onclick="handleFormSubmit(event)" class="px-10 py-3 bg-[#24112e] text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-black transition shadow-lg hover:-translate-y-1 border-none cursor-pointer">Simpan Pengaturan</button>
             </div>
         </form>
     </div>
@@ -94,6 +110,54 @@
         function validateInput(input) {
             let val = input.value;
             if (val.length > 1 && val.startsWith('0')) { input.value = parseInt(val) || 0; }
+        }
+
+        function checkKuotaConstraint(element) {
+            const card = element.closest('.tier-card');
+            const kuotaInput = card.querySelector('.kuota-input');
+            const hargaInput = card.querySelector('.harga-input');
+            const errorMsg = card.querySelector('.error-msg');
+
+            const kuotaVal = parseInt(kuotaInput.value) || 0;
+            const hargaVal = parseInt(hargaInput.value) || 0;
+
+            if (kuotaVal === 0 && hargaVal > 0) {
+                hargaInput.classList.add('border-red-500', 'bg-red-50');
+                errorMsg.classList.remove('hidden');
+            } else {
+                hargaInput.classList.remove('border-red-500', 'bg-red-50');
+                errorMsg.classList.add('hidden');
+            }
+        }
+
+        // Penanganan Submit Baru: Dipisah dari onsubmit bawaan form tag agar tidak terintersept menjadi GET
+        function handleFormSubmit(e) {
+            let isInvalid = false;
+            let invalidTierName = '';
+
+            document.querySelectorAll('.tier-card').forEach(card => {
+                const kuotaVal = parseInt(card.querySelector('.kuota-input').value) || 0;
+                const hargaVal = parseInt(card.querySelector('.harga-input').value) || 0;
+                const nameVal = card.querySelector('.tier-name').value;
+
+                if (kuotaVal === 0 && hargaVal > 0) {
+                    isInvalid = true;
+                    invalidTierName = nameVal;
+                }
+            });
+
+            if (isInvalid) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'LOGIKA TIKET SALAH!',
+                    text: 'Masa tier ' + invalidTierName + ' tidak ada kuota (0) tapi diberi harga? Isi kuota terlebih dahulu atau ubah harga menjadi 0!',
+                    confirmButtonColor: '#7a4988',
+                    customClass: { popup: 'rounded-2xl' }
+                });
+            } else {
+                // Jika validasi sukses, jalankan perintah submit form murni (POST -> PUT)
+                document.getElementById('formTiket').submit();
+            }
         }
 
         function updateTotal() {
@@ -106,7 +170,13 @@
             document.getElementById('display_total').innerText = total;
             document.getElementById('input_total').value = total;
         }
-        window.onload = updateTotal;
+        
+        window.onload = function() {
+            updateTotal();
+            document.querySelectorAll('.harga-input').forEach(input => {
+                checkKuotaConstraint(input);
+            });
+        };
     </script>
 </body>
 </html>

@@ -16,39 +16,26 @@ class DashboardController extends Controller
 
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
-
                 $q->where('judul', 'like', '%' . $request->search . '%')
-                  ->orWhere('lokasi', 'like', '%' . $request->search . '%');
-
+                    ->orWhere('lokasi', 'like', '%' . $request->search . '%');
             });
         }
 
         if ($request->filled('kategori')) {
-            $query->where('kategori', $request->kategori);
+            $query->where('id_kategori', $request->kategori);
         }
 
-        $events = $query
-            ->orderBy('tanggal', 'asc')
-            ->paginate(6);
-
+        $events = $query->orderBy('tgl_mulai', 'asc')->paginate(6);
         $jumlahTiket = Tiket::count();
-
         $riwayatPendaftaran = 0;
 
-        $eventMendatang = Event::whereDate(
-            'tanggal',
-            '>=',
-            now()
-        )->count();
+        $eventMendatang = Event::whereDate('tgl_mulai', '>=', now())->count();
 
-        return view(
-            'pengunjung.dashboard',
-            compact(
-                'events',
-                'jumlahTiket',
-                'riwayatPendaftaran',
-                'eventMendatang'
-            )
-        );
-    }
-}
+        return view('pengunjung.dashboard', compact(
+            'events',
+            'jumlahTiket',
+            'riwayatPendaftaran',
+            'eventMendatang'
+        ));
+    } // Penutup method index
+} // Penutup class DashboardController
