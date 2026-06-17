@@ -33,22 +33,17 @@ class pembeliancontroller extends Controller
             'jumlah_tiket' => 'required|integer|min:1',
             'metode_pembayaran' => 'required|string',
         ]);
-
         $event = Event::findOrFail($id);
         $tiket = Tiket::findOrFail($request->id_tiket);
-
         // Validasi ketersediaan kuota tiket di database admin sebelum memproses
         if ($tiket->kuota_tersedia < $request->jumlah_tiket) {
             return back()->with('error', 'Maaf, kuota tiket yang Anda pilih tidak mencukupi.');
         }
-
         // Kalkulasi total harga: (Harga Tiket * Jumlah) + Biaya Layanan Rp 5.000
         $biaya_layanan = 5000;
         $total_harga = ($tiket->harga * $request->jumlah_tiket) + $biaya_layanan;
-
         // Membuat kode registrasi unik acak untuk tiket pengunjung
         $kode_registrasi = 'REG-' . strtoupper(bin2hex(random_bytes(4)));
-
         // Menggunakan Database Transaction demi keamanan data relasi tabel
         DB::beginTransaction();
         try {
