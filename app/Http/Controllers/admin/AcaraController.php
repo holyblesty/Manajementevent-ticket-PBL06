@@ -44,7 +44,6 @@ class AcaraController extends Controller
             'jam_mulai' => $request->jam_mulai,
             'jam_selesai' => $request->jam_selesai,
             'kapasitas' => 0,
-            'kuota_tersedia' => 0,
             'lokasi' => $request->lokasi,
             'id_kategori' => $request->id_kategori,
             'status_event' => $request->status_event,
@@ -162,7 +161,6 @@ class AcaraController extends Controller
         $event = Event::where('id_event', $id_event)->firstOrFail();
         $event->update([
             'kapasitas' => $totalKapasitas,
-            'kuota_tersedia' => $totalKapasitas
         ]);
 
         return redirect()->route('admin.dashboard')
