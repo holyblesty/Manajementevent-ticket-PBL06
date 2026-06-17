@@ -74,7 +74,8 @@ Route::prefix('pengunjung')->name('pengunjung.')->middleware('auth:web')->group(
     Route::post('/daftar-event', [EventController::class, 'daftarEvent'])->name('daftar-event');
 
     //Halaman pendaftaran Event
-    Route::get('/pendaftaran',[PendaftaranController::class]);
+    Route::get('/event/{event}/daftar', [PendaftaranController::class, 'create'])
+    ->name('pendaftaran.create');
     
     // Riwayat & Profil
     Route::get('/riwayat', function () {
