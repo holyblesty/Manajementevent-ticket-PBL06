@@ -68,4 +68,79 @@ Route::middleware(['auth:web'])->prefix('pengunjung')->name('pengunjung.')->grou
     // Proses Simpan Transaksi ke Database
     // URL: /pengunjung/pembelian-tiket | Nama Route: pengunjung.pembelian.store
     Route::post('/pembelian-tiket', [PembelianController::class, 'store'])->name('pembelian.store');
+
+
+    // =========================================================================
+    // FITUR PROFIL PENGUNJUNG (SESUAI MOCKUP TAB & ALUR EDIT SATU MINGGU SEKALI)
+    // =========================================================================
+    
+    // 1. Tampilan Utama Profil (Read-Only sesuai Data Riil Database)
+    Route::get('/profil', function () {
+        return view('pengunjung.profil');
+    })->name('profil');
+
+    // 2. Form Alihan Mengubah Informasi Profil
+    Route::get('/profil/edit', function () {
+        // Menggunakan \App\Models\User karena data login merujuk ke tabel users kelompok Anda
+        $user = \App\Models\User::findOrFail(\Illuminate\Support\Facades\Auth::id());
+        
+        // Logika Pengaman: Cek jika user pernah update data dalam kurun waktu 7 hari terakhir
+        $bisaUpdate = true;
+        $sisaHari = 0;
+        if ($user->updated_at && $user->updated_at->diffInDays(now()) < 7) {
+            $bisaUpdate = false;
+            $sisaHari = 7 - $user->updated_at->diffInDays(now());
+        }
+
+        return view('pengunjung.profil-edit', compact('user', 'bisaUpdate', 'sisaHari'));
+    })->name('profil.edit');
+
+    // 3. Proses Validasi & Simpan Perubahan Informasi Profil (Sisi Server)
+    Route::put('/profil/update', function (\Illuminate\Http\Request $request) {
+        $user = \App\Models\User::findOrFail(\Illuminate\Support\Facades\Auth::id());
+
+        // Antisipasi lapis kedua jika user menembak route langsung tanpa lewat tombol form
+        if ($user->updated_at && $user->updated_at->diffInDays(now()) < 7) {
+            return redirect()->route('pengunjung.profil')->with('error', 'Anda hanya dapat mengubah informasi profil sekali seminggu.');
+        }
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'no_hp' => 'nullable|string|max:15',
+            'alamat' => 'nullable|string',
+        ]);
+
+        $user->name = $request->name;
+        $user->no_hp = $request->no_hp;
+        $user->alamat = $request->alamat;
+        
+        // Memaksa sistem memperbarui record timestamp updated_at ke waktu sekarang sebagai acuan hitungan hari
+        $user->touch(); 
+        $user->save();
+
+        return redirect()->route('pengunjung.profil')->with('success', 'Informasi pribadi Anda berhasil diperbarui!');
+    })->name('profil.update');
+
+    // 4. Form Alihan Mengubah Kata Sandi / Password (Bebas Kapan Saja)
+    Route::get('/profil/password', function () {
+        return view('pengunjung.profil-password');
+    })->name('profil.password');
+
+    // 5. Proses Enkripsi Hash & Update Password Baru ke Database
+    Route::put('/profil/password/update', function (\Illuminate\Http\Request $request) {
+        $request->validate([
+            'password' => 'required|string|min:8|confirmed', // 'confirmed' otomatis mencocokkan input password_confirmation
+        ], [
+            'password.confirmed' => 'Konfirmasi ulang kata sandi baru tidak cocok.',
+            'password.min' => 'Keamanan kata sandi minimal harus berisi 8 karakter.'
+        ]);
+
+        $user = \App\Models\User::findOrFail(\Illuminate\Support\Facades\Auth::id());
+        $user->password = \Illuminate\Support\Facades\Hash::make($request->password);
+        $user->save();
+
+        return redirect()->route('pengunjung.profil')->with('success', '🔒 Kata sandi Anda berhasil diperbarui!');
+    })->name('profil.password.update');
+    
+    // =========================================================================
 });
