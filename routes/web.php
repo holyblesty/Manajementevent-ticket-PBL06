@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\StatistikController;
 use App\Http\Controllers\Pengunjung\DashboardController as PengunjungDashboardController;
 use App\Http\Controllers\Pengunjung\EventController;
 use App\Http\Controllers\Pengunjung\PendaftaranEventController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +31,13 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->name('login');
     Route::post('/register', [AuthController::class, 'register'])->name('register');
 });
+
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// =====================================================
+// PASSWORD RESET (Fitur Baru)
+// =====================================================
+Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
