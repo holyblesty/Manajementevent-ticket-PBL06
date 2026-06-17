@@ -30,7 +30,13 @@
         }
     </style>
 </head>
-<body class="bg-white text-black antialiased">
+<body 
+    id="mainBody"
+    data-has-errors="{{ $errors->any() ? 'true' : 'false' }}"
+    data-old-email="{{ old('email') }}"
+    data-old-name="{{ old('name') }}"
+    class="bg-white text-black antialiased"
+>
 
     <header class="container mx-auto px-4 py-4">
         <div class="flex flex-col md:flex-row items-center justify-between gap-4">
@@ -194,20 +200,16 @@
                 </div>
             </div>
 
-            <div class="relative rounded-lg overflow-hidden shadow-md group hover:-translate-y-1 
-            transition-transform duration-300">
-                <img src="https://via.placeholder.com/300x420/333333/ffffff?text=AI+FORUM" 
-                class="w-full h-[380px] object-cover" alt="AI Forum">
+            <div class="relative rounded-lg overflow-hidden shadow-md group hover:-translate-y-1 transition-transform duration-300">
+                <img src="https://via.placeholder.com/300x420/333333/ffffff?text=AI+FORUM" class="w-full h-[380px] object-cover" alt="AI Forum">
                 <div class="absolute bottom-0 left-0 right-0 bg-black text-white p-3 text-center">
                     <div class="text-xs font-bold uppercase mb-1">28 MEI , 13:00</div>
                     <p class="text-[11px] uppercase truncate"><i class="fa-solid fa-location-dot me-1"></i>GEDUNG UTAMA</p>
                 </div>
             </div>
 
-            <div class="relative rounded-lg overflow-hidden shadow-md group hover:-translate-y-1 
-            transition-transform duration-300">
-                <img src="https://via.placeholder.com/300x420/7a4988/ffffff?text=FUTSAL+CHAMP" 
-                class="w-full h-[380px] object-cover" alt="Futsal Kampus">
+            <div class="relative rounded-lg overflow-hidden shadow-md group hover:-translate-y-1 transition-transform duration-300">
+                <img src="https://via.placeholder.com/300x420/7a4988/ffffff?text=FUTSAL+CHAMP" class="w-full h-[380px] object-cover" alt="Futsal Kampus">
                 <div class="absolute bottom-0 left-0 right-0 bg-black text-white p-3 text-center">
                     <div class="text-xs font-bold uppercase mb-1">30 MEI , 08:00</div>
                     <p class="text-[11px] uppercase truncate"><i class="fa-solid fa-location-dot me-1"></i>LAPANGAN POLITEKNIK</p>
@@ -216,24 +218,21 @@
         </div>
 
         <div class="text-center mt-12">
-            <a href="#" class="bg-purplePrimary text-white text-sm font-bold px-8 py-2.5 
-            rounded-lg shadow hover:bg-purpleAccent transition-colors inline-block mb-4">Lihat Semua Acara</a>
+            <a href="#" class="bg-purplePrimary text-white text-sm font-bold px-8 py-2.5 rounded-lg shadow hover:bg-purpleAccent transition-colors inline-block mb-4">Lihat Semua Acara</a>
             <div class="text-sm text-gray-600 max-w-lg mx-auto leading-relaxed mb-3 mt-2">
                 Ingin membuat acara atau kegiatan baru? hubungi admin untuk informasi lebih lanjut melalui kontak kami
             </div>
-            <a href="#" class="bg-purplePrimary text-white text-sm font-bold px-6 
-            py-2.5 rounded-lg shadow hover:bg-purpleAccent transition-colors inline-block">Kontak kami</a>
+            <a href="#" class="bg-purplePrimary text-white text-sm font-bold px-6 py-2.5 rounded-lg shadow hover:bg-purpleAccent transition-colors inline-block">Kontak kami</a>
         </div>
     </section>
-<footer class="w-full">
-    @include('components.footer')
-</footer>
-    <div id="loginModal" class="fixed inset-0 z-50 flex items-center justify-center 
-    hidden bg-black/50 backdrop-blur-sm">
-        <div class="bg-white w-[90%] sm:w-[420px] p-8 rounded-xl shadow-2xl relative 
-        transition-all duration-300 border border-gray-100">
-            <button onclick="closeModal('loginModal')" class="absolute top-4 right-4 
-            text-gray-400 hover:text-gray-600 text-xl font-bold cursor-pointer">&times;</button>
+
+    <footer class="w-full">
+        @include('components.footer')
+    </footer>
+
+    <div id="loginModal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black/50 backdrop-blur-sm">
+        <div class="bg-white w-[90%] sm:w-[420px] p-8 rounded-xl shadow-2xl relative transition-all duration-300 border border-gray-100">
+            <button onclick="closeModal('loginModal')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl font-bold cursor-pointer">&times;</button>
             
             <h3 class="text-2xl font-bold text-center text-gray-800 uppercase tracking-wide mb-4">Masuk Ke Akun</h3>
             
@@ -247,38 +246,28 @@
                 @csrf
                 <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-semibold mb-2">Nama Akun / Username</label>
-                    <input type="text" name="username" value="{{ old('username') }}" 
-                    class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none 
-                    focus:border-purplePrimary text-sm" placeholder="Isi nama akun anda" required>
+                    <input type="text" name="username" value="{{ old('username') }}" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:border-purplePrimary text-sm" placeholder="Isi nama akun anda" required>
                 </div>
                 
                 <div class="mb-6">
                     <label class="block text-gray-700 text-sm font-semibold mb-2">Kata Sandi</label>
-                    <input type="password" name="password" class="w-full px-4 py-2.5 border 
-                    border-gray-200 rounded-lg focus:outline-none focus:border-purplePrimary text-sm" 
-                    placeholder="Isi kata sandi anda" required>
+                    <input type="password" name="password" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:border-purplePrimary text-sm" placeholder="Isi kata sandi anda" required>
                 </div>
                 
-                <button type="submit" class="w-full py-2.5 bg-purpleAccent hover:bg-purplePrimary 
-                text-white font-medium rounded-lg transition shadow-md shadow-purpleAccent/20 cursor-pointer text-sm">
+                <button type="submit" class="w-full py-2.5 bg-purpleAccent hover:bg-purplePrimary text-white font-medium rounded-lg transition shadow-md shadow-purpleAccent/20 cursor-pointer text-sm">
                     Masuk
                 </button>
             </form>
             
             <p class="text-center text-sm text-gray-500 mt-5">
-                Belum punya akun? <a href="javascript:void(0)" 
-                onclick="switchModal('loginModal', 'registerModal')" class="text-purplePrimary font-semibold 
-                hover:underline">Registrasi disini!</a>
+                Belum punya akun? <a href="javascript:void(0)" onclick="switchModal('loginModal', 'registerModal')" class="text-purplePrimary font-semibold hover:underline">Registrasi disini!</a>
             </p>
         </div>
     </div>
 
-
     <div id="registerModal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black/50 backdrop-blur-sm">
-        <div class="bg-white w-[90%] sm:w-[440px] p-7 rounded-xl shadow-2xl relative max-h-[92vh] 
-        overflow-y-auto no-scrollbar border border-gray-100">
-            <button onclick="closeModal('registerModal')" 
-            class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl font-bold cursor-pointer">&times;</button>
+        <div class="bg-white w-[90%] sm:w-[440px] p-7 rounded-xl shadow-2xl relative max-h-[92vh] overflow-y-auto no-scrollbar border border-gray-100">
+            <button onclick="closeModal('registerModal')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl font-bold cursor-pointer">&times;</button>
             
             <h3 class="text-2xl font-bold text-center text-gray-800 uppercase tracking-wide mb-4">DAFTAR AKUN</h3>
             
@@ -295,58 +284,42 @@
                 
                 <div class="mb-3">
                     <label class="block text-gray-700 text-xs font-semibold mb-1">Nama Lengkap</label>
-                    <input type="text" name="name" value="{{ old('name') }}" 
-                    class="w-full px-3.5 py-2 text-sm border border-gray-200 rounded-lg 
-                    focus:outline-none focus:border-purplePrimary" placeholder="Isi nama lengkap anda" required>
+                    <input type="text" name="name" value="{{ old('name') }}" class="w-full px-3.5 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:border-purplePrimary" placeholder="Isi nama lengkap anda" required>
                 </div>
 
                 <div class="mb-3">
                     <label class="block text-gray-700 text-xs font-semibold mb-1">Buat Nama Akun (Username)</label>
-                    <input type="text" name="username" value="{{ old('username') }}" 
-                    class="w-full px-3.5 py-2 text-sm border border-gray-200 rounded-lg 
-                    focus:outline-none focus:border-purplePrimary" placeholder="Isi nama akun anda" required>
+                    <input type="text" name="username" value="{{ old('username') }}" class="w-full px-3.5 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:border-purplePrimary" placeholder="Isi nama akun anda" required>
                 </div>
 
                 <div class="mb-3">
                     <label class="block text-gray-700 text-xs font-semibold mb-1">Email</label>
-                    <input type="email" name="email" value="{{ old('email') }}" 
-                    class="w-full px-3.5 py-2 text-sm border border-gray-200 rounded-lg 
-                    focus:outline-none focus:border-purplePrimary" placeholder="Isi email aktif anda" required>
+                    <input type="email" name="email" value="{{ old('email') }}" class="w-full px-3.5 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:border-purplePrimary" placeholder="Isi email aktif anda" required>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
                     <div>
                         <label class="block text-gray-700 text-xs font-semibold mb-1">Kata Sandi</label>
-                        <input type="password" name="password" class="w-full px-3.5 py-2 text-sm 
-                        border border-gray-200 rounded-lg focus:outline-none focus:border-purplePrimary" 
-                        placeholder="Minimal 6 karakter" required>
+                        <input type="password" name="password" class="w-full px-3.5 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:border-purplePrimary" placeholder="Minimal 6 karakter" required>
                     </div>
                     <div>
                         <label class="block text-gray-700 text-xs font-semibold mb-1">Ulangi Sandi</label>
-                        <input type="password" name="password_confirmation" class="w-full 
-                        px-3.5 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none 
-                        focus:border-purplePrimary" placeholder="Konfirmasi sandi" required>
+                        <input type="password" name="password_confirmation" class="w-full px-3.5 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:border-purplePrimary" placeholder="Konfirmasi sandi" required>
                     </div>
                 </div>
 
                 <div class="mb-3">
                     <label class="block text-gray-700 text-xs font-semibold mb-1">No. HP</label>
-                    <input type="text" name="no_hp" value="{{ old('no_hp') }}" 
-                    class="w-full px-3.5 py-2 text-sm border border-gray-200 rounded-lg 
-                    focus:outline-none focus:border-purplePrimary" placeholder="Isi nomor ponsel aktif">
+                    <input type="text" name="no_hp" value="{{ old('no_hp') }}" class="w-full px-3.5 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:border-purplePrimary" placeholder="Isi nomor ponsel aktif">
                 </div>
 
                 <div class="mb-5">
                     <label class="block text-gray-700 text-xs font-semibold mb-1">Alamat Rumah</label>
-                    <textarea name="alamat" rows="2" class="w-full px-3.5 py-2 text-sm border b
-                    order-gray-200 rounded-lg focus:outline-none focus:border-purplePrimary" 
-                    placeholder="Isi alamat rumah anda">{{ old('alamat') }}</textarea>
+                    <textarea name="alamat" rows="2" class="w-full px-3.5 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:border-purplePrimary" placeholder="Isi alamat rumah anda">{{ old('alamat') }}</textarea>
                 </div>
                 
                 <div class="text-center">
-                    <button type="submit" class="w-full py-2.5 bg-purpleAccent 
-                    hover:bg-purplePrimary text-white font-medium rounded-lg transition 
-                    shadow-md shadow-purpleAccent/20 text-sm cursor-pointer">
+                    <button type="submit" class="w-full py-2.5 bg-purpleAccent hover:bg-purplePrimary text-white font-medium rounded-lg transition shadow-md shadow-purpleAccent/20 text-sm cursor-pointer">
                         Buat Akun Baru
                     </button>
                 </div>
@@ -354,12 +327,10 @@
             
             <p class="text-center text-xs text-gray-500 mt-4">
                 Sudah punya akun? 
-                <a href="javascript:void(0)" onclick="switchModal('registerModal', 'loginModal')" 
-                class="text-purplePrimary font-semibold hover:underline">Masuk disini!</a>
+                <a href="javascript:void(0)" onclick="switchModal('registerModal', 'loginModal')" class="text-purplePrimary font-semibold hover:underline">Masuk disini!</a>
             </p>
         </div>
     </div>
-
 
     <script>
         function openModal(modalId) {
@@ -380,15 +351,20 @@
             if (event.target.id === 'registerModal') closeModal('registerModal');
         }
 
-        // Trik Jitu: Otomatis memunculkan kembali pop-up modal jika terjadi eror input saat reload halaman
         document.addEventListener("DOMContentLoaded", function() {
-            @if($errors->any())
-                @if(old('email') || old('name'))
-                    openModal('registerModal'); // Tampilkan modal register jika yang eror form register
-                @else
-                    openModal('loginModal'); // Tampilkan modal login jika yang eror form login
-                @endif
-            @endif
+            // Mengambil data dari elemen HTML body yang diisi oleh Blade di atas
+            const bodyEl = document.getElementById('mainBody');
+            const hasErrors = bodyEl.getAttribute('data-has-errors') === 'true';
+            const oldEmail = bodyEl.getAttribute('data-old-email');
+            const oldName = bodyEl.getAttribute('data-old-name');
+
+            if (hasErrors) {
+                if (oldEmail || oldName) {
+                    openModal('registerModal');
+                } else {
+                    openModal('loginModal');
+                }
+            }
         });
     </script>
 
