@@ -4,22 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Tiket;
-use App\Models\Menghadiri;
-use App\Models\Pemesanan;
 use Carbon\Carbon;
 
 class Event extends Model
 {
     use HasFactory;
 
-    // Menentukan nama tabel jika tidak mengikuti konvensi jamak
     protected $table = 'events';
 
-    // Menentukan Primary Key
     protected $primaryKey = 'id_event';
 
-    // Pastikan timestamps aktif
     public $timestamps = true;
 
     protected $fillable = [
@@ -35,14 +29,13 @@ class Event extends Model
         'poster',
         'id_admin',
         'kapasitas',
-        'kuota_tersedia'
     ];
 
     protected $casts = [
         'tgl_mulai' => 'date',
         'tgl_selesai' => 'date',
     ];
-    // Tambahkan ini agar Laravel otomatis mencari tgl_mulai sebagai acuan urutan
+
     protected static function booted()
     {
         static::addGlobalScope('order_by_date', function ($builder) {
@@ -50,80 +43,116 @@ class Event extends Model
         });
     }
 
-    // Relasi ke Kategori
+    /*
+    |--------------------------------------------------------------------------
+    | RELATIONSHIP
+    |--------------------------------------------------------------------------
+    */
+
     public function kategori()
     {
-        return $this->belongsTo(KategoriEvent::class, 'id_kategori', 'id_kategori');
+        return $this->belongsTo(
+            KategoriEvent::class,
+            'id_kategori',
+            'id_kategori'
+        );
     }
 
-    // Relasi ke Tiket
     public function tiket()
     {
-        return $this->hasMany(Tiket::class, 'id_event', 'id_event');
+        return $this->hasMany(
+            Tiket::class,
+            'id_event',
+            'id_event'
+        );
     }
 
     public function pemesanan()
     {
-        // Ini artinya: Event punya banyak tiket, dan setiap tiket punya banyak pesanan
         return $this->hasManyThrough(
-            Pemesanan::class, // Target akhir
-            Tiket::class,     // Model perantara
-            'id_event',       // Foreign key di tabel 'tiket'
-            'id_tiket',       // Foreign key di tabel 'pemesanan'
-            'id_event',       // Local key di tabel 'events'
-            'id_tiket'        // Local key di tabel 'tiket'
+            Pemesanan::class,
+            Tiket::class,
+            'id_event',
+            'id_tiket',
+            'id_event',
+            'id_tiket'
         );
     }
 
     public function participants()
     {
-        return $this->hasMany(Menghadiri::class, 'id_event', 'id_event');
+        return $this->hasMany(
+            Menghadiri::class,
+            'id_event',
+            'id_event'
+        );
     }
 
-    // Accessor untuk total terjual
+    /*
+    |--------------------------------------------------------------------------
+    | ACCESSOR
+    |--------------------------------------------------------------------------
+    */
+
+    // Total tiket yang masih tersedia
+    public function getKuotaAktualAttribute(): int
+    {
+        return (int) $this->tiket()->sum('kuota_tersedia');
+    }
+
+    // Total tiket terjual
     public function getTotalTerjualAttribute(): int
     {
-        return $this->tiket->sum('terjual');
+        return (int) $this->tiket()->sum('terjual');
     }
 
-    // Accessor untuk sisa kapasitas
+    // Sisa kapasitas event
     public function getSisaKapasitasAttribute(): int
     {
-        return $this->kapasitas - $this->total_terjual;
+        return $this->kuota_aktual;
     }
 
-    // Accessor untuk URL Poster
+    // URL Poster
     public function getPosterUrlAttribute(): string
     {
         return $this->poster
-            ? asset('storage/posters/' . $this->poster)
+            ? asset('images/' . $this->poster)
             : asset('images/default-event.jpg');
     }
 
-    /**
-     * =========================================================================
-     * FITUR TAMBAHAN: DINAMIS ACCESSOR UNTUK STATUS EVENT
-     * =========================================================================
-     * Mengubah status menjadi 'closed' secara otomatis di program jika waktu 
-     * sekarang sudah melewati batas tanggal dan jam selesai event.
-     */
+    //pendaftaran
+     public function pendaftaran()
+    {
+        return $this->hasMany(
+            Pendaftaran::class,
+            'id_event',
+            'id_event'
+        );
+    }
+    /*
+    |--------------------------------------------------------------------------
+    | STATUS EVENT OTOMATIS
+    |--------------------------------------------------------------------------
+    */
+
     public function getStatusEventAttribute(?string $value): string
     {
-        // Pastikan tgl_selesai diformat ke string Y-m-d dahulu sebelum digabung jam
-        $tanggalSelesai = $this->tgl_selesai ? $this->tgl_selesai->format('Y-m-d') : null;
+        $tanggalSelesai = $this->tgl_selesai
+            ? $this->tgl_selesai->format('Y-m-d')
+            : null;
+
         $jamSelesai = $this->jam_selesai;
 
         if ($tanggalSelesai && $jamSelesai) {
-            // Gabungkan menjadi satu objek Carbon utuh
-            $waktuAkhirEvent = Carbon::parse($tanggalSelesai . ' ' . $jamSelesai);
+            $waktuAkhirEvent = Carbon::parse(
+                $tanggalSelesai . ' ' . $jamSelesai
+            );
 
-            // Jika waktu komputer/server sekarang sudah melewati akhir acara, paksa status jadi 'closed'
             if (Carbon::now()->greaterThan($waktuAkhirEvent)) {
                 return 'closed';
             }
         }
 
-        // Jika belum lewat, return status asli dari database ('draft' atau 'open')
         return $value;
     }
 }
