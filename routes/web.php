@@ -9,7 +9,7 @@ use App\Http\Controllers\Admin\PesertaController;
 use App\Http\Controllers\Admin\StatistikController;
 use App\Http\Controllers\Pengunjung\DashboardController as PengunjungDashboardController;
 use App\Http\Controllers\Pengunjung\EventController;
-use App\Http\Controllers\Pengunjung\PendaftaranEventController;
+use App\Http\Controllers\Pengunjung\PendaftaranController;
 
 /*
 |--------------------------------------------------------------------------
@@ -72,9 +72,10 @@ Route::prefix('pengunjung')->name('pengunjung.')->middleware('auth:web')->group(
     // Halaman Event Pengunjung
     Route::get('/event/{id}', [EventController::class, 'show'])->name('event.show');
     Route::post('/daftar-event', [EventController::class, 'daftarEvent'])->name('daftar-event');
-    Route::get('/event/{id}/daftar', [PendaftaranEventController::class, 'create'])->name('event.daftar');
 
-
+    //Halaman pendaftaran Event
+    Route::get('/pendaftaran',[PendaftaranController::class]);
+    
     // Riwayat & Profil
     Route::get('/riwayat', function () {
         return view('Pengunjung.riwayat');
