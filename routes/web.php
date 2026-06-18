@@ -74,8 +74,8 @@ Route::prefix('pengunjung')->name('pengunjung.')->middleware('auth:web')->group(
     Route::post('/daftar-event', [EventController::class, 'daftarEvent'])->name('daftar-event');
 
     //Halaman pendaftaran Event
-    Route::get('/event/{id_event}/daftar', [PendaftaranController::class, 'create'])
-    ->name('pendaftaran.create');
+    Route::get('/event/{id_event}/daftar', [PendaftaranController::class,])
+    ->name('pendaftaran');
     Route::post('/pendaftaran', [PendaftaranController::class, 'store'])
     ->name('pendaftaran.store');
     
@@ -89,6 +89,6 @@ Route::prefix('pengunjung')->name('pengunjung.')->middleware('auth:web')->group(
 
     // Halaman Pembelian Tiket
     Route::get('/pembelian-tiket', function () {
-        return view('Pengunjung.pembelian-tiket');
+        return view('pengunjung.pembelian-tiket');
     })->name('pembelian');
 });
