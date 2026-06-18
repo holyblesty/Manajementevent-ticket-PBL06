@@ -17,7 +17,7 @@ class PendaftaranController extends Controller
         $event = Event::findOrFail($id_event);
 
         return view(
-            'pengunjung.pendaftaran.create',
+            'pengunjung.pendaftaran',
             compact('event')
         );
     }
