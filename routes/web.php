@@ -41,7 +41,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('dashboard');
     Route::get('/statistik', [StatistikController::class, 'index'])->name('statistik');
-    
+
     Route::resource('acara', AcaraController::class);
     Route::get('/acara/{id_event}/tiket', [AcaraController::class, 'tiket'])->name('acara.tiket');
     Route::put('/acara/{id_event}/tiket/update', [AcaraController::class, 'updateTiket'])->name('acara.tiket.update');
@@ -62,19 +62,22 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
 // PENGUNJUNG AREA 
 // =====================================================
 Route::middleware(['auth:web'])->prefix('pengunjung')->name('pengunjung.')->group(function () {
-    
+
     // Dashboard Pengunjung
-    Route::get('/dashboard', function () {
-        return view('pengunjung.dashboard'); 
-    })->name('dashboard');
-    
+    Route::get('/dashboard', [PengunjungDashboardController::class, 'index'])
+        ->name('dashboard');
+
+    // Detail Event
+    Route::get('/event/{id}', [EventController::class, 'show'])
+        ->name('event.show');
+
     // Riwayat Pendaftaran / Transaksi
     Route::get('/riwayat-pendaftaran', [RiwayatController::class, 'index'])->name('riwayat');
-    
+
     // Transaksi Pembelian Tiket (Berdasarkan ID Event)
     // URL: /pengunjung/pembelian-tiket/{id} | Nama Route: pengunjung.pembelian.index
     Route::get('/pembelian-tiket/{id}', [PembelianController::class, 'index'])->name('pembelian.index');
-    
+
     // Proses Simpan Transaksi ke Database
     // URL: /pengunjung/pembelian-tiket | Nama Route: pengunjung.pembelian.store
     Route::post('/pembelian-tiket', [PembelianController::class, 'store'])->name('pembelian.store');
@@ -83,7 +86,7 @@ Route::middleware(['auth:web'])->prefix('pengunjung')->name('pengunjung.')->grou
     // =========================================================================
     // FITUR PROFIL PENGUNJUNG (SESUAI MOCKUP TAB & ALUR EDIT SATU MINGGU SEKALI)
     // =========================================================================
-    
+
     // 1. Tampilan Utama Profil (Read-Only sesuai Data Riil Database)
     Route::get('/profil', function () {
         return view('pengunjung.profil');
@@ -93,7 +96,7 @@ Route::middleware(['auth:web'])->prefix('pengunjung')->name('pengunjung.')->grou
     Route::get('/profil/edit', function () {
         // Menggunakan \App\Models\User karena data login merujuk ke tabel users kelompok Anda
         $user = \App\Models\User::findOrFail(\Illuminate\Support\Facades\Auth::id());
-        
+
         // Logika Pengaman: Cek jika user pernah update data dalam kurun waktu 7 hari terakhir
         $bisaUpdate = true;
         $sisaHari = 0;
@@ -123,9 +126,9 @@ Route::middleware(['auth:web'])->prefix('pengunjung')->name('pengunjung.')->grou
         $user->name = $request->name;
         $user->no_hp = $request->no_hp;
         $user->alamat = $request->alamat;
-        
+
         // Memaksa sistem memperbarui record timestamp updated_at ke waktu sekarang sebagai acuan hitungan hari
-        $user->touch(); 
+        $user->touch();
         $user->save();
 
         return redirect()->route('pengunjung.profil')->with('success', 'Informasi pribadi Anda berhasil diperbarui!');
@@ -151,6 +154,6 @@ Route::middleware(['auth:web'])->prefix('pengunjung')->name('pengunjung.')->grou
 
         return redirect()->route('pengunjung.profil')->with('success', '🔒 Kata sandi Anda berhasil diperbarui!');
     })->name('profil.password.update');
-    
+
     // =========================================================================
 });
