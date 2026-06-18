@@ -59,16 +59,6 @@
                 </div>
             </div>
 
-            <div class="mb-5 text-right">
-                <a
-                    href="javascript:void(0)"
-                    onclick="switchModal('loginModal','forgotModal')"
-                    class="text-xs text-purplePrimary hover:underline font-semibold"
-                >
-                    Lupa Password?
-                </a>
-            </div>
-
             <button
                 type="submit"
                 class="w-full py-2.5 bg-purpleAccent hover:bg-purplePrimary text-white font-medium rounded-lg transition shadow-md shadow-purpleAccent/20 cursor-pointer text-sm"
@@ -268,42 +258,6 @@
     </div>
 </div>
 
-<!-- FORGOT PASSWORD MODAL -->
-<div id="forgotModal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black/50 backdrop-blur-sm">
-
-    <div class="bg-white w-[90%] sm:w-[400px] p-8 rounded-xl shadow-2xl relative border border-gray-100">
-
-        <button onclick="closeModal('forgotModal')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl font-bold cursor-pointer">
-            &times;
-        </button>
-
-        <h3 class="text-xl font-bold text-center text-gray-800 mb-4">
-            Lupa Password?
-        </h3>
-
-        <form action="{{ route('password.email') }}" method="POST">
-            @csrf
-
-            <div class="mb-4">
-                <input
-                    type="email"
-                    name="email"
-                    class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm"
-                    placeholder="Email terdaftar"
-                    required
-                >
-            </div>
-
-            <button
-                type="submit"
-                class="w-full py-2.5 bg-purpleAccent hover:bg-purplePrimary text-white rounded-lg text-sm cursor-pointer"
-            >
-                Kirim Link Reset
-            </button>
-        </form>
-
-    </div>
-</div>
 
 <script>
     function openModal(modalId) {

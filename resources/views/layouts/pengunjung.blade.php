@@ -75,28 +75,31 @@
 
                @auth
 
+
 <div class="flex items-center gap-3 border-l pl-6">
 
-    <div class="flex items-center gap-3">
-       <a href="#"
-   class="flex items-center gap-2 px-2 py-3 rounded-xl text-gray-600 hover:bg-red-50 hover:text-red-500 no-underline">
+    <form id="logoutForm" method="POST" action="{{ route('logout') }}">
+        @csrf
 
-    <svg xmlns="http://www.w3.org/2000/svg"
-         fill="none"
-         viewBox="0 0 24 24"
-         stroke-width="1.5"
-         stroke="currentColor"
-         class="w-5 h-5">
-        <path stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-7.5A2.25 2.25 0 003.75 5.25v13.5A2.25 2.25 0 006 21h7.5a2.25 2.25 0 002.25-2.25V15m-3-3h8.25m0 0l-3-3m3 3l-3 3" />
-    </svg>
+        <button type="button"
+            onclick="confirmLogout()"
+            class="flex items-center gap-2 px-2 py-3 rounded-xl text-gray-600 hover:bg-red-50 hover:text-red-500">
 
-    <span>Keluar</span>
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 fill="none"
+                 viewBox="0 0 24 24"
+                 stroke-width="1.5"
+                 stroke="currentColor"
+                 class="w-5 h-5">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-7.5A2.25 2.25 0 003.75 5.25v13.5A2.25 2.25 0 006 21h7.5a2.25 2.25 0 002.25-2.25V15m-3-3h8.25m0 0l-3-3m3 3l-3 3" />
+            </svg>
 
-</a>
+            <span>Keluar</span>
 
-    </div>
+        </button>
+    </form>
 
 </div>
 
@@ -196,79 +199,24 @@
     </div>
 
     {{-- ================= FOOTER ================= --}}
-    <footer class="ml-64 bg-[#24112e] text-white px-10 py-10">
+    @include('components.footer')
 
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-10">
+    <script>
+function confirmLogout() {
+    Swal.fire({
+        title: 'Keluar dari akun?',
+        text: 'Anda akan logout dari sistem.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, Keluar',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('logoutForm').submit();
+        }
+    });
+}
+</script>
 
-            {{-- LOGO --}}
-            <div>
-
-                <img src="{{ asset('images/footer.jpg') }}"
-                     class="h-41 mb-4">
-
-                <p class="text-gray-300 text-center text-sm leading-relaxed">
-                    Event Ticketing adalah platform untuk menemukan dan memesan tiket event terbaik dengan mudah dan cepat.
-                </p>
-
-            </div>
-
-            {{-- NAVIGASI --}}
-            <div>
-
-                <h3 class="text-[#be93d4] font-bold mb-4 uppercase">
-                    Navigasi
-                </h3>
-
-                <ul class="space-y-2 text-gray-300">
-
-                    <li>Beranda</li>
-                    <li>Acara</li>
-                    <li>Tentang Kami</li>
-                    <li>Kontak Kami</li>
-
-                </ul>
-
-            </div>
-
-            {{-- KATEGORI --}}
-            <div>
-
-                <h3 class="text-[#be93d4] font-bold mb-4 uppercase">
-                    Kategori
-                </h3>
-
-                <ul class="space-y-2 text-gray-300">
-
-                    <li>Olahraga</li>
-                    <li>Seminar</li>
-                    <li>Hiburan</li>
-
-                </ul>
-
-            </div>
-
-            {{-- KONTAK --}}
-            <div>
-
-                <h3 class="text-[#be93d4] font-bold mb-4 uppercase">
-                    Hubungi Kami
-                </h3>
-
-                <ul class="space-y-3 text-gray-300">
-
-                    <li>📧 AdminKita@gmail.com</li>
-                    <li>📞 +62 895 3128 7505</li>
-
-                </ul>
-
-            </div>
-
-        </div>
-
-        <div class="border-t border-white/10 mt-8 pt-4 text-center text-gray-400 text-sm">
-
-            © 2026 Event Ticketing System | All Rights Reserved
-
-        </div>
-
-    </footer>
+</body>
+</html>
