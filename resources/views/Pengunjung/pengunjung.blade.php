@@ -82,7 +82,7 @@
                     class="text-sm font-medium {{ request()->routeIs('pengunjung.acara*') ? 'text-purple-800 font-bold' : 'text-gray-600 hover:text-purple-800' }} transition-colors">
                     Acara
                 </a>
-                <a href="{{ route('pengunjung.tentang-kami') }}"
+                <a href="{{ route('pengunjung.tentang') }}"
                     class="text-sm font-medium {{ request()->routeIs('pengunjung.tentang-kami') ? 'text-purple-800 font-bold' : 'text-gray-600 hover:text-purple-800' }} transition-colors">
                     Tentang kami
                 </a>
@@ -211,7 +211,7 @@
                     <ul class="space-y-2 text-sm text-purple-200">
                         <li><a href="{{ route('pengunjung.beranda') }}" class="hover:text-white transition-colors">Beranda</a></li>
                         <li><a href="{{ route('pengunjung.acara') }}" class="hover:text-white transition-colors">Acara</a></li>
-                        <li><a href="{{ route('pengunjung.tentang-kami') }}" class="hover:text-white transition-colors">Tentang Kami</a></li>
+                        <li><a href="{{ route('pengunjung.tentang') }}" class="hover:text-white transition-colors">Tentang Kami</a></li>
                     </ul>
                 </div>
 
