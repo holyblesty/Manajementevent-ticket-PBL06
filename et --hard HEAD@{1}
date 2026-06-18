@@ -1,0 +1,59 @@
+[33mbd34967[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{0}: pull: Fast-forward
+[33mfdc88dc[m HEAD@{1}: commit: menambahkan dan memperbarui route fitur pengunjung
+[33m9a80677[m HEAD@{2}: commit: memperbarui layout utama halaman pengunjung
+[33ma833df5[m HEAD@{3}: commit: menambahkan proses pembelian tiket pengunjung
+[33m5e65a3f[m HEAD@{4}: commit: memperbarui halaman detail event pengunjung
+[33m7f43749[m HEAD@{5}: commit: menambahkan fitur pendaftaran dan daftar event pengunjung
+[33m3e64516[m HEAD@{6}: commit: memperbarui tampilan dashboard pengunjung
+[33me1d6e31[m HEAD@{7}: commit: update views pengunjung
+[33md90d4c0[m HEAD@{8}: commit (merge): Memperbaharui AuthController
+[33mcf029d0[m HEAD@{9}: commit: Remove kelompok routes from web.php
+[33mbed6ed2[m HEAD@{10}: commit: Update pengunjung layout after deleting kelompok
+[33m0deab73[m HEAD@{11}: commit: Delete view kelompok
+[33mc448a7e[m HEAD@{12}: commit: Delete model kelompok
+[33mf6c59da[m HEAD@{13}: commit: Delete ListKelompokController
+[33mf81716d[m HEAD@{14}: reset: moving to f81716d
+[33mf81716d[m HEAD@{15}: reset: moving to f81716d
+[33mbc46f4d[m HEAD@{16}: reset: moving to HEAD@{1}
+[33mbc46f4d[m HEAD@{17}: reset: moving to HEAD
+[33mbc46f4d[m HEAD@{18}: pull: Fast-forward
+[33mf81716d[m HEAD@{19}: commit: memperbarui layout pengunjung
+[33mac73e08[m HEAD@{20}: commit (merge): resolve conflict routes web
+[33m47dcdda[m HEAD@{21}: commit: menambahkan method public function simpan pada file ListController.php
+[33mf45e326[m HEAD@{22}: commit: membuat DashboardController
+[33m10c088c[m HEAD@{23}: commit: memperbaharui layout pengunjung
+[33m23a799e[m HEAD@{24}: commit: membuat halaman detail event pengunjung
+[33m7b393cb[m HEAD@{25}: commit: update views event pengunjung
+[33m1b52181[m HEAD@{26}: commit: fix(assets): remove old image and add new profile images
+[33m45f6d09[m HEAD@{27}: commit: feat(visitor): update visitor history controller logic
+[33mef6a89e[m HEAD@{28}: commit: feat(admin): update participant controller and admin model
+[33m891c21b[m HEAD@{29}: commit: feat(admin): update event management controller and model
+[33m4f3f040[m HEAD@{30}: commit: feat(auth): update authentication controller logic
+[33mcc39084[m HEAD@{31}: reset: moving to HEAD
+[33mcc39084[m HEAD@{32}: commit: Menambahkan pada fitur pengunjung
+[33m9a3c6a6[m HEAD@{33}: pull: updating HEAD
+[33m9a3c6a6[m HEAD@{34}: pull: updating HEAD
+[33m9a3c6a6[m HEAD@{35}: commit: menambahkan gambar pada fitur pengunjung
+[33m5ca017a[m HEAD@{36}: commit: Memperbaiki dashboard pengunjung dan footer layout
+[33m6b893db[m HEAD@{37}: commit: Menambahkan halaman detail event
+[33mb84a8ab[m HEAD@{38}: commit: Menambahkan tampilan halaman event pengunjung
+[33m365128a[m HEAD@{39}: commit (merge): fix merge conflict routes
+[33mf696cde[m HEAD@{40}: commit: menambahkan fitur pengunjung dashboard
+[33m18e0555[m HEAD@{41}: pull: Fast-forward
+[33m44fc7a8[m HEAD@{42}: pull: Fast-forward
+[33m82d0fac[m HEAD@{43}: pull: Merge made by the 'ort' strategy.
+[33m19540bb[m HEAD@{44}: commit: Menambahkan route dan view about
+[33m146b609[m HEAD@{45}: commit: menambahkan poto
+[33m0c3623d[m HEAD@{46}: pull: Merge made by the 'ort' strategy.
+[33mc7e7ecc[m HEAD@{47}: pull: Merge made by the 'ort' strategy.
+[33m07fa120[m HEAD@{48}: pull: Merge made by the 'ort' strategy.
+[33mf016b38[m HEAD@{49}: commit: update route pagecontroller
+[33mdfbf797[m HEAD@{50}: commit: membuat halaman dashboard admin
+[33me372496[m HEAD@{51}: commit: Menambahkan route dan fitur pada folder admin
+[33m28c2c96[m HEAD@{52}: commit: membuat controllers pada halaman admin
+[33mcda3da2[m HEAD@{53}: commit: nambah halaman contact
+[33m65fad7c[m HEAD@{54}: commit: nambah contact
+[33m6e15cbb[m HEAD@{55}: commit: Menambahkan PageController untuk halaman contact
+[33mcf1f447[m HEAD@{56}: commit: buat tampilan about
+[33m154f6a8[m HEAD@{57}: commit: Menambahkan halaman About
+[33m91c61f0[m HEAD@{58}: clone: from https://github.com/holyblesty/Manajementevent-ticket-PBL06.git
