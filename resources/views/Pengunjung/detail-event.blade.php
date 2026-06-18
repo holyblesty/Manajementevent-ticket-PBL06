@@ -105,8 +105,9 @@
 
                     @if($event->kuota_aktual > 0)
 
-                        <a href="{{ route('pengunjung.pendaftaran.create', $event->id_event) }}">
-                            Daftar Sekarang
+                        <a href="{{ route('pengunjung.pendaftaran', $event->id_event) }}"
+                            class="px-4 py-2 bg-[#7a4988] text-white px-5 py-2 rounded-r-xl text-sm font-semibold hover:bg-[#693b76]">
+                            Beli Sekarang
                         </a>
                     @else
 
