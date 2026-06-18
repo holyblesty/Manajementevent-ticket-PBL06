@@ -32,12 +32,84 @@
 
     <style>
         * { font-family: 'Plus Jakarta Sans', sans-serif; }
-        .sidebar-link { @apply flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-purple-50 hover:text-purple-700 transition-all duration-200 font-medium; }
-        .sidebar-link.active { @apply bg-purple-100 text-purple-700 font-semibold; }
-        .btn-primary { @apply bg-purple-800 hover:bg-purple-900 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 w-full text-center block; }
-        .btn-outline { @apply border-2 border-purple-800 text-purple-800 hover:bg-purple-50 font-semibold py-3 px-6 rounded-xl transition-all duration-200 w-full text-center block; }
-        .input-field { @apply w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all; }
-        .card { @apply bg-white rounded-2xl border border-gray-200 shadow-sm; }
+        
+        /* Menggunakan CSS Vanilla murni agar VS Code tidak error dan tampilan tetap sama sesuai utilitas Tailwind */
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            color: #4b5563;
+            transition-property: all;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 200ms;
+            font-weight: 500;
+        }
+        .sidebar-link:hover {
+            background-color: #faf5ff;
+            color: #7e22ce;
+        }
+        .sidebar-link.active {
+            background-color: #f3e8ff;
+            color: #7e22ce;
+            font-weight: 600;
+        }
+        .btn-primary {
+            background-color: #6b21a8;
+            color: #ffffff;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            transition-property: all;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 200ms;
+            width: 100%;
+            text-align: center;
+            display: block;
+        }
+        .btn-primary:hover {
+            background-color: #581c87;
+        }
+        .btn-outline {
+            border: 2px solid #6b21a8;
+            color: #6b21a8;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            transition-property: all;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 200ms;
+            width: 100%;
+            text-align: center;
+            display: block;
+        }
+        .btn-outline:hover {
+            background-color: #faf5ff;
+        }
+        .input-field {
+            width: 100%;
+            border: 1px solid #d1d5db;
+            border-radius: 0.75rem;
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+            transition-property: all;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 150ms;
+        }
+        .input-field:focus {
+            outline: 2px solid transparent;
+            outline-offset: 2px;
+            border-color: transparent;
+            box-shadow: 0 0 0 2px #c084fc;
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 1rem;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
     </style>
 
     @stack('styles')

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Pengunjung;
 
 use App\Http\Controllers\Controller;
-use App\Models\Pengunjung;
+use App\Models\User; // Mengubah Pengunjung menjadi User sesuai tabel database Anda
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -19,7 +19,7 @@ class ProfilController extends Controller
     public function index()
     {
         // ── SEMENTARA: dummy data untuk cek tampilan ──────────────────────
-        // Setelah tampilan oke, hapus blok ini dan uncomment baris aslinya
+        // Foto diisi otomatis (tidak null), password diset null
         $pengunjung = (object)[
             'id'            => 1,
             'nama_lengkap'  => 'Jesina Holy',
@@ -29,13 +29,15 @@ class ProfilController extends Controller
             'tanggal_lahir' => Carbon::parse('2000-01-15'),
             'jenis_kelamin' => 'Perempuan',
             'alamat'        => 'Jl. Malaka No. 12, Bandung, Jawa Barat',
-            'foto'          => null,
+            'foto'          => 'https://ui-avatars.com/api/?name=Jesina+Holy&color=ffffff&background=7a4988',
+            'password'      => null, // Password cukup diset null untuk keperluan testing
             'metode_login'  => 'Email',
             'status_akun'   => 'Aktif',
             'created_at'    => Carbon::parse('2024-05-29'),
         ];
-        // ── Setelah selesai testing, ganti dengan ini: ────────────────────
-        // $pengunjung = Auth::guard('pengunjung')->user();
+
+        // SINKRONISASI: Jika layout sudah oke, hapus dummy di atas dan aktifkan baris auth default di bawah ini:
+        // $pengunjung = Auth::user();
 
         return view('pengunjung.profil.profil', compact('pengunjung'));
     }
@@ -45,11 +47,16 @@ class ProfilController extends Controller
      */
     public function update(Request $request)
     {
-        $pengunjung = Auth::guard('pengunjung')->user();
+        /** @var \App\Models\User $pengunjung */
+        $pengunjung = Auth::user();
+
+        if (!$pengunjung) {
+            return redirect()->back()->with('error', 'Sesi login tidak ditemukan.');
+        }
 
         $request->validate([
             'nama_lengkap'  => 'required|string|max:100',
-            'email'         => ['required', 'email', Rule::unique('pengunjungs', 'email')->ignore($pengunjung->id)],
+            'email'         => ['required', 'email', Rule::unique('users', 'email')->ignore($pengunjung->id)],
             'no_telepon'    => 'nullable|string|max:20',
             'tanggal_lahir' => 'nullable|date',
             'jenis_kelamin' => 'nullable|in:Laki-laki,Perempuan',
@@ -57,11 +64,9 @@ class ProfilController extends Controller
         ]);
 
         $pengunjung->update([
-            'nama_lengkap'  => $request->nama_lengkap,
+            'name'          => $request->nama_lengkap, 
             'email'         => $request->email,
-            'no_telepon'    => $request->no_telepon,
-            'tanggal_lahir' => $request->tanggal_lahir,
-            'jenis_kelamin' => $request->jenis_kelamin,
+            'no_hp'         => $request->no_telepon, 
             'alamat'        => $request->alamat,
         ]);
 
@@ -78,9 +83,15 @@ class ProfilController extends Controller
             'foto' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        $pengunjung = Auth::guard('pengunjung')->user();
+        /** @var \App\Models\User $pengunjung */
+        $pengunjung = Auth::user();
 
-        if ($pengunjung->foto && Storage::disk('public')->exists($pengunjung->foto)) {
+        if (!$pengunjung) {
+            return redirect()->back()->with('error', 'Sesi login tidak ditemukan.');
+        }
+
+        // Hapus file lama jika ada di storage dan jalurnya bukan tautan luar (URL)
+        if (isset($pengunjung->foto) && $pengunjung->foto && !filter_var($pengunjung->foto, FILTER_VALIDATE_URL) && Storage::disk('public')->exists($pengunjung->foto)) {
             Storage::disk('public')->delete($pengunjung->foto);
         }
 
@@ -102,7 +113,12 @@ class ProfilController extends Controller
             'password_baru_confirmation' => 'required',
         ]);
 
-        $pengunjung = Auth::guard('pengunjung')->user();
+        /** @var \App\Models\User $pengunjung */
+        $pengunjung = Auth::user();
+
+        if (!$pengunjung) {
+            return redirect()->back()->with('error', 'Sesi login tidak ditemukan.');
+        }
 
         $pengunjung->update([
             'password' => Hash::make($request->password_baru),
@@ -117,13 +133,18 @@ class ProfilController extends Controller
      */
     public function destroy()
     {
-        $pengunjung = Auth::guard('pengunjung')->user();
+        /** @var \App\Models\User $pengunjung */
+        $pengunjung = Auth::user();
 
-        if ($pengunjung->foto && Storage::disk('public')->exists($pengunjung->foto)) {
+        if (!$pengunjung) {
+            return redirect()->back()->with('error', 'Sesi login tidak ditemukan.');
+        }
+
+        if (isset($pengunjung->foto) && $pengunjung->foto && !filter_var($pengunjung->foto, FILTER_VALIDATE_URL) && Storage::disk('public')->exists($pengunjung->foto)) {
             Storage::disk('public')->delete($pengunjung->foto);
         }
 
-        Auth::guard('pengunjung')->logout();
+        Auth::logout();
         $pengunjung->delete();
 
         return redirect()->route('home')
