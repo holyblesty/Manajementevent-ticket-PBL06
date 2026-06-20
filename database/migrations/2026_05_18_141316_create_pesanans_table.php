@@ -6,52 +6,29 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up(): void
+    public function up()
     {
-        Schema::create('detail_pesanans', function (Blueprint $table) {
-
-            $table->id('id_detail');
-
-            // ==========================================
-            // RELASI
-            // ==========================================
-
-            $table->unsignedBigInteger('id_pesanan');
-
-            $table->unsignedBigInteger('id_tiket');
-
-            // ==========================================
-            // DETAIL PEMBELIAN
-            // ==========================================
-
-            $table->integer('subtotal_harga');
-
-            $table->integer('jumlah_beli');
-
-            $table->boolean('status_checkin')
-                  ->default(false);
-
+        Schema::create('pemesanan', function (Blueprint $table) {
+            $table->id('id_pemesanan');
+            $table->unsignedBigInteger('id_pengunjung');
+            $table->unsignedBigInteger('id_event');
+            $table->string('jenis_tiket'); // Early Bird, Normal, VIP
+            $table->integer('jumlah_tiket');
+            $table->integer('harga_satuan');
+            $table->integer('biaya_layanan')->default(5000);
+            $table->integer('total_harga');
+            $table->string('metode_pembayaran');
+            $table->string('status_pembayaran')->default('Pending'); // Pending, Sukses, Batal
             $table->timestamps();
 
-            // ==========================================
-            // FOREIGN KEY
-            // ==========================================
-
-            $table->foreign('id_pesanan')
-                  ->references('id_pesanan')
-                  ->on('pesanans')
-                  ->onDelete('cascade');
-
-            $table->foreign('id_tiket')
-                  ->references('id_tiket')
-                  ->on('tikets')
-                  ->onDelete('cascade');
+            // Foreign Key Constraints
+            $table->foreign('id_pengunjung')->references('id_pengunjung')->on('users')->onDelete('cascade');
+            // Catatan: Pastikan tabel events menggunakan primary key id_event
         });
     }
 
-    public function down(): void
+    public function down()
     {
-        Schema::dropIfExists('detail_pesanans');
+        Schema::dropIfExists('pemesanan');
     }
 };
-
