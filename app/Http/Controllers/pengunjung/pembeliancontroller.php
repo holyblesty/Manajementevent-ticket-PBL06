@@ -3,23 +3,110 @@
 namespace App\Http\Controllers\pengunjung;
 
 use App\Http\Controllers\Controller;
+use App\Models\Event;
+use App\Models\Pemesanan;
+use App\Models\Tiket;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class pembeliancontroller extends Controller
 {
-    public function index()
+    public function index(int $id_event)
     {
-        // Data dummy event yang sedang dipilih untuk dibeli sesuai mockup
-        $event = [
-            'nama_event' => 'AI & MASA DEPAN KITA TECH FORUM 2024',
-            'banner' => 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=500&q=80',
-            'hari_tanggal' => 'Kamis, 29 Mei 2024',
-            'jam' => '09.00 - 17.00 WIB',
-            'lokasi' => 'Gedung Utama, Jl. Teknologi No. 1, Bandung',
-            'deskripsi' => 'Tech Forum yang membahas perkembangan kecerdasan buatan dan masa depan teknologi.'
-        ];
+        $event = Event::findOrFail($id_event);
 
-        // Mengarah ke folder layouts/Pengunjung/pembeliantiket.blade.php
-        return view('layouts.Pengunjung.pembeliantiket', compact('event'));
+        $tiket = Tiket::where(
+            'id_event',
+            $id_event
+        )->get();
+
+        $user = Auth::user();
+
+        return view(
+            'pengunjung.pembelian',
+            compact(
+                'event',
+                'tiket',
+                'user'
+            )
+        );
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email',
+            'no_hp' => 'required',
+            'alamat' => 'required',
+            'id_event' => 'required',
+            'id_tiket' => 'required',
+            'jumlah_tiket' => 'required|integer|min:1'
+        ]);
+
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->no_hp = $request->no_hp;
+        $user->alamat = $request->alamat;
+        $user->save();
+
+        $tiket = Tiket::findOrFail(
+            $request->id_tiket
+        );
+
+        if (
+            $request->jumlah_tiket >
+            $tiket->kuota_tersedia
+        ) {
+            return back()->with(
+                'error',
+                'Kuota tiket tidak mencukupi.'
+            );
+        }
+
+        $pemesanan = Pemesanan::create([
+            'id_event' => $request->id_event,
+            'id_pengunjung' => $user->id_pengunjung,
+            'id_tiket' => $request->id_tiket,
+            'tgl_pesan' => now(),
+            'tgl_bayar' => null,
+            'metode_pembayaran' => 'Cash',
+            'total_harga' =>
+                $tiket->harga *
+                $request->jumlah_tiket,
+            'jumlah_tiket' =>
+                $request->jumlah_tiket,
+            'kode_registrasi' =>
+                Pemesanan::generateKode(),
+            'sts_transaksi' => 'Belum Bayar'
+        ]);
+
+        $tiket->kuota_tersedia =
+            $tiket->kuota_tersedia -
+            $request->jumlah_tiket;
+
+        $tiket->save();
+
+        return redirect()->route(
+            'pengunjung.pembelian.sukses',
+            $pemesanan->id_pesanan
+        );
+    }
+
+    public function sukses(int $id)
+    {
+        $pemesanan = Pemesanan::with([
+            'event',
+            'tiket',
+            'user'
+        ])->findOrFail($id);
+
+        return view(
+            'pengunjung.pembelian-sukses',
+            compact('pemesanan')
+        );
     }
 }
