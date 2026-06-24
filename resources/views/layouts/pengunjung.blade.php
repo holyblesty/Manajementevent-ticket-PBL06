@@ -155,27 +155,25 @@
             {{-- MENU --}}
             <nav class="mt-4 px-3 flex-col gap-1 font-bold">
 
-                <a href="#"
-                   class="flex items-center gap-3 px-2 py-3 rounded-xl bg-[#f3ebf8] text-[#7a4988] font-semibold no-underline">
+                <a href="{{ route('pengunjung.dashboard') }}"
+   class="flex items-center gap-2 px-2 py-3 rounded-xl
+   {{ request()->routeIs('pengunjung.dashboard')
+       ? 'bg-[#7a4988] text-white'
+       : 'text-gray-600 hover:bg-[#f9f5fc] hover:text-[#7a4988]' }}">
+    🏠 Beranda
+</a>
 
-                    🏠 Beranda
-
-                </a>
-
-                <a href="#"
-                   class="flex items-center gap-4 px-2 py-3 rounded-xl text-gray-600 hover:bg-[#f9f5fc] hover:text-[#7a4988] no-underline">
-
-                    🎫 Ticket Saya
-
-                </a>
-
-                <a href="{{ route('pengunjung.riwayat') }}"
-                    class="flex items-center gap-2 px-2 py-3 rounded-xl">
-                    🕒 Riwayat Pendaftaran
-                </a>
-
-                <a href="#"
-                   class="flex items-center gap-2 px-2 py-3 rounded-xl text-gray-600 hover:bg-[#f9f5fc] hover:text-[#7a4988] no-underline">
+                <a href="{{ route('pengunjung.tiket') }}"
+   class="flex items-center gap-2 px-2 py-3 rounded-xl
+   {{ request()->routeIs('pengunjung.tiket')
+       ? 'bg-[#7a4988] text-white'
+       : 'text-gray-600 hover:bg-[#f9f5fc] hover:text-[#7a4988]' }}">
+    🎫 Ticket Saya
+</a>
+<a href="{{ route('pengunjung.riwayat') }}"
+   class="flex items-center gap-2 px-2 py-3 rounded-xl">
+    🕒 Riwayat Pendaftaran
+</a>
 
                     👤 Profil
 
