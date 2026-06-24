@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class PendaftaranEventController extends Controller
 {
-    public function create($id)
+    public function create(int $id)
     {
         $event = Event::with('tiket')
                     ->findOrFail($id);
@@ -21,7 +21,7 @@ class PendaftaranEventController extends Controller
         );
     }
 
-    public function store(Request $request,$id)
+    public function store(Request $request,int $id)
     {
         $event = Event::findOrFail($id);
 

@@ -176,10 +176,7 @@
             </div>
 
         </div>
-<<<<<<< HEAD
-=======
         </div>
->>>>>>> 1f4122ef3935aa3335b294cf6c8a5a43b2316de8
     </div>
 </form>
 @endsection

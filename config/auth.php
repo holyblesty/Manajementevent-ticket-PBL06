@@ -70,7 +70,7 @@ return [
         // Provider default untuk mengambil data dari model User (pengunjung)
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\User::class,
+            'model' => App\Models\Pengunjung::class,
         ],
 
         // 👈 AKUN ADMIN: Provider baru yang mengarah ke model Admin

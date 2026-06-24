@@ -27,7 +27,7 @@ class pembeliancontroller extends Controller
     }
 
     // Memproses data pendaftaran & transaksi pembelian tiket
-    public function store(Request $request, $id)
+    public function store(Request $request, int $id)
     {
         $request->validate([
             'id_tiket' => 'required|exists:tiket,id_tiket',

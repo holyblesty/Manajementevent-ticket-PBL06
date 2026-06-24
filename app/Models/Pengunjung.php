@@ -6,14 +6,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class Pengunjung extends Authenticatable // <--- Class diubah
 {
     use HasFactory, Notifiable;
+
+    // PENTING: Memberitahu Laravel nama tabelnya sekarang
+    protected $table = 'pengunjung';
 
     // PENTING: Memberitahu Laravel bahwa primary key tabel ini adalah id_pengunjung
     protected $primaryKey = 'id_pengunjung';
 
-    // Jika id_pengunjung adalah auto-incrementing integer
     public $incrementing = true;
     protected $keyType = 'int';
 
