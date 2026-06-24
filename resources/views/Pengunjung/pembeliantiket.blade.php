@@ -4,302 +4,84 @@
 
 @section('content')
 
-<div class="max-w-7xl mx-auto">
-
-    {{-- Breadcrumb --}}
-    <div class="text-sm text-gray-500 mb-4">
-        Beranda >
-        Acara >
-        <span class="font-semibold text-[#7a4988]">
-            Pembelian Tiket
-        </span>
-    </div>
-
-    <h1 class="text-3xl font-bold text-[#24112e] mb-6">
+<div class="mb-6">
+    <h1 class="text-3xl font-bold text-[#7a4988]">
         Pembelian Tiket
     </h1>
 
-    <form action="{{ route('pengunjung.checkout.store') }}"
-          method="POST">
-
-        @csrf
-
-        <div class="grid grid-cols-12 gap-6">
-
-            {{-- ================= KIRI ================= --}}
-            <div class="col-span-12 lg:col-span-8 space-y-5">
-
-                {{-- Event --}}
-                <div class="bg-white rounded-2xl border p-5">
-
-                    <div class="flex flex-col md:flex-row gap-5">
-
-                        <img src="{{ asset('storage/' . $event->gambar) }}"
-                             class="w-64 h-40 object-cover rounded-xl">
-
-                        <div class="flex-1">
-
-                            <h2 class="text-2xl font-bold text-[#24112e]">
-                                {{ $event->nama_event }}
-                            </h2>
-
-                            <div class="mt-3 space-y-2 text-gray-600">
-
-                                <p>
-                                    📅 {{ \Carbon\Carbon::parse($event->tanggal_event)->translatedFormat('l, d F Y') }}
-                                </p>
-
-                                <p>
-                                    🕒 {{ $event->jam_mulai }}
-                                    -
-                                    {{ $event->jam_selesai }}
-                                </p>
-
-                                <p>
-                                    📍 {{ $event->lokasi }}
-                                </p>
-
-                            </div>
-
-                            <p class="mt-4 text-gray-700">
-                                {{ $event->deskripsi }}
-                            </p>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-                {{-- Informasi Pembeli --}}
-                <div class="grid md:grid-cols-2 gap-5">
-
-                    <div class="bg-white border rounded-2xl p-5">
-
-                        <h3 class="font-bold text-lg mb-4 text-[#7a4988]">
-                            Informasi Pembeli
-                        </h3>
-
-                        <div class="space-y-3">
-
-                            <div>
-
-                                <label class="text-sm">
-                                    Nama Lengkap
-                                </label>
-
-                                <input type="text"
-                                       name="nama"
-                                       value="{{ Auth::user()->name }}"
-                                       class="w-full border rounded-lg px-3 py-2">
-
-                            </div>
-
-                            <div>
-
-                                <label class="text-sm">
-                                    No HP
-                                </label>
-
-                                <input type="text"
-                                       name="no_hp"
-                                       class="w-full border rounded-lg px-3 py-2">
-
-                            </div>
-
-                            <div>
-
-                                <label class="text-sm">
-                                    Email
-                                </label>
-
-                                <input type="email"
-                                       name="email"
-                                       value="{{ Auth::user()->email }}"
-                                       class="w-full border rounded-lg px-3 py-2">
-
-                            </div>
-
-                            <div>
-
-                                <label class="text-sm">
-                                    Alamat
-                                </label>
-
-                                <textarea name="alamat"
-                                          rows="3"
-                                          class="w-full border rounded-lg px-3 py-2"></textarea>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    {{-- Pilihan Tiket --}}
-                    <div class="bg-white border rounded-2xl p-5">
-
-                        <h3 class="font-bold text-lg mb-4 text-[#7a4988]">
-                            Pilihan Tiket
-                        </h3>
-
-                        <div class="space-y-3">
-
-                            @foreach($event->tiket as $tiket)
-
-                            <label
-                                class="border rounded-xl p-4 flex gap-3 cursor-pointer hover:border-[#7a4988]">
-
-                                <input type="radio"
-                                       name="tiket_id"
-                                       value="{{ $tiket->id }}"
-                                       class="mt-1">
-
-                                <div>
-
-                                    <h4 class="font-semibold">
-                                        {{ $tiket->nama_tiket }}
-                                    </h4>
-
-                                    <p class="text-[#7a4988] font-bold">
-                                        Rp {{ number_format($tiket->harga,0,',','.') }}
-                                    </p>
-
-                                    <p class="text-sm text-gray-500">
-                                        Sisa {{ $tiket->stok }}
-                                    </p>
-
-                                </div>
-
-                            </label>
-
-                            @endforeach
-
-                        </div>
-
-                        {{-- Jumlah --}}
-                        <div class="mt-5">
-
-                            <label class="font-semibold">
-                                Jumlah Tiket
-                            </label>
-
-                            <input type="number"
-                                   name="jumlah"
-                                   min="1"
-                                   value="1"
-                                   class="w-28 mt-2 border rounded-lg px-3 py-2">
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            {{-- ================= KANAN ================= --}}
-            <div class="col-span-12 lg:col-span-4 space-y-5">
-
-                {{-- Metode Pembayaran --}}
-                <div class="bg-white border rounded-2xl p-5">
-
-                    <h3 class="font-bold text-lg mb-4 text-[#7a4988]">
-                        Pilih Metode Pembayaran
-                    </h3>
-
-                    <div class="space-y-4">
-
-                        <label class="flex items-center gap-3">
-
-                            <input type="radio"
-                                   name="metode_pembayaran"
-                                   value="Transfer Bank">
-
-                            Transfer Bank
-
-                        </label>
-
-                        <label class="flex items-center gap-3">
-
-                            <input type="radio"
-                                   name="metode_pembayaran"
-                                   value="Virtual Account">
-
-                            Virtual Account
-
-                        </label>
-
-                        <label class="flex items-center gap-3">
-
-                            <input type="radio"
-                                   name="metode_pembayaran"
-                                   value="E-Wallet">
-
-                            E-Wallet
-
-                        </label>
-
-                    </div>
-
-                </div>
-
-                {{-- Ringkasan --}}
-                <div class="bg-white border rounded-2xl p-5">
-
-                    <h3 class="font-bold text-lg mb-4 text-[#7a4988]">
-                        Ringkasan Pesanan
-                    </h3>
-
-                    <div class="space-y-3 text-sm">
-
-                        <div class="flex justify-between">
-
-                            <span>Harga Tiket</span>
-
-                            <span id="harga-tiket">
-                                Rp 0
-                            </span>
-
-                        </div>
-
-                        <div class="flex justify-between">
-
-                            <span>Biaya Layanan</span>
-
-                            <span>
-                                Rp 5.000
-                            </span>
-
-                        </div>
-
-                    </div>
-
-                    <hr class="my-4">
-
-                    <div class="flex justify-between font-bold text-xl text-[#7a4988]">
-
-                        <span>Total</span>
-
-                        <span id="total">
-                            Rp 0
+    <p class="text-gray-500 mt-2">
+        Lengkapi data pemesanan tiket event.
+    </p>
+</div>
+
+@if(session('error'))
+<div class="bg-red-100 text-red-700 p-4 rounded-xl mb-5">
+    {{ session('error') }}
+</div>
+@endif
+
+@if($errors->any())
+<div class="bg-red-100 text-red-700 p-4 rounded-xl mb-5">
+    <ul>
+        @foreach($errors->all() as $error)
+            <li>• {{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
+@endif
+
+<form action="{{ route('pengunjung.pembelian.store') }}" method="POST">
+
+    @csrf
+
+    <input type="hidden"
+        name="id_event"
+        value="{{ $event->id_event }}">
+
+    <div class="grid lg:grid-cols-3 gap-6">
+
+        {{-- Informasi Event --}}
+        <div class="lg:col-span-1">
+
+            <div class="bg-white rounded-3xl shadow p-6">
+
+                <img
+                    src="{{ asset('images/'.$event->poster) }}"
+                    class="w-full rounded-2xl mb-5">
+
+                <h2 class="text-2xl font-bold text-[#7a4988]">
+                    {{ $event->judul }}
+                </h2>
+
+                <p class="text-gray-500 mt-3">
+                    {{ $event->deskripsi }}
+                </p>
+
+                <div class="mt-5 space-y-3">
+
+                    <div>
+                        <span class="font-semibold">
+                            Lokasi:
                         </span>
 
+                        {{ $event->lokasi }}
                     </div>
 
-                    <button type="submit"
-                            class="w-full mt-5 bg-[#7a4988] text-white py-3 rounded-xl font-semibold hover:bg-[#693b76]">
+                    <div>
+                        <span class="font-semibold">
+                            Tanggal:
+                        </span>
 
-                        Bayar Sekarang
+                        {{ $event->tgl_mulai }}
+                    </div>
 
-                    </button>
+                    <div>
+                        <span class="font-semibold">
+                            Jam:
+                        </span>
 
-                    <a href="{{ route('pengunjung.event.show',$event->id) }}"
-                       class="block text-center mt-3 border border-gray-300 py-3 rounded-xl text-gray-700 no-underline">
-
-                        Batal
-
-                    </a>
+                        {{ $event->jam_mulai }}
+                    </div>
 
                 </div>
 
@@ -307,8 +89,219 @@
 
         </div>
 
-    </form>
+        {{-- Form --}}
+        <div class="lg:col-span-2">
 
-</div>
+            <div class="bg-white rounded-3xl shadow p-8">
+
+                <h2 class="text-2xl font-bold mb-6 text-[#7a4988]">
+                    Data Pemesan
+                </h2>
+
+                <div class="grid md:grid-cols-2 gap-5">
+
+                    <div>
+                        <label class="font-semibold">
+                            Nama
+                        </label>
+
+                        <input
+                            type="text"
+                            name="name"
+                            value="{{ $user->name }}"
+                            class="w-full mt-2 border rounded-xl p-3">
+                    </div>
+
+                    <div>
+                        <label class="font-semibold">
+                            Email
+                        </label>
+
+                        <input
+                            type="email"
+                            name="email"
+                            value="{{ $user->email }}"
+                            class="w-full mt-2 border rounded-xl p-3">
+                    </div>
+
+                    <div>
+                        <label class="font-semibold">
+                            Nomor HP
+                        </label>
+
+                        <input
+                            type="text"
+                            name="no_hp"
+                            value="{{ $user->no_hp }}"
+                            class="w-full mt-2 border rounded-xl p-3">
+                    </div>
+
+                    <div>
+                        <label class="font-semibold">
+                            Alamat
+                        </label>
+
+                        <input
+                            type="text"
+                            name="alamat"
+                            value="{{ $user->alamat }}"
+                            class="w-full mt-2 border rounded-xl p-3">
+                    </div>
+
+                </div>
+
+                <hr class="my-8">
+
+                <h2 class="text-2xl font-bold mb-6 text-[#7a4988]">
+                    Tiket
+                </h2>
+
+                <div class="space-y-5">
+
+                    <div>
+
+                        <label class="font-semibold">
+                            Jenis Tiket
+                        </label>
+
+                        <select
+                            name="id_tiket"
+                            id="id_tiket"
+                            class="w-full mt-2 border rounded-xl p-3">
+
+                            <option value="">
+                                Pilih Tiket
+                            </option>
+
+                            @foreach($tiket as $item)
+
+                            <option
+                                value="{{ $item->id_tiket }}"
+                                data-harga="{{ $item->harga }}">
+
+                                {{ $item->jenis_tiket }}
+                                -
+                                Rp {{ number_format($item->harga,0,',','.') }}
+
+                            </option>
+
+                            @endforeach
+
+                        </select>
+
+                    </div>
+
+                    <div>
+
+                        <label class="font-semibold">
+                            Harga Tiket
+                        </label>
+
+                        <input
+                            type="text"
+                            id="harga"
+                            readonly
+                            class="w-full mt-2 border rounded-xl p-3 bg-gray-100">
+
+                    </div>
+
+                    <div>
+
+                        <label class="font-semibold">
+                            Jumlah Tiket
+                        </label>
+
+                        <input
+                            type="number"
+                            name="jumlah_tiket"
+                            id="jumlah_tiket"
+                            min="1"
+                            value="1"
+                            class="w-full mt-2 border rounded-xl p-3">
+
+                    </div>
+
+                    <div>
+
+                        <label class="font-semibold">
+                            Metode Pembayaran
+                        </label>
+
+                        <input
+                            type="text"
+                            value="Cash"
+                            readonly
+                            class="w-full mt-2 border rounded-xl p-3 bg-gray-100">
+
+                    </div>
+
+                    <div>
+
+                        <label class="font-semibold">
+                            Total Harga
+                        </label>
+
+                        <input
+                            type="text"
+                            id="total"
+                            readonly
+                            class="w-full mt-2 border rounded-xl p-3 bg-purple-100 font-bold text-[#7a4988]">
+
+                    </div>
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="mt-8 w-full bg-[#7a4988] hover:bg-[#693b76] text-white py-4 rounded-xl font-semibold">
+
+                    Pesan Tiket
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</form>
+
+<script>
+
+    const tiket = document.getElementById('id_tiket');
+    const jumlah = document.getElementById('jumlah_tiket');
+    const harga = document.getElementById('harga');
+    const total = document.getElementById('total');
+
+    function hitungTotal()
+    {
+        let selected =
+            tiket.options[tiket.selectedIndex];
+
+        let hrg =
+            selected.getAttribute('data-harga') || 0;
+
+        harga.value =
+            'Rp ' +
+            Number(hrg).toLocaleString('id-ID');
+
+        total.value =
+            'Rp ' +
+            (hrg * jumlah.value)
+            .toLocaleString('id-ID');
+    }
+
+    tiket.addEventListener(
+        'change',
+        hitungTotal
+    );
+
+    jumlah.addEventListener(
+        'input',
+        hitungTotal
+    );
+
+</script>
 
 @endsection
