@@ -9,10 +9,10 @@ use App\Http\Controllers\Admin\PesertaController;
 use App\Http\Controllers\Admin\StatistikController;
 use App\Http\Controllers\Pengunjung\DashboardController as PengunjungDashboardController;
 use App\Http\Controllers\Pengunjung\EventController;
-use App\Http\Controllers\Pengunjung\PendaftaranEventController;
-use App\Http\Controllers\Pengunjung\pembeliancontroller; // Import pembeliancontroller untuk tiket
-use App\Http\Controllers\Pengunjung\ProfilController;    // Import ProfilController untuk profil pengunjung
-use App\Http\Controllers\Pengunjung\RiwayatController;   // Import RiwayatController untuk riwayat pengunjung
+use App\Http\Controllers\Pengunjung\PendaftaranController;
+use App\Http\Controllers\pengunjung\pembeliancontroller;
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -24,7 +24,6 @@ Route::get('/', [PageController::class, 'index'])->name('home');
 Route::get('/about', [PageController::class, 'tentang'])->name('pengunjung.tentang');
 Route::get('/contact', [PageController::class, 'kontak'])->name('pengunjung.kontak');
 Route::get('/search', [PageController::class, 'search'])->name('pengunjung.search');
-
 // =====================================================
 // AUTENTIKASI
 // =====================================================
@@ -42,9 +41,14 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
     Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('dashboard');
     Route::get('/statistik', [StatistikController::class, 'index'])->name('statistik');
 
-    Route::resource('acara', AcaraController::class);
-    Route::get('/acara/{id_event}/tiket', [AcaraController::class, 'tiket'])->name('acara.tiket');
-    Route::put('/acara/{id_event}/tiket/update', [AcaraController::class, 'updateTiket'])->name('acara.tiket.update');
+    // CRUD Utama untuk Acara
+    Route::resource('acara', AcaraController::class)->except(['show']);
+
+    // Manajemen Tiket Massal
+    Route::prefix('acara/{id_event}')->group(function () {
+        Route::get('/tiket', [AcaraController::class, 'tiket'])->name('acara.tiket');
+        Route::put('/tiket/update', [AcaraController::class, 'updateTiket'])->name('acara.tiket.update');
+    });
 
     // Profil Admin
     Route::get('/profile', [AdminDashboard::class, 'profile'])->name('profile');
@@ -59,43 +63,37 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
 });
 
 // =====================================================
-// PENGUNJUNG AREA 
+// PENGUNJUNG AREA
 // =====================================================
-Route::middleware(['auth:web'])->prefix('pengunjung')->name('pengunjung.')->group(function () {
+Route::prefix('pengunjung')->name('pengunjung.')->middleware('auth:web')->group(function () {
 
     // Dashboard Pengunjung
-    Route::get('/dashboard', [PengunjungDashboardController::class, 'index'])
-        ->name('dashboard');
+    Route::get('/dashboard', [PengunjungDashboardController::class, 'index'])->name('dashboard');
 
-    // Detail Event
-    Route::get('/event/{id}', [EventController::class, 'show'])
-        ->name('event.show');
+    // Halaman Event Pengunjung
+    Route::get('/event/{id}', [EventController::class, 'show'])->name('event.show');
+    Route::post('/daftar-event', [EventController::class, 'daftarEvent'])->name('daftar-event');
 
-    // Riwayat Pendaftaran / Transaksi
-    Route::get('/riwayat-pendaftaran', [RiwayatController::class, 'index'])->name('riwayat');
+    // Halaman pendaftaran Event
+    Route::get('/event/{id_event}/daftar', [PendaftaranController::class])
+        ->name('pendaftaran');
 
-    // Transaksi Pembelian Tiket (Berdasarkan ID Event)
-    // URL: /pengunjung/pembelian-tiket/{id} | Nama Route: pengunjung.pembelian.index
-    Route::get('/pembelian-tiket/{id}', [PembelianController::class, 'index'])->name('pembelian.index');
+    Route::post('/pendaftaran', [PendaftaranController::class, 'store'])
+        ->name('pendaftaran.store');
 
-    // Proses Simpan Transaksi ke Database
-    // URL: /pengunjung/pembelian-tiket | Nama Route: pengunjung.pembelian.store
-    Route::post('/pembelian-tiket', [PembelianController::class, 'store'])->name('pembelian.store');
+    // Riwayat & Profil
+    Route::get('/riwayat', function () {
+        return view('Pengunjung.riwayat');
+    })->name('riwayat');
 
-
-    // =========================================================================
-    // FITUR PROFIL PENGUNJUNG (SESUAI MOCKUP TAB & ALUR EDIT SATU MINGGU SEKALI)
-    // =========================================================================
-
-    // 1. Tampilan Utama Profil (Read-Only sesuai Data Riil Database)
     Route::get('/profil', function () {
-        return view('pengunjung.profil');
+        return view('Pengunjung.profil');
     })->name('profil');
 
     // 2. Form Alihan Mengubah Informasi Profil
     Route::get('/profil/edit', function () {
         // Menggunakan \App\Models\User karena data login merujuk ke tabel users kelompok Anda
-        $user = \App\Models\Pengunjung::findOrFail(\Illuminate\Support\Facades\Auth::id());
+        $user = \App\Models\User::findOrFail(\Illuminate\Support\Facades\Auth::id());
 
         // Logika Pengaman: Cek jika user pernah update data dalam kurun waktu 7 hari terakhir
         $bisaUpdate = true;
@@ -110,7 +108,7 @@ Route::middleware(['auth:web'])->prefix('pengunjung')->name('pengunjung.')->grou
 
     // 3. Proses Validasi & Simpan Perubahan Informasi Profil (Sisi Server)
     Route::put('/profil/update', function (\Illuminate\Http\Request $request) {
-        $user = \App\Models\Pengunjung::findOrFail(\Illuminate\Support\Facades\Auth::id());
+        $user = \App\Models\User::findOrFail(\Illuminate\Support\Facades\Auth::id());
 
         // Antisipasi lapis kedua jika user menembak route langsung tanpa lewat tombol form
         if ($user->updated_at && $user->updated_at->diffInDays(now()) < 7) {
@@ -148,7 +146,7 @@ Route::middleware(['auth:web'])->prefix('pengunjung')->name('pengunjung.')->grou
             'password.min' => 'Keamanan kata sandi minimal harus berisi 8 karakter.'
         ]);
 
-        $user = \App\Models\Pengunjung::findOrFail(\Illuminate\Support\Facades\Auth::id());
+        $user = \App\Models\User::findOrFail(\Illuminate\Support\Facades\Auth::id());
         $user->password = \Illuminate\Support\Facades\Hash::make($request->password);
         $user->save();
 

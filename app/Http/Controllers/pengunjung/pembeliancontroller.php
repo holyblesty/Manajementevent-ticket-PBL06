@@ -1,93 +1,144 @@
 <?php
 
-namespace App\Http\Controllers\Pengunjung;
+namespace App\Http\Controllers\pengunjung;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Event;
-use App\Models\Tiket;
 use App\Models\Pemesanan;
+use App\Models\Tiket;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class pembeliancontroller extends Controller
 {
-    // Menampilkan halaman Pembelian Tiket berdasarkan id_event
-    public function create(int $id)
+    public function index(int $id_event)
     {
-        // Mengambil data event beserta relasi tiket yang dimiliki event tersebut
-        /** @var \App\Models\Event $event */
-        $event = Event::with(['tiket'])->findOrFail($id);
-        
-        // Mengambil data pengunjung yang sedang login
+        $event = Event::findOrFail($id_event);
+
+        $tiket = Tiket::where(
+            'id_event',
+            $id_event
+        )->get();
+
         $user = Auth::user();
 
-        // Mengarahkan ke file pembeliantiket.blade.php sesuai struktur VS Code Anda
-        return view('pengunjung.pembeliantiket', compact('event', 'user'));
+        return view(
+    'pengunjung.pembeliantiket',
+    compact('event','tiket','user')
+);
     }
 
     // Memproses data pendaftaran & transaksi pembelian tiket
-    public function store(Request $request, int $id)
+    public function store(Request $request, $id)
     {
         $request->validate([
-            'id_tiket' => 'required|exists:tiket,id_tiket',
-            'jumlah_tiket' => 'required|integer|min:1',
-            'metode_pembayaran' => 'required|string',
+            'name' => 'required',
+            'email' => 'required|email',
+            'no_hp' => 'required',
+            'alamat' => 'required',
+            'id_event' => 'required',
+            'id_tiket' => 'required',
+            'jumlah_tiket' => 'required|integer|min:1'
         ]);
 
-        /** @var \App\Models\Event $event */
-        $event = Event::findOrFail($id);
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
 
-        /** @var \App\Models\Tiket $tiket */
-        $tiket = Tiket::findOrFail($request->id_tiket);
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->no_hp = $request->no_hp;
+        $user->alamat = $request->alamat;
+        $user->save();
 
-        // Validasi ketersediaan kuota tiket di database admin sebelum memproses
-        if ($tiket->kuota_tersedia < $request->jumlah_tiket) {
-            return back()->with('error', 'Maaf, kuota tiket yang Anda pilih tidak mencukupi.');
+        $tiket = Tiket::findOrFail(
+            $request->id_tiket
+        );
+
+        if (
+            $request->jumlah_tiket >
+            $tiket->kuota_tersedia
+        ) {
+            return back()->with(
+                'error',
+                'Kuota tiket tidak mencukupi.'
+            );
         }
 
-        // Kalkulasi total harga: (Harga Tiket * Jumlah) + Biaya Layanan Rp 5.000
-        $biaya_layanan = 5000;
-        $total_harga = ($tiket->harga * $request->jumlah_tiket) + $biaya_layanan;
+        $pemesanan = Pemesanan::create([
+            'id_event' => $request->id_event,
+            'id_pengunjung' => $user->id_pengunjung,
+            'id_tiket' => $request->id_tiket,
+            'tgl_pesan' => now(),
+            'tgl_bayar' => null,
+            'metode_pembayaran' => 'Cash',
+            'total_harga' =>
+                $tiket->harga *
+                $request->jumlah_tiket,
+            'jumlah_tiket' =>
+                $request->jumlah_tiket,
+            'kode_registrasi' =>
+                Pemesanan::generateKode(),
+            'sts_transaksi' => 'Belum Bayar'
+        ]);
 
-        // Membuat kode registrasi unik acak untuk tiket pengunjung
-        $kode_registrasi = 'REG-' . strtoupper(bin2hex(random_bytes(4)));
+        $tiket->kuota_tersedia =
+            $tiket->kuota_tersedia -
+            $request->jumlah_tiket;
 
-        // Menggunakan Database Transaction demi keamanan data relasi tabel
-        DB::beginTransaction();
-        try {
-            // 1. Menyimpan data transaksi ke dalam tabel 'pemesanan'
-            $pemesanan = new Pemesanan();
-            $pemesanan->id_event = $event->id_event;
-            $pemesanan->id_pengunjung = Auth::id(); // Mengambil id_pengunjung dari users (akun login)
-            $pemesanan->id_tiket = $tiket->id_tiket;
-            $pemesanan->tgl_pesan = now();
-            $pemesanan->tgl_bayar = now(); 
-            $pemesanan->metode_pembayaran = $request->metode_pembayaran;
-            $pemesanan->total_harga = $total_harga;
-            $pemesanan->jumlah_tiket = $request->jumlah_tiket;
-            $pemesanan->kode_registrasi = $kode_registrasi;
-            $pemesanan->sts_transaksi = 'Lunas'; // Langsung otomatis lunas demi simulasi pendaftaran
-            $pemesanan->save();
+        $tiket->save();
 
-            // 2. Mengurangi kuota tiket yang dibeli pada tabel 'tiket' secara otomatis
-            $tiket->kuota_tersedia = $tiket->kuota_tersedia - $request->jumlah_tiket;
-            $tiket->save();
-
-            // 3. Mengurangi kuota umum event pada tabel 'events'
-            if ($event->kuota_tersedia >= $request->jumlah_tiket) {
-                $event->kuota_tersedia = $event->kuota_tersedia - $request->jumlah_tiket;
-                $event->save();
-            }
-
-            DB::commit();
-
-            // Setelah sukses, diarahkan ke halaman riwayat pendaftaran
-            return redirect()->route('pengunjung.riwayat')->with('success', 'Pembelian tiket berhasil! Kode Registrasi Anda: ' . $kode_registrasi);
-
-        } catch (\Exception $e) {
-            DB::rollback();
-            return back()->with('error', 'Terjadi kesalahan sistem: ' . $e->getMessage());
-        }
+        return redirect()->route(
+            'pengunjung.pembelian.sukses',
+            $pemesanan->id_pesanan
+        );
     }
+
+   public function sukses(int $id)
+{
+    $pemesanan = Pemesanan::with([
+        'event',
+        'tiket',
+        'user'
+    ])->findOrFail($id);
+
+    return view(
+        'pengunjung.pembelian-sukses',
+        compact('pemesanan')
+    );
+}
+
+public function tiketSaya()
+{
+    $user = Auth::user();
+
+    $pemesanan = Pemesanan::with([
+        'event',
+        'tiket'
+    ])
+    ->where(
+        'id_pengunjung',
+        $user->id_pengunjung
+    )
+    ->latest('id_pesanan')
+    ->get();
+
+    return view(
+        'pengunjung.tiket-saya',
+        compact('pemesanan')
+    );
+}
+
+public function detailTiket($id)
+{
+    $pemesanan = Pemesanan::with([
+        'event',
+        'tiket',
+        'user'
+    ])->findOrFail($id);
+
+    return view(
+        'pengunjung.detail-tiket',
+        compact('pemesanan')
+    );
+}
 }

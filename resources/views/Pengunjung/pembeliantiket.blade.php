@@ -1,251 +1,310 @@
-@extends('layouts.app') {{-- Sesuaikan dengan nama file master layout Anda --}}
+@extends('layouts.pengunjung')
 
-@section('title', 'Pembelian Tiket - ' . $event->nama_event)
+@section('title', 'Pembelian Tiket')
 
 @section('content')
-<div class="mb-4 text-sm text-gray-500">
-    <a href="#" class="hover:text-purple-800">Beranda</a> &gt; 
-    <a href="#" class="hover:text-purple-800">Acara</a> &gt; 
-    <span class="text-gray-800 font-medium">Pembelian Tiket</span>
+
+<div class="mb-6">
+    <h1 class="text-3xl font-bold text-[#7a4988]">
+        Pembelian Tiket
+    </h1>
+
+    <p class="text-gray-500 mt-2">
+        Lengkapi data pemesanan tiket event.
+    </p>
 </div>
 
-<h1 class="text-2xl font-bold text-purple-900 mb-6">Pembelian Tiket</h1>
+@if(session('error'))
+<div class="bg-red-100 text-red-700 p-4 rounded-xl mb-5">
+    {{ session('error') }}
+</div>
+@endif
 
-<form action="{{ route('pengunjung.pembelian.store') }}" method="POST" id="form-beli-tiket">
+@if($errors->any())
+<div class="bg-red-100 text-red-700 p-4 rounded-xl mb-5">
+    <ul>
+        @foreach($errors->all() as $error)
+            <li>• {{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
+@endif
+
+<form action="{{ route('pengunjung.pembelian.store') }}" method="POST">
+
     @csrf
-    <input type="hidden" name="id_event" value="{{ $event->id_event }}">
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
-        {{-- LEFT & CENTER COLUMN: Info Event, Pembeli, Pilihan Tiket --}}
-        <div class="lg:col-span-2 space-y-6">
-            
-            {{-- Detail Event Card --}}
-            <div class="card p-5 flex flex-col md:flex-row gap-5">
-                <img src="{{ asset('storage/' . $event->foto) }}" alt="Banner Event" class="w-full md:w-48 h-48 object-cover rounded-xl">
-                <div class="flex-1 space-y-3">
-                    <h2 class="text-xl font-bold text-gray-900">{{ $event->nama_event }}</h2>
-                    <p class="text-sm text-gray-600 flex items-center gap-2">
-                        <i class="fa-regular fa-calendar text-purple-700"></i> {{ \Carbon\Carbon::parse($event->tanggal)->translatedFormat('l, d F Y') }} • {{ $event->waktu }}
-                    </p>
-                    <p class="text-sm text-gray-600 flex items-center gap-2">
-                        <i class="fa-solid fa-location-dot text-purple-700"></i> {{ $event->lokasi }}
-                    </p>
-                    <p class="text-xs text-gray-500 leading-relaxed">{{ $event->deskripsi }}</p>
-                </div>
-            </div>
+    <input type="hidden"
+        name="id_event"
+        value="{{ $event->id_event }}">
 
-            {{-- Informasi Pembeli --}}
-            <div class="card p-5 space-y-4">
-                <h3 class="font-bold text-purple-900 text-base border-b pb-2">Informasi Pembeli</h3>
-                <div class="space-y-3">
+    <div class="grid lg:grid-cols-3 gap-6">
+
+        {{-- Informasi Event --}}
+        <div class="lg:col-span-1">
+
+            <div class="bg-white rounded-3xl shadow p-6">
+
+                <img
+                    src="{{ asset('images/'.$event->poster) }}"
+                    class="w-full rounded-2xl mb-5">
+
+                <h2 class="text-2xl font-bold text-[#7a4988]">
+                    {{ $event->judul }}
+                </h2>
+
+                <p class="text-gray-500 mt-3">
+                    {{ $event->deskripsi }}
+                </p>
+
+                <div class="mt-5 space-y-3">
+
                     <div>
-                        <label class="text-xs font-semibold text-gray-600 mb-1 block">Nama Lengkap</label>
-                        <input type="text" value="{{ $user->name }}" class="input-field bg-gray-50" readonly>
+                        <span class="font-semibold">
+                            Lokasi:
+                        </span>
+
+                        {{ $event->lokasi }}
                     </div>
+
                     <div>
-                        <label class="text-xs font-semibold text-gray-600 mb-1 block">No. HP</label>
-                        <input type="text" value="{{ $user->no_hp ?? '081234567890' }}" class="input-field bg-gray-50" readonly>
+                        <span class="font-semibold">
+                            Tanggal:
+                        </span>
+
+                        {{ $event->tgl_mulai }}
                     </div>
+
                     <div>
-                        <label class="text-xs font-semibold text-gray-600 mb-1 block">Email</label>
-                        <input type="text" value="{{ $user->email }}" class="input-field bg-gray-50" readonly>
+                        <span class="font-semibold">
+                            Jam:
+                        </span>
+
+                        {{ $event->jam_mulai }}
                     </div>
-                    <div>
-                        <label class="text-xs font-semibold text-gray-600 mb-1 block">Alamat</label>
-                        <textarea class="input-field bg-gray-50 resize-none h-20" readonly>{{ $user->alamat ?? 'Jl. Malaka No. 12, Bandung, Jawa Barat' }}</textarea>
-                    </div>
-                </div>
-            </div>
 
-            {{-- Pilihan Tiket --}}
-            <div class="card p-5 space-y-4">
-                <h3 class="font-bold text-purple-900 text-base border-b pb-2">Pilihan Tiket</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    
-                    <label class="border-2 border-gray-200 rounded-xl p-4 flex items-start gap-3 cursor-pointer hover:border-purple-300 transition-all option-tiket">
-                        <input type="radio" name="id_tiket" value="1" data-nama="Early Bird" data-harga="30000" class="mt-1 accent-purple-800" required>
-                        <div>
-                            <span class="font-bold text-gray-800 block text-sm">Early Bird</span>
-                            <span class="text-purple-700 font-bold text-sm">Rp 30.000</span>
-                            <span class="text-xs text-gray-400 block mt-1">Sisa 10</span>
-                        </div>
-                    </label>
-
-                    <label class="border-2 border-gray-200 rounded-xl p-4 flex items-start gap-3 cursor-pointer hover:border-purple-300 transition-all option-tiket">
-                        <input type="radio" name="id_tiket" value="2" data-nama="Normal" data-harga="50000" class="mt-1 accent-purple-800">
-                        <div>
-                            <span class="font-bold text-gray-800 block text-sm">Normal</span>
-                            <span class="text-purple-700 font-bold text-sm">Rp 50.000</span>
-                            <span class="text-xs text-gray-400 block mt-1">Sisa 32</span>
-                        </div>
-                    </label>
-
-                    <label class="border-2 border-gray-200 rounded-xl p-4 flex items-start gap-3 cursor-pointer hover:border-purple-300 transition-all option-tiket col-span-1 md:col-span-2">
-                        <input type="radio" name="id_tiket" value="3" data-nama="VIP" data-harga="150000" class="mt-1 accent-purple-800">
-                        <div class="w-full">
-                            <div class="flex justify-between items-center">
-                                <span class="font-bold text-gray-800 text-sm">VIP</span>
-                                <span class="text-purple-700 font-bold text-sm">Rp 150.000</span>
-                            </div>
-                            <ul class="text-xs text-gray-500 mt-2 space-y-1 list-disc list-inside">
-                                <li>Akses area khusus</li>
-                                <li>Tempat duduk prioritas</li>
-                                <li>Merchandise eksklusif</li>
-                            </ul>
-                        </div>
-                    </label>
                 </div>
 
-                {{-- Jumlah Tiket --}}
-                <div class="flex items-center justify-between pt-4 border-t">
-                    <span class="font-semibold text-sm text-gray-700">Jumlah Tiket</span>
-                    <div class="flex items-center border rounded-xl overflow-hidden bg-gray-50">
-                        <button type="button" id="btn-minus" class="px-3 py-2 hover:bg-gray-200 text-gray-600 font-bold">-</button>
-                        <input type="number" name="jumlah_tiket" id="jumlah-tiket" value="1" min="1" class="w-12 text-center bg-transparent border-none text-sm font-bold focus:outline-none" readonly>
-                        <button type="button" id="btn-plus" class="px-3 py-2 hover:bg-gray-200 text-gray-600 font-bold">+</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- RIGHT COLUMN: Metode Pembayaran & Ringkasan --}}
-        <div class="space-y-6">
-            
-            {{-- Metode Pembayaran --}}
-            <div class="card p-5 space-y-4">
-                <h3 class="font-bold text-purple-900 text-base border-b pb-2">Pilih Metode Pembayaran</h3>
-                <div class="space-y-3">
-                    <label class="flex items-center justify-between p-3 border rounded-xl cursor-pointer hover:bg-gray-50">
-                        <div class="flex items-center gap-3">
-                            <input type="radio" name="metode_pembayaran" value="Transfer Bank" class="accent-purple-800" required>
-                            <span class="text-sm font-medium text-gray-700">Transfer Bank</span>
-                        </div>
-                        <div class="flex gap-1 text-[10px] font-bold text-gray-500">
-                            <span class="border px-1.5 py-0.5 rounded bg-white">BCA</span>
-                            <span class="border px-1.5 py-0.5 rounded bg-white">Mandiri</span>
-                        </div>
-                    </label>
-
-                    <label class="flex items-center justify-between p-3 border rounded-xl cursor-pointer hover:bg-gray-50">
-                        <div class="flex items-center gap-3">
-                            <input type="radio" name="metode_pembayaran" value="Virtual Account" class="accent-purple-800">
-                            <span class="text-sm font-medium text-gray-700">Virtual Account</span>
-                        </div>
-                        <div class="flex gap-1 text-[10px] font-bold text-gray-500">
-                            <span class="border px-1.5 py-0.5 rounded bg-white">BNI</span>
-                            <span class="border px-1.5 py-0.5 rounded bg-white">BRI</span>
-                        </div>
-                    </label>
-
-                    <label class="flex items-center justify-between p-3 border rounded-xl cursor-pointer hover:bg-gray-50">
-                        <div class="flex items-center gap-3">
-                            <input type="radio" name="metode_pembayaran" value="E-Wallet" class="accent-purple-800">
-                            <span class="text-sm font-medium text-gray-700">E-Wallet</span>
-                        </div>
-                        <div class="flex gap-1 text-[10px] font-bold text-gray-500">
-                            <span class="border px-1.5 py-0.5 rounded bg-white">GoPay</span>
-                            <span class="border px-1.5 py-0.5 rounded bg-white">OVO</span>
-                        </div>
-                    </label>
-                </div>
-            </div>
-
-            {{-- Ringkasan Pesanan --}}
-            <div class="card p-5 space-y-4">
-                <h3 class="font-bold text-purple-900 text-base border-b pb-2">Ringkasan Pesanan</h3>
-                <div class="space-y-3 text-sm text-gray-600">
-                    <div class="flex justify-between">
-                        <span id="label-ringkasan-tiket">Tiket x1</span>
-                        <span id="val-ringkasan-tiket" class="font-semibold text-gray-800">Rp 0</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span>Biaya layanan</span>
-                        <span class="font-semibold text-gray-800">Rp 5.000</span>
-                    </div>
-                    <div class="border-t pt-3 flex justify-between items-center">
-                        <span class="font-bold text-gray-800 text-base">Total</span>
-                        <span id="val-total-harga" class="font-bold text-purple-800 text-lg">Rp 5.000</span>
-                    </div>
-                </div>
-
-                <div class="space-y-2 pt-2">
-                    <button type="submit" class="btn-primary text-sm shadow-md shadow-purple-200">Bayar Sekarang</button>
-                    <a href="{{ route('home') }}" class="btn-outline text-sm text-center block w-full py-2 rounded-xl">Batal</a>
-                </div>
             </div>
 
         </div>
+
+        {{-- Form --}}
+        <div class="lg:col-span-2">
+
+            <div class="bg-white rounded-3xl shadow p-8">
+
+                <h2 class="text-2xl font-bold mb-6 text-[#7a4988]">
+                    Data Pemesan
+                </h2>
+
+                <div class="grid md:grid-cols-2 gap-5">
+
+                    <div>
+                        <label class="font-semibold">
+                            Nama
+                        </label>
+
+                        <input
+                            type="text"
+                            name="name"
+                            value="{{ $user->name }}"
+                            class="w-full mt-2 border rounded-xl p-3">
+                    </div>
+
+                    <div>
+                        <label class="font-semibold">
+                            Email
+                        </label>
+
+                        <input
+                            type="email"
+                            name="email"
+                            value="{{ $user->email }}"
+                            class="w-full mt-2 border rounded-xl p-3">
+                    </div>
+
+                    <div>
+                        <label class="font-semibold">
+                            Nomor HP
+                        </label>
+
+                        <input
+                            type="text"
+                            name="no_hp"
+                            value="{{ $user->no_hp }}"
+                            class="w-full mt-2 border rounded-xl p-3">
+                    </div>
+
+                    <div>
+                        <label class="font-semibold">
+                            Alamat
+                        </label>
+
+                        <input
+                            type="text"
+                            name="alamat"
+                            value="{{ $user->alamat }}"
+                            class="w-full mt-2 border rounded-xl p-3">
+                    </div>
+
+                </div>
+
+                <hr class="my-8">
+
+                <h2 class="text-2xl font-bold mb-6 text-[#7a4988]">
+                    Tiket
+                </h2>
+
+                <div class="space-y-5">
+
+                    <div>
+
+                        <label class="font-semibold">
+                            Jenis Tiket
+                        </label>
+
+                        <select
+                            name="id_tiket"
+                            id="id_tiket"
+                            class="w-full mt-2 border rounded-xl p-3">
+
+                            <option value="">
+                                Pilih Tiket
+                            </option>
+
+                            @foreach($tiket as $item)
+
+                            <option
+                                value="{{ $item->id_tiket }}"
+                                data-harga="{{ $item->harga }}">
+
+                                {{ $item->jenis_tiket }}
+                                -
+                                Rp {{ number_format($item->harga,0,',','.') }}
+
+                            </option>
+
+                            @endforeach
+
+                        </select>
+
+                    </div>
+
+                    <div>
+
+                        <label class="font-semibold">
+                            Harga Tiket
+                        </label>
+
+                        <input
+                            type="text"
+                            id="harga"
+                            readonly
+                            class="w-full mt-2 border rounded-xl p-3 bg-gray-100">
+
+                    </div>
+
+                    <div>
+
+                        <label class="font-semibold">
+                            Jumlah Tiket
+                        </label>
+
+                        <input
+                            type="number"
+                            name="jumlah_tiket"
+                            id="jumlah_tiket"
+                            min="1"
+                            value="1"
+                            class="w-full mt-2 border rounded-xl p-3">
+
+                    </div>
+
+                    <div>
+
+                        <label class="font-semibold">
+                            Metode Pembayaran
+                        </label>
+
+                        <input
+                            type="text"
+                            value="Cash"
+                            readonly
+                            class="w-full mt-2 border rounded-xl p-3 bg-gray-100">
+
+                    </div>
+
+                    <div>
+
+                        <label class="font-semibold">
+                            Total Harga
+                        </label>
+
+                        <input
+                            type="text"
+                            id="total"
+                            readonly
+                            class="w-full mt-2 border rounded-xl p-3 bg-purple-100 font-bold text-[#7a4988]">
+
+                    </div>
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="mt-8 w-full bg-[#7a4988] hover:bg-[#693b76] text-white py-4 rounded-xl font-semibold">
+
+                    Pesan Tiket
+
+                </button>
+
+            </div>
+
         </div>
+<<<<<<< HEAD
+=======
+        </div>
+>>>>>>> 1f4122ef3935aa3335b294cf6c8a5a43b2316de8
     </div>
+
 </form>
-@endsection
 
-@push('scripts')
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Selector disesuaikan ke input[name="id_tiket"]
-        const radioTiket = document.querySelectorAll('input[name="id_tiket"]');
-        const inputJumlah = document.getElementById('jumlah-tiket');
-        const btnMinus = document.getElementById('btn-minus');
-        const btnPlus = document.getElementById('btn-plus');
-        
-        const labelRingkasanTiket = document.getElementById('label-ringkasan-tiket');
-        const valRingkasanTiket = document.getElementById('val-ringkasan-tiket');
-        const valTotalHarga = document.getElementById('val-total-harga');
-        
-        let hargaSatuan = 0;
-        const biayaLayanan = 5000;
 
-        function formatRupiah(angka) {
-            return 'Rp ' + angka.toLocaleString('id-ID');
-        }
+    const tiket = document.getElementById('id_tiket');
+    const jumlah = document.getElementById('jumlah_tiket');
+    const harga = document.getElementById('harga');
+    const total = document.getElementById('total');
 
-        function hitungTotal() {
-            let jumlah = parseInt(inputJumlah.value);
-            
-            if (hargaSatuan === 0) {
-                valRingkasanTiket.innerText = 'Rp 0';
-                valTotalHarga.innerText = formatRupiah(biayaLayanan);
-                return;
-            }
+    function hitungTotal()
+    {
+        let selected =
+            tiket.options[tiket.selectedIndex];
 
-            let subtotalTiket = hargaSatuan * jumlah;
-            let total = subtotalTiket + biayaLayanan;
+        let hrg =
+            selected.getAttribute('data-harga') || 0;
 
-            // Mengambil nama tiket dari atribut data-nama (Early Bird/Normal/VIP)
-            let selectedRadio = document.querySelector('input[name="id_tiket"]:checked');
-            let namaTiket = selectedRadio ? selectedRadio.getAttribute('data-nama') : '';
+        harga.value =
+            'Rp ' +
+            Number(hrg).toLocaleString('id-ID');
 
-            labelRingkasanTiket.innerText = `Tiket (${namaTiket}) x${jumlah}`;
-            valRingkasanTiket.innerText = formatRupiah(subtotalTiket);
-            valTotalHarga.innerText = formatRupiah(total);
-        }
+        total.value =
+            'Rp ' +
+            (hrg * jumlah.value)
+            .toLocaleString('id-ID');
+    }
 
-        // Event listener saat ganti jenis tiket
-        radioTiket.forEach(radio => {
-            radio.addEventListener('change', function() {
-                // Beri efek highlight border pada opsi terpilih
-                document.querySelectorAll('.option-tiket').forEach(el => el.classList.remove('border-purple-600', 'bg-purple-50/50'));
-                this.closest('.option-tiket').classList.add('border-purple-600', 'bg-purple-50/50');
-                
-                hargaSatuan = parseInt(this.getAttribute('data-harga'));
-                hitungTotal();
-            });
-        });
+    tiket.addEventListener(
+        'change',
+        hitungTotal
+    );
 
-        // Event counter tambah/kurang jumlah tiket
-        btnPlus.addEventListener('click', function() {
-            inputJumlah.value = parseInt(inputJumlah.value) + 1;
-            hitungTotal();
-        });
+    jumlah.addEventListener(
+        'input',
+        hitungTotal
+    );
 
-        btnMinus.addEventListener('click', function() {
-            if (parseInt(inputJumlah.value) > 1) {
-                inputJumlah.value = parseInt(inputJumlah.value) - 1;
-                hitungTotal();
-            }
-        });
-    });
 </script>
-@endpush
+
+@endsection

@@ -11,15 +11,6 @@ use App\Models\KategoriEvent;
 
 class AcaraController extends Controller
 {
-
-    public function index()
-    {
-        // Ambil semua data acara dari database
-        $events = \App\Models\Event::latest()->get();
-
-        // Kembalikan ke view (pastikan nama view-nya sesuai dengan file-mu)
-        return view('admin.acara.index', compact('events'));
-    }
     public function create()
     {
         $kategoris = KategoriEvent::all();
@@ -53,7 +44,6 @@ class AcaraController extends Controller
             'jam_mulai' => $request->jam_mulai,
             'jam_selesai' => $request->jam_selesai,
             'kapasitas' => 0,
-            'kuota_tersedia' => 0,
             'lokasi' => $request->lokasi,
             'id_kategori' => $request->id_kategori,
             'status_event' => $request->status_event,
@@ -171,7 +161,6 @@ class AcaraController extends Controller
         $event = Event::where('id_event', $id_event)->firstOrFail();
         $event->update([
             'kapasitas' => $totalKapasitas,
-            'kuota_tersedia' => $totalKapasitas
         ]);
 
         return redirect()->route('admin.dashboard')

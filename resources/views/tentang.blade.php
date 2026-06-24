@@ -72,7 +72,7 @@
 
         {{-- Footer Call to Action --}}
         <div class="mt-20 text-center">
-            <a href="{{ route('pengunjung.kontak') }}" class="inline-block bg-white px-10 py-5 rounded-full border-4 border-dashed border-purplePrimary animate-bounce hover:bg-purplePrimary hover:text-white transition-all duration-300 group">
+            <a href="{{ route('pengunjung.contact') }}" class="inline-block bg-white px-10 py-5 rounded-full border-4 border-dashed border-purplePrimary animate-bounce hover:bg-purplePrimary hover:text-white transition-all duration-300 group">
                 <p class="text-lg font-black text-purplePrimary group-hover:text-white uppercase">Siap bikin event? Hubungi kami!</p>
             </a>
         </div>
