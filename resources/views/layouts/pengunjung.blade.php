@@ -57,17 +57,17 @@
             <div class="flex items-center gap-8">
 
                 <a href="{{ route('home') }}"
-                class="text-sm font-bold text-black hover:text-[#7a4988] no-underline">
+                class="text-sm font-bold text-blue hover:text-[#7a4988] no-underline">
                     Beranda
                 </a>
 
                 <a href="{{ route('pengunjung.dashboard') }}"
-                class="text-sm font-bold text-black hover:text-[#7a4988] no-underline">
+                class="text-sm font-bold text-blue hover:text-[#7a4988] no-underline">
                     Acara
                 </a>
 
                 <a href="{{ route('pengunjung.tentang') }}"
-                class="text-sm font-bold text-black hover:text-[#7a4988] no-underline">
+                class="text-sm font-bold text-blue hover:text-[#7a4988] no-underline">
                     Tentang Kami
                 </a>
 
