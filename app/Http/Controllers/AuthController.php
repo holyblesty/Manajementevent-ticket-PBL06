@@ -13,7 +13,8 @@ class AuthController extends Controller
     // 1. Menampilkan Form Login
     public function showLoginForm()
     {
-        return view('auth.login');
+        // Arahkan kembali ke home agar modal bisa muncul
+        return redirect()->route('home');
     }
 
     // 2. Proses Login
@@ -44,7 +45,8 @@ class AuthController extends Controller
     // 3. Menampilkan Form Register
     public function showRegisterForm()
     {
-        return view('auth.register');
+        // Arahkan kembali ke home
+        return redirect()->route('home');
     }
 
     // 4. Proses Register
