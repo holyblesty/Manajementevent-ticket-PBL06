@@ -101,29 +101,26 @@
 
                     </div>
                      {{-- CTA --}}
-                <div class="mt-8">
+          <div class="mt-8">
 
-                    @if($event->kuota_aktual > 0)
+    @if($event->kuota_aktual > 0)
 
-                        <a href="{{ route('pengunjung.pendaftaran', $event->id_event) }}"
-                            class="px-4 py-2 bg-[#7a4988] text-white px-5 py-2 rounded-r-xl text-sm font-semibold hover:bg-[#693b76]">
-                            Beli Sekarang
-                        </a>
-                    @else
+        <a href="{{ route('pengunjung.pembelian', $event->id_event) }}"
+           class="px-4 py-2 bg-[#7a4988] text-white rounded-xl text-sm font-semibold hover:bg-[#693b76]">
+            Beli Sekarang
+        </a>
 
-                        <button
-                            disabled
-                            class="w-full lg:w-auto px-8 py-4 rounded-xl bg-gray-300 text-white">
+    @else
 
-                            Kuota Penuh
+        <button
+            disabled
+            class="w-full lg:w-auto px-8 py-4 rounded-xl bg-gray-300 text-white">
+            Kuota Penuh
+        </button>
 
-                        </button>
+    @endif
 
-                </div>
-
-                    @endif
-
-                </div>
+</div>
 
             </div>
 
