@@ -23,13 +23,9 @@ class pembeliancontroller extends Controller
         $user = Auth::user();
 
         return view(
-            'pengunjung.pembelian',
-            compact(
-                'event',
-                'tiket',
-                'user'
-            )
-        );
+    'pengunjung.pembeliantiket',
+    compact('event','tiket','user')
+);
     }
 
     public function store(Request $request)
@@ -96,17 +92,52 @@ class pembeliancontroller extends Controller
         );
     }
 
-    public function sukses(int $id)
-    {
-        $pemesanan = Pemesanan::with([
-            'event',
-            'tiket',
-            'user'
-        ])->findOrFail($id);
+   public function sukses(int $id)
+{
+    $pemesanan = Pemesanan::with([
+        'event',
+        'tiket',
+        'user'
+    ])->findOrFail($id);
 
-        return view(
-            'pengunjung.pembelian-sukses',
-            compact('pemesanan')
-        );
-    }
+    return view(
+        'pengunjung.pembelian-sukses',
+        compact('pemesanan')
+    );
+}
+
+public function tiketSaya()
+{
+    $user = Auth::user();
+
+    $pemesanan = Pemesanan::with([
+        'event',
+        'tiket'
+    ])
+    ->where(
+        'id_pengunjung',
+        $user->id_pengunjung
+    )
+    ->latest('id_pesanan')
+    ->get();
+
+    return view(
+        'pengunjung.tiket-saya',
+        compact('pemesanan')
+    );
+}
+
+public function detailTiket($id)
+{
+    $pemesanan = Pemesanan::with([
+        'event',
+        'tiket',
+        'user'
+    ])->findOrFail($id);
+
+    return view(
+        'pengunjung.detail-tiket',
+        compact('pemesanan')
+    );
+}
 }

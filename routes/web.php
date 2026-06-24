@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\StatistikController;
 use App\Http\Controllers\Pengunjung\DashboardController as PengunjungDashboardController;
 use App\Http\Controllers\Pengunjung\EventController;
 use App\Http\Controllers\Pengunjung\PendaftaranController;
+use App\Http\Controllers\pengunjung\pembeliancontroller;
 
 /*
 |--------------------------------------------------------------------------
