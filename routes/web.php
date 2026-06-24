@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\StatistikController;
 use App\Http\Controllers\Pengunjung\DashboardController as PengunjungDashboardController;
 use App\Http\Controllers\Pengunjung\EventController;
 use App\Http\Controllers\Pengunjung\PendaftaranController;
+use App\Http\Controllers\Pengunjung\ProfilController;
 use App\Http\Controllers\pengunjung\pembeliancontroller;
 
 
@@ -70,92 +71,28 @@ Route::prefix('pengunjung')->name('pengunjung.')->middleware('auth:web')->group(
 
     // Dashboard Pengunjung
     Route::get('/dashboard', [PengunjungDashboardController::class, 'index'])->name('dashboard');
-
-    // Halaman tiket saya
     Route::get('/tiket', [PengunjungDashboardController::class, 'tiket'])->name('tiket');
 
-    // Halaman Event Pengunjung
+    // Halaman Event
     Route::get('/event/{id}', [EventController::class, 'show'])->name('event.show');
     Route::post('/daftar-event', [EventController::class, 'daftarEvent'])->name('daftar-event');
 
-    // Halaman pendaftaran Event
-    Route::get('/event/{id_event}/daftar', [PendaftaranController::class])
-        ->name('pendaftaran');
+    Route::get('/event/{id_event}/daftar', [PendaftaranController::class, 'index'])->name('pendaftaran');
+    Route::post('/pendaftaran', [PendaftaranController::class, 'store'])->name('pendaftaran.store');
 
-    Route::post('/pendaftaran', [PendaftaranController::class, 'store'])
-        ->name('pendaftaran.store');
-
-    // Riwayat & Profil
+    // Riwayat
     Route::get('/riwayat', function () {
         return view('Pengunjung.riwayat');
     })->name('riwayat');
 
-    Route::get('/profil', function () {
-        return view('Pengunjung.profil');
-    })->name('profil');
-
-    // 2. Form Alihan Mengubah Informasi Profil
-    Route::get('/profil/edit', function () {
-        // Menggunakan \App\Models\User karena data login merujuk ke tabel users kelompok Anda
-        $user = \App\Models\Pengunjung::findOrFail(\Illuminate\Support\Facades\Auth::id());
-
-        // Logika Pengaman: Cek jika user pernah update data dalam kurun waktu 7 hari terakhir
-        $bisaUpdate = true;
-        $sisaHari = 0;
-        if ($user->updated_at && $user->updated_at->diffInDays(now()) < 7) {
-            $bisaUpdate = false;
-            $sisaHari = 7 - $user->updated_at->diffInDays(now());
-        }
-
-        return view('pengunjung.profil-edit', compact('user', 'bisaUpdate', 'sisaHari'));
-    })->name('profil.edit');
-
-    // 3. Proses Validasi & Simpan Perubahan Informasi Profil (Sisi Server)
-    Route::put('/profil/update', function (\Illuminate\Http\Request $request) {
-        $user = \App\Models\Pengunjung::findOrFail(\Illuminate\Support\Facades\Auth::id());
-
-        // Antisipasi lapis kedua jika user menembak route langsung tanpa lewat tombol form
-        if ($user->updated_at && $user->updated_at->diffInDays(now()) < 7) {
-            return redirect()->route('pengunjung.profil')->with('error', 'Anda hanya dapat mengubah informasi profil sekali seminggu.');
-        }
-
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'no_hp' => 'nullable|string|max:15',
-            'alamat' => 'nullable|string',
-        ]);
-
-        $user->name = $request->name;
-        $user->no_hp = $request->no_hp;
-        $user->alamat = $request->alamat;
-
-        // Memaksa sistem memperbarui record timestamp updated_at ke waktu sekarang sebagai acuan hitungan hari
-        $user->touch();
-        $user->save();
-
-        return redirect()->route('pengunjung.profil')->with('success', 'Informasi pribadi Anda berhasil diperbarui!');
-    })->name('profil.update');
-
-    // 4. Form Alihan Mengubah Kata Sandi / Password (Bebas Kapan Saja)
-    Route::get('/profil/password', function () {
-        return view('pengunjung.profil-password');
-    })->name('profil.password');
-
-    // 5. Proses Enkripsi Hash & Update Password Baru ke Database
-    Route::put('/profil/password/update', function (\Illuminate\Http\Request $request) {
-        $request->validate([
-            'password' => 'required|string|min:8|confirmed', // 'confirmed' otomatis mencocokkan input password_confirmation
-        ], [
-            'password.confirmed' => 'Konfirmasi ulang kata sandi baru tidak cocok.',
-            'password.min' => 'Keamanan kata sandi minimal harus berisi 8 karakter.'
-        ]);
-
-        $user = \App\Models\Pengunjung::findOrFail(\Illuminate\Support\Facades\Auth::id());
-        $user->password = \Illuminate\Support\Facades\Hash::make($request->password);
-        $user->save();
-
-        return redirect()->route('pengunjung.profil')->with('success', '🔒 Kata sandi Anda berhasil diperbarui!');
-    })->name('profil.password.update');
-
-    // =========================================================================
+    // Profil (Hanya satu kali pembungkusan)
+    Route::prefix('pengunjung')->name('pengunjung.')->middleware('auth:web')->group(function () {
+        Route::prefix('profil')->name('profil.')->group(function () {
+            Route::get('/', [ProfilController::class, 'index'])->name('index');
+            Route::get('/edit', [ProfilController::class, 'edit'])->name('edit');
+            Route::put('/update', [ProfilController::class, 'update'])->name('update');
+            Route::get('/password', [ProfilController::class, 'editPassword'])->name('password');
+            Route::put('/password/update', [ProfilController::class, 'updatePassword'])->name('password.update');
+        });
+    });
 });
