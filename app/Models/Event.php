@@ -15,6 +15,7 @@ class Event extends Model
     protected $table = 'events';
     protected $primaryKey = 'id_event';
 
+
     protected $fillable = [
         'judul',
         'deskripsi',
@@ -28,6 +29,7 @@ class Event extends Model
         'poster',
         'id_admin',
         'kapasitas',
+        'kuota_tersedia',
     ];
 
     protected $casts = [
@@ -36,6 +38,10 @@ class Event extends Model
         // 'jam_mulai' dan 'jam_selesai' tidak perlu di-cast jika formatnya H:i:s di DB
     ];
 
+    protected $attributes = [
+        'kapasitas' => 0,
+        'status_event' => 'open',
+    ];
     /*
     |--------------------------------------------------------------------------
     | RELATIONSHIPS

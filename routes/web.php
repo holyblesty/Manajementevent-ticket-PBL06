@@ -86,13 +86,12 @@ Route::prefix('pengunjung')->name('pengunjung.')->middleware('auth:web')->group(
     })->name('riwayat');
 
     // Profil (Hanya satu kali pembungkusan)
-    Route::prefix('pengunjung')->name('pengunjung.')->middleware('auth:web')->group(function () {
-        Route::prefix('profil')->name('profil.')->group(function () {
-            Route::get('/', [ProfilController::class, 'index'])->name('index');
-            Route::get('/edit', [ProfilController::class, 'edit'])->name('edit');
-            Route::put('/update', [ProfilController::class, 'update'])->name('update');
-            Route::get('/password', [ProfilController::class, 'editPassword'])->name('password');
-            Route::put('/password/update', [ProfilController::class, 'updatePassword'])->name('password.update');
-        });
+
+    Route::prefix('profil')->name('profil.')->group(function () {
+        Route::get('/', [ProfilController::class, 'index'])->name('index');
+        Route::get('/edit', [ProfilController::class, 'edit'])->name('edit');
+        Route::put('/update', [ProfilController::class, 'update'])->name('update');
+        Route::get('/password', [ProfilController::class, 'editPassword'])->name('password');
+        Route::put('/password/update', [ProfilController::class, 'updatePassword'])->name('password.update');
     });
 });

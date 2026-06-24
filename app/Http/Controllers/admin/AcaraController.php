@@ -10,57 +10,104 @@ use Illuminate\Support\Facades\{DB, File, Auth};
 
 class AcaraController extends Controller
 {
+    // 1. READ: Menampilkan daftar acara
+    public function index()
+    {
+        $events = Event::with('kategori')->get();
+        return view('admin.dashboard', compact('events'));
+    }
+
+    // 2. CREATE: Menampilkan form tambah
+    public function create()
+    {
+        $kategoris = KategoriEvent::all();
+        return view('admin.tambah', compact('kategoris'));
+    }
+
+    // 3. STORE: Menyimpan event baru
     public function store(StoreEventRequest $request)
     {
-        DB::transaction(function () use ($request) {
-            $imageName = time() . '_' . $request->poster->hashName();
-            $request->poster->move(public_path('images'), $imageName);
+        try {
 
-            Event::create(array_merge($request->validated(), [
-                'poster' => $imageName,
-                'id_admin' => Auth::id(),
-                'kapasitas' => 0,
-            ]));
-        });
-
-        return redirect()->route('admin.dashboard')->with('success', 'Event berhasil dibuat.');
-    }
-
-    public function updateTiket(Request $request, int $id_event)
-    {
-        $request->validate(['tiket' => 'required|array']);
-
-        DB::transaction(function () use ($request, $id_event) {
-            foreach ($request->tiket as $data) {
-                Tiket::updateOrCreate(
-                    ['id_event' => $id_event, 'jenis_tiket' => $data['nama']],
-                    [
-                        'harga' => $data['harga'],
-                        'kuota_total' => $data['kuota'],
-                        'kuota_tersedia' => $data['kuota'],
-                        'deskripsi_tiket' => $data['deskripsi'] ?? null,
-                    ]
-                );
+            if (!$request->hasFile('poster')) {
+                throw new \Exception('File poster tidak ditemukan');
             }
-            // Biarkan DB yang menghitung kapasitas agar akurat
-            $total = Tiket::where('id_event', $id_event)->sum('kuota_total');
-            Event::where('id_event', $id_event)->update(['kapasitas' => $total]);
-        });
 
-        return redirect()->route('admin.dashboard')->with('success', 'Tiket diperbarui.');
+            $image = $request->file('poster');
+
+            $imageName = time() . '_' . $image->getClientOriginalName();
+
+            $image->move(public_path('images'), $imageName);
+
+            $data = $request->validated();
+            $data['poster'] = $imageName;
+            $data['id_admin'] = Auth::id();
+            $data['kapasitas'] = 0;
+            $data['kuota_tersedia'] = 0;
+            $data['status_event'] = 'open';
+
+            Event::create($data);
+
+            return redirect()
+                ->route('admin.dashboard')
+                ->with('success', 'Event berhasil dibuat.');
+        } catch (\Exception $e) {
+
+            return back()
+                ->withInput()
+                ->with('error', $e->getMessage());
+        }
     }
 
-    public function destroy(int $id_event)
+    // 4. EDIT: Menampilkan form edit
+    public function edit(int $id_event)
+    {
+        $event = Event::where('id_event', $id_event)->firstOrFail();
+        $kategoris = KategoriEvent::all();
+
+        return view('admin.edit', compact('event', 'kategoris'));
+    }
+
+    // Halaman Manajemen Tiket
+    public function tiket(int $id_event)
+    {
+        $event = Event::with('tiket')->findOrFail($id_event);
+
+        return view('admin.tiket', compact('event'));
+    }
+
+    // 5. UPDATE: Menyimpan perubahan
+    public function update(Request $request, int $id_event)
     {
         $event = Event::where('id_event', $id_event)->firstOrFail();
 
-        DB::transaction(function () use ($event) {
-            if ($event->poster && File::exists(public_path('images/' . $event->poster))) {
-                File::delete(public_path('images/' . $event->poster));
+        $request->validate([
+            'judul' => 'required|string|max:255',
+            'poster' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
+        ]);
+
+        DB::transaction(function () use ($request, $event) {
+
+            $data = $request->except('poster');
+
+            if ($request->hasFile('poster')) {
+
+                if ($event->poster && File::exists(public_path('images/' . $event->poster))) {
+                    File::delete(public_path('images/' . $event->poster));
+                }
+
+                $imageName = time() . '_' . $request->poster->hashName();
+
+                $request->poster->move(public_path('images'), $imageName);
+
+                $data['poster'] = $imageName;
             }
-            $event->delete(); // Pastikan ada onDelete('cascade') di migration tiket
+
+            $event->update($data);
         });
 
-        return redirect()->route('admin.dashboard')->with('success', 'Event dihapus permanen.');
+        return redirect()
+            ->route('admin.dashboard')
+            ->with('success', 'Event berhasil diupdate.');
     }
 }

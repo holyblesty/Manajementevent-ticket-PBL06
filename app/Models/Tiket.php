@@ -27,6 +27,10 @@ class Tiket extends Model
         'kuota_tersedia',
     ];
 
+    protected $attributes = [
+        'kuota_tersedia' => 0,
+        'harga' => 0,
+    ];
     /**
      * Relasi tiket ke event
      * Satu tiket dimiliki satu event

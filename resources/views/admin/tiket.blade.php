@@ -65,8 +65,10 @@
 
                 @foreach(['early_bird' => 'Early Bird', 'normal' => 'Normal', 'vip' => 'VIP'] as $key => $label)
                 @php
-                    $hargaLama = $event->tiket->where('jenis_tiket', $label)->first()->harga_tiket ?? 0;
-                    $kuotaLama = $event->tiket->where('jenis_tiket', $label)->first()->kuota_tiket ?? 0;
+                 $tiket = $event->tiket->where('jenis_tiket', $label)->first();
+
+                 $hargaLama = $tiket->harga ?? 0;
+                 $kuotaLama = $tiket->kuota_total ?? 0;
                 @endphp
                 <div class="tier-card bg-white p-5 rounded-2xl border-2 border-gray-100 grid grid-cols-1 md:grid-cols-3 gap-4 items-end hover:border-[#be93d4] transition-all shadow-sm">
                     <div>
