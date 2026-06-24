@@ -28,6 +28,7 @@ Route::get('/search', [PageController::class, 'search'])->name('pengunjung.searc
 // AUTENTIKASI
 // =====================================================
 Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login.view');
     Route::post('/login', [AuthController::class, 'login'])->name('login');
     Route::post('/register', [AuthController::class, 'register'])->name('register');
 });
@@ -70,6 +71,9 @@ Route::prefix('pengunjung')->name('pengunjung.')->middleware('auth:web')->group(
     // Dashboard Pengunjung
     Route::get('/dashboard', [PengunjungDashboardController::class, 'index'])->name('dashboard');
 
+    // Halaman tiket saya
+    Route::get('/tiket', [PengunjungDashboardController::class, 'tiket'])->name('tiket');
+
     // Halaman Event Pengunjung
     Route::get('/event/{id}', [EventController::class, 'show'])->name('event.show');
     Route::post('/daftar-event', [EventController::class, 'daftarEvent'])->name('daftar-event');
@@ -93,7 +97,7 @@ Route::prefix('pengunjung')->name('pengunjung.')->middleware('auth:web')->group(
     // 2. Form Alihan Mengubah Informasi Profil
     Route::get('/profil/edit', function () {
         // Menggunakan \App\Models\User karena data login merujuk ke tabel users kelompok Anda
-        $user = \App\Models\User::findOrFail(\Illuminate\Support\Facades\Auth::id());
+        $user = \App\Models\Pengunjung::findOrFail(\Illuminate\Support\Facades\Auth::id());
 
         // Logika Pengaman: Cek jika user pernah update data dalam kurun waktu 7 hari terakhir
         $bisaUpdate = true;
@@ -108,7 +112,7 @@ Route::prefix('pengunjung')->name('pengunjung.')->middleware('auth:web')->group(
 
     // 3. Proses Validasi & Simpan Perubahan Informasi Profil (Sisi Server)
     Route::put('/profil/update', function (\Illuminate\Http\Request $request) {
-        $user = \App\Models\User::findOrFail(\Illuminate\Support\Facades\Auth::id());
+        $user = \App\Models\Pengunjung::findOrFail(\Illuminate\Support\Facades\Auth::id());
 
         // Antisipasi lapis kedua jika user menembak route langsung tanpa lewat tombol form
         if ($user->updated_at && $user->updated_at->diffInDays(now()) < 7) {
@@ -146,7 +150,7 @@ Route::prefix('pengunjung')->name('pengunjung.')->middleware('auth:web')->group(
             'password.min' => 'Keamanan kata sandi minimal harus berisi 8 karakter.'
         ]);
 
-        $user = \App\Models\User::findOrFail(\Illuminate\Support\Facades\Auth::id());
+        $user = \App\Models\Pengunjung::findOrFail(\Illuminate\Support\Facades\Auth::id());
         $user->password = \Illuminate\Support\Facades\Hash::make($request->password);
         $user->save();
 

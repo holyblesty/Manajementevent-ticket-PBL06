@@ -47,7 +47,7 @@ class ProfilController extends Controller
      */
     public function update(Request $request)
     {
-        /** @var \App\Models\User $pengunjung */
+        /** @var \App\Models\pengunjung $pengunjung */
         $pengunjung = Auth::user();
 
         if (!$pengunjung) {
@@ -64,9 +64,9 @@ class ProfilController extends Controller
         ]);
 
         $pengunjung->update([
-            'name'          => $request->nama_lengkap, 
+            'name'          => $request->nama_lengkap,
             'email'         => $request->email,
-            'no_hp'         => $request->no_telepon, 
+            'no_hp'         => $request->no_telepon,
             'alamat'        => $request->alamat,
         ]);
 
@@ -83,7 +83,7 @@ class ProfilController extends Controller
             'foto' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        /** @var \App\Models\User $pengunjung */
+        /** @var \App\Models\pengunjung $pengunjung */
         $pengunjung = Auth::user();
 
         if (!$pengunjung) {
@@ -113,7 +113,7 @@ class ProfilController extends Controller
             'password_baru_confirmation' => 'required',
         ]);
 
-        /** @var \App\Models\User $pengunjung */
+        /** @var \App\Models\pengunjung $pengunjung */
         $pengunjung = Auth::user();
 
         if (!$pengunjung) {
@@ -133,7 +133,7 @@ class ProfilController extends Controller
      */
     public function destroy()
     {
-        /** @var \App\Models\User $pengunjung */
+        /** @var \App\Models\pengunjung $pengunjung */
         $pengunjung = Auth::user();
 
         if (!$pengunjung) {

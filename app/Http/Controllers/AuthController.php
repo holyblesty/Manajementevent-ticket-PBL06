@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pengunjung;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -47,25 +48,25 @@ class AuthController extends Controller
     }
 
     // 4. Proses Register
- public function register(Request $request)
-{
-    $request->validate([
-        'name'     => 'required|string|max:255',
-        'username' => 'required|string|unique:users,username|max:255',
-        'email'    => 'required|string|email|max:255|unique:users,email', // Tambahkan validasi email
-        'password' => 'required|string|min:6|confirmed',
-    ]);
+    public function register(Request $request)
+    {
+        $request->validate([
+            'name'     => 'required|string|max:255',
+            'username' => 'required|string|unique:users,username|max:255',
+            'email'    => 'required|string|email|max:255|unique:users,email', // Tambahkan validasi email
+            'password' => 'required|string|min:6|confirmed',
+        ]);
 
-    $user = User::create([
-        'name'     => $request->name,
-        'username' => $request->username,
-        'email'    => $request->email, // Tambahkan ini
-        'password' => Hash::make($request->password),
-    ]);
+        $pengunjung = Pengunjung::create([
+            'name'     => $request->name,
+            'username' => $request->username,
+            'email'    => $request->email, // Tambahkan ini
+            'password' => Hash::make($request->password),
+        ]);
 
-    Auth::guard('web')->login($user);
-    return redirect()->route('home')->with('success', 'Akun berhasil dibuat!');
-}
+        Auth::guard('web')->login($pengunjung);
+        return redirect()->route('home')->with('success', 'Akun berhasil dibuat!');
+    }
 
     // 5. Logout
     public function logout(Request $request)

@@ -38,7 +38,7 @@ class Pemesanan extends Model
     public function user()
     {
         return $this->belongsTo(
-            User::class,
+            Pengunjung::class,
             'id_pengunjung',
             'id_pengunjung'
         );
