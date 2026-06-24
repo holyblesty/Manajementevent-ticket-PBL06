@@ -29,7 +29,11 @@ class DashboardController extends Controller
             });
         }
 
-        $eventObjects = $query->latest()->get();
+        $eventObjects = $query
+            ->latest()
+            ->paginate(5)
+            ->withQueryString();
+
         $admin = Auth::guard('admin')->user();
 
         return view('admin.dashboard', [
@@ -38,7 +42,6 @@ class DashboardController extends Controller
             'admin' => $admin
         ]);
     }
-
     public function profile()
     {
         $admin = Auth::guard('admin')->user();
