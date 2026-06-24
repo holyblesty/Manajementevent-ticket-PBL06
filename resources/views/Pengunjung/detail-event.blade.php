@@ -58,7 +58,7 @@
                             </div>
 
                             <div class="font-semibold">
-                                {{ \Carbon\Carbon::parse($event->tanggal)->translatedFormat('l, d F Y') }}
+                                {{ \Carbon\Carbon::parse($event->tgl_mulai)->translatedFormat('l, d F Y') }}
                             </div>
 
                         </div>
@@ -104,10 +104,38 @@
                 <div class="mt-8">
 
                     @if($event->kuota_aktual > 0)
+                    <div class="mt-6">
 
-                        <a href="{{ route('pengunjung.pendaftaran', $event->id_event) }}"
+                            <h3 class="font-bold mb-3">
+                                Jenis Tiket Tersedia
+                            </h3>
+
+                            @foreach($event->tiket as $tiket)
+
+                                <div class="flex justify-between border rounded-xl p-3 mb-2">
+
+                                    <div>
+
+                                        <span class="font-semibold">
+                                            {{ $tiket->jenis_tiket }}
+                                        </span>
+
+                                    </div>
+
+                                    <div>
+
+                                        Rp {{ number_format($tiket->harga,0,',','.') }}
+
+                                    </div>
+
+                                </div>
+
+                            @endforeach
+
+                        </div>
+                        <a href="{{ route('pengunjung.pembelian.index', $event->id_event) }}"
                             class="px-4 py-2 bg-[#7a4988] text-white px-5 py-2 rounded-r-xl text-sm font-semibold hover:bg-[#693b76]">
-                            Beli Sekarang
+                            Beli Tiket
                         </a>
                     @else
 

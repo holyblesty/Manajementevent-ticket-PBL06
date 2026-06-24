@@ -11,6 +11,15 @@ use App\Models\KategoriEvent;
 
 class AcaraController extends Controller
 {
+
+    public function index()
+    {
+        // Ambil semua data acara dari database
+        $events = \App\Models\Event::latest()->get();
+
+        // Kembalikan ke view (pastikan nama view-nya sesuai dengan file-mu)
+        return view('admin.acara.index', compact('events'));
+    }
     public function create()
     {
         $kategoris = KategoriEvent::all();

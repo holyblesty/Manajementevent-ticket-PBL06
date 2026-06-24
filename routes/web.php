@@ -9,8 +9,9 @@ use App\Http\Controllers\Admin\PesertaController;
 use App\Http\Controllers\Admin\StatistikController;
 use App\Http\Controllers\Pengunjung\DashboardController as PengunjungDashboardController;
 use App\Http\Controllers\Pengunjung\EventController;
-use App\Http\Controllers\Pengunjung\PendaftaranController;
-
+use App\Http\Controllers\Pengunjung\Pembeliancontroller;
+use App\Http\Controllers\Pengunjung\ProfilController;
+use App\Http\Controllers\Pengunjung\RiwayatController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -22,6 +23,7 @@ Route::get('/', [PageController::class, 'index'])->name('home');
 Route::get('/about', [PageController::class, 'tentang'])->name('pengunjung.tentang');
 Route::get('/contact', [PageController::class, 'kontak'])->name('pengunjung.kontak');
 Route::get('/search', [PageController::class, 'search'])->name('pengunjung.search');
+
 // =====================================================
 // AUTENTIKASI
 // =====================================================
@@ -39,14 +41,9 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
     Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('dashboard');
     Route::get('/statistik', [StatistikController::class, 'index'])->name('statistik');
 
-    // CRUD Utama untuk Acara
-    Route::resource('acara', AcaraController::class)->except(['show']);
-
-    // Manajemen Tiket Massal
-    Route::prefix('acara/{id_event}')->group(function () {
-        Route::get('/tiket', [AcaraController::class, 'tiket'])->name('acara.tiket');
-        Route::put('/tiket/update', [AcaraController::class, 'updateTiket'])->name('acara.tiket.update');
-    });
+    Route::resource('acara', AcaraController::class);
+    Route::get('/acara/{id_event}/tiket', [AcaraController::class, 'tiket'])->name('acara.tiket');
+    Route::put('/acara/{id_event}/tiket/update', [AcaraController::class, 'updateTiket'])->name('acara.tiket.update');
 
     // Profil Admin
     Route::get('/profile', [AdminDashboard::class, 'profile'])->name('profile');
@@ -63,32 +60,31 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
 // =====================================================
 // PENGUNJUNG AREA 
 // =====================================================
-Route::prefix('pengunjung')->name('pengunjung.')->middleware('auth:web')->group(function () {
+Route::middleware(['auth:web'])->prefix('pengunjung')->name('pengunjung.')->group(function () {
 
     // Dashboard Pengunjung
     Route::get('/dashboard', [PengunjungDashboardController::class, 'index'])->name('dashboard');
 
-
-    // Halaman Event Pengunjung
+    // Detail Event
     Route::get('/event/{id}', [EventController::class, 'show'])->name('event.show');
-    Route::post('/daftar-event', [EventController::class, 'daftarEvent'])->name('daftar-event');
 
-    //Halaman pendaftaran Event
-    Route::get('/event/{id_event}/daftar', [PendaftaranController::class,])
-    ->name('pendaftaran');
-    Route::post('/pendaftaran', [PendaftaranController::class, 'store'])
-    ->name('pendaftaran.store');
-    
-    // Riwayat & Profil
-    Route::get('/riwayat', function () {
-        return view('Pengunjung.riwayat');
-    })->name('riwayat');
-    Route::get('/profil', function () {
-        return view('Pengunjung.profil');
-    })->name('profil');
+    // PEMBELIAN TIKET
+     Route::get('/pembelian-tiket/{id}', [PembelianController::class, 'index'])->name('pembelian.index');
 
-    // Halaman Pembelian Tiket
-    Route::get('/pembelian-tiket', function () {
-        return view('pengunjung.pembelian-tiket');
-    })->name('pembelian');
+    // Simpan transaksi pembelian
+    Route::post('/pembelian-tiket', [PembelianController::class, 'store'])->name('pembelian.store');
+
+    //RIWAYAT PENDAFTARAN
+     Route::get('/riwayat-pendaftaran', [RiwayatController::class, 'index'])->name('riwayat');
+
+    //PROFIL
+    Route::get('/profil', [ProfilController::class, 'index'])->name('profil');
+
+    Route::get('/profil/edit', [ProfilController::class, 'edit'])->name('profil.edit');
+
+    Route::put('/profil/update', [ProfilController::class, 'update'])->name('profil.update');
+
+    Route::get('/profil/password', [ProfilController::class, 'passwordForm'])->name('profil.password');
+
+    Route::put('/profil/password/update', [ProfilController::class, 'updatePassword'])->name('profil.password.update');
 });
