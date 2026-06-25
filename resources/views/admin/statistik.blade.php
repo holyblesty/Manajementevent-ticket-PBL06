@@ -281,9 +281,6 @@
                 </tbody>
             </table>
         </div>
-    </div>
-    @include('components.pagination')
-</div>
 
 {{-- HTML TOOLTIP GLOBAL MELAYANG --}}
 <div id="custom-tooltip" class="fixed bg-white/95 backdrop-blur-md text-gray-900 px-6 py-4 rounded-2xl shadow-2xl border border-gray-100 pointer-events-none opacity-0 transition-opacity duration-150 z-[9999] text-left hidden w-80">

@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Admin\AcaraController;
+use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\PesertaController;
 use App\Http\Controllers\Admin\StatistikController;
 use App\Http\Controllers\Pengunjung\DashboardController as PengunjungDashboardController;
@@ -53,14 +54,14 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
     });
 
     // Profil Admin
-    Route::get('/profile', [AdminDashboard::class, 'profile'])->name('profile');
-    Route::put('/profile/update', [AdminDashboard::class, 'updateProfile'])->name('profile.update');
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
     // Manajemen Peserta & Check-In
     Route::prefix('peserta')->name('peserta.')->group(function () {
         Route::get('/', [PesertaController::class, 'index'])->name('index');
         Route::get('/detail/{id}', [PesertaController::class, 'detail'])->name('detail');
-        Route::post('/checkin-individu/{eventId}/{regId}', [PesertaController::class, 'checkInIndividu'])->name('checkin_individu');
+        Route::put('/checkin-individu/{eventId}/{regId}', [PesertaController::class, 'checkInIndividu'])->name('checkin_individu');
     });
 });
 
@@ -77,8 +78,11 @@ Route::prefix('pengunjung')->name('pengunjung.')->middleware('auth:web')->group(
     Route::get('/event/{id}', [EventController::class, 'show'])->name('event.show');
     Route::post('/daftar-event', [EventController::class, 'daftarEvent'])->name('daftar-event');
 
-    Route::get('/event/{id_event}/daftar', [PendaftaranController::class, 'index'])->name('pendaftaran');
-    Route::post('/pendaftaran', [PendaftaranController::class, 'store'])->name('pendaftaran.store');
+    // 1. RUTE UNTUK BUKA HALAMAN (GET)
+    Route::get('/event/{id_event}/daftar', [PendaftaranController::class, 'create'])->name('pendaftaran.create');
+
+    // 2. RUTE UNTUK PROSES DATA (POST)
+    Route::post('/pendaftaran/store', [PendaftaranController::class, 'store'])->name('pendaftaran.store');
 
     // Riwayat
     Route::get('/riwayat', function () {

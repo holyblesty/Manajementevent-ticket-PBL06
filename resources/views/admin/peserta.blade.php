@@ -68,10 +68,50 @@
     </div>
 
     {{-- PAGINATION --}}
-    <div class="bg-white px-10 py-8 flex justify-center border-t border-gray-100">
-        {{ $events->links() }}
-    </div>
+   {{-- PAGINATION --}}
+@if ($events->hasPages())
+<div class="bg-white px-10 py-8 flex items-center justify-center gap-2 border-t border-gray-100">
+
+    {{-- Sebelumnya --}}
+    @if ($events->onFirstPage())
+        <span class="px-4 py-2 border border-gray-300 rounded-lg text-gray-400 cursor-not-allowed">
+            &lt;
+        </span>
+    @else
+        <a href="{{ $events->previousPageUrl() }}"
+           class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition">
+            &lt;
+        </a>
+    @endif
+
+    {{-- Nomor Halaman --}}
+    @foreach ($events->getUrlRange(1, $events->lastPage()) as $page => $url)
+        @if ($page == $events->currentPage())
+            <span class="px-4 py-2 bg-[#7a4988] text-white rounded-lg font-bold">
+                {{ $page }}
+            </span>
+        @else
+            <a href="{{ $url }}"
+               class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition">
+                {{ $page }}
+            </a>
+        @endif
+    @endforeach
+
+    {{-- Selanjutnya --}}
+    @if ($events->hasMorePages())
+        <a href="{{ $events->nextPageUrl() }}"
+           class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition">
+            &gt;
+        </a>
+    @else
+        <span class="px-4 py-2 border border-gray-300 rounded-lg text-gray-400 cursor-not-allowed">
+            &gt;
+        </span>
+    @endif
+
 </div>
+@endif
 
 <script>
     document.getElementById('eventSearch').addEventListener('input', function() {

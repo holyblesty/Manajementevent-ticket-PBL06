@@ -49,6 +49,27 @@
             <input type="text" id="searchInput" placeholder="Cari event atau lokasi..." class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-base focus:ring-1 focus:ring-[#7a4988] outline-none transition">
         </div>
         
+      <form method="GET" action="{{ route('admin.dashboard') }}">
+    <select
+        name="status"
+        onchange="this.form.submit()"
+        class="bg-gray-50 border border-gray-200 text-gray-500 text-base rounded-lg px-5 py-3 outline-none focus:ring-1 focus:ring-[#7a4988] cursor-pointer font-bold"
+    >
+        <option value="">Semua Event</option>
+
+        <option value="open" {{ request('status') == 'open' ? 'selected' : '' }}>
+            Open
+        </option>
+
+        <option value="closed" {{ request('status') == 'closed' ? 'selected' : '' }}>
+            Closed
+        </option>
+
+        <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>
+            Draft
+        </option>
+    </select>
+</form>
         <select id="filterKategori" class="bg-gray-50 border border-gray-200 text-gray-500 text-base rounded-lg px-5 py-3 outline-none focus:ring-1 focus:ring-[#7a4988] cursor-pointer font-bold">
             <option value="" {{ (isset($selectedCategory) && $selectedCategory == '') ? 'selected' : '' }}>Semua Kategori</option>
             <option value="Olahraga" {{ (isset($selectedCategory) && $selectedCategory == 'Olahraga') ? 'selected' : '' }}>Olahraga</option>

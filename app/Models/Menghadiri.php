@@ -11,16 +11,18 @@ class Menghadiri extends Model
 
     // Tentukan kolom yang boleh diisi (mass assignable)
     protected $fillable = [
-        'id_user', 
-        'id_event', 
-        'status_kehadiran', // misal: 'hadir', 'tidak hadir'
-        'waktu_check_in'
+        'id_pengunjung',
+        'id_event',
+        'id_tiket',
+        'kode_registrasi',
+        'sts_kehadiran', // misal: 'hadir', 'tidak hadir'
+
     ];
 
     // Definisikan relasi ke User
     public function user()
     {
-        return $this->belongsTo(Pengunjung::class, 'id_user');
+        return $this->belongsTo(Pengunjung::class, 'id_pengunjung');
     }
 
     // Definisikan relasi ke Event

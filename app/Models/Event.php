@@ -15,7 +15,6 @@ class Event extends Model
     protected $table = 'events';
     protected $primaryKey = 'id_event';
 
-
     protected $fillable = [
         'judul',
         'deskripsi',
@@ -35,13 +34,26 @@ class Event extends Model
     protected $casts = [
         'tgl_mulai'   => 'date',
         'tgl_selesai' => 'date',
-        // 'jam_mulai' dan 'jam_selesai' tidak perlu di-cast jika formatnya H:i:s di DB
     ];
 
+    // Hapus 'kapasitas' => 0 dari sini agar tidak memaksa nilai nol saat pembuatan
     protected $attributes = [
-        'kapasitas' => 0,
         'status_event' => 'open',
     ];
+
+    /**
+     * Otomatis sinkronisasi kuota saat Event dibuat
+     */
+    protected static function booted()
+    {
+        static::creating(function ($event) {
+            // Jika kuota_tersedia kosong, isi otomatis dengan kapasitas
+            if (is_null($event->kuota_tersedia)) {
+                $event->kuota_tersedia = $event->kapasitas;
+            }
+        });
+    }
+
     /*
     |--------------------------------------------------------------------------
     | RELATIONSHIPS
@@ -58,26 +70,23 @@ class Event extends Model
         return $this->hasMany(Tiket::class, 'id_event', 'id_event');
     }
 
-    public function pemesanan(): HasManyThrough
+    // UBAH: Mengarah ke model Pemesanan yang baru
+    public function pemesanan(): HasMany
     {
-        return $this->hasManyThrough(Pemesanan::class, Tiket::class, 'id_event', 'id_tiket', 'id_event', 'id_tiket');
-    }
-
-    public function participants(): HasMany
-    {
-        return $this->hasMany(Menghadiri::class, 'id_event', 'id_event');
-    }
-
-    public function pendaftaran(): HasMany
-    {
-        return $this->hasMany(Pendaftaran::class, 'id_event', 'id_event');
+        return $this->hasMany(Pemesanan::class, 'id_event', 'id_event');
     }
 
     /*
     |--------------------------------------------------------------------------
-    | ACCESSORS
+    | ACCESSORS (Untuk sisa kuota dinamis)
     |--------------------------------------------------------------------------
     */
+
+    // Menghitung sisa kuota secara real-time dari tabel tiket
+    public function getSisaKuotaAttribute(): int
+    {
+        return $this->tiket()->sum('kuota_tersedia');
+    }
 
     public function getPosterUrlAttribute(): string
     {
