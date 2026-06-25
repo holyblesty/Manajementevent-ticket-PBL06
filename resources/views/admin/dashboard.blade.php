@@ -152,7 +152,7 @@
     </div>
 </div>
 
-@include('components.pagination')
+<x-pagination :paginator="$events" />
 
 <script>
     function openModal(imgSrc, caption) {

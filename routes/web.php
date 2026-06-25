@@ -12,6 +12,8 @@ use App\Http\Controllers\Pengunjung\EventController;
 use App\Http\Controllers\Pengunjung\Pembeliancontroller;
 use App\Http\Controllers\Pengunjung\ProfilController;
 use App\Http\Controllers\Pengunjung\RiwayatController;
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -28,6 +30,7 @@ Route::get('/search', [PageController::class, 'search'])->name('pengunjung.searc
 // AUTENTIKASI
 // =====================================================
 Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login.view');
     Route::post('/login', [AuthController::class, 'login'])->name('login');
     Route::post('/register', [AuthController::class, 'register'])->name('register');
 });
@@ -58,14 +61,16 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
 });
 
 // =====================================================
-// PENGUNJUNG AREA 
+// PENGUNJUNG AREA
 // =====================================================
 Route::middleware(['auth:web'])->prefix('pengunjung')->name('pengunjung.')->group(function () {
 
     // Dashboard Pengunjung
     Route::get('/dashboard', [PengunjungDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/tiket', [PengunjungDashboardController::class, 'tiket'])->name('tiket');
 
-    // Detail Event
+  // Detail Event
+    // Halaman Event
     Route::get('/event/{id}', [EventController::class, 'show'])->name('event.show');
 
     // PEMBELIAN TIKET
@@ -87,4 +92,18 @@ Route::middleware(['auth:web'])->prefix('pengunjung')->name('pengunjung.')->grou
     Route::get('/profil/password', [ProfilController::class, 'passwordForm'])->name('profil.password');
 
     Route::put('/profil/password/update', [ProfilController::class, 'updatePassword'])->name('profil.password.update');
+
+    // Riwayat
+    Route::get('/riwayat', function () {
+        return view('Pengunjung.riwayat');
+    })->name('riwayat');
+
+    // Profil (Hanya satu kali pembungkusan)
+    Route::prefix('profil')->name('profil.')->group(function () {
+        Route::get('/', [ProfilController::class, 'index'])->name('index');
+        Route::get('/edit', [ProfilController::class, 'edit'])->name('edit');
+        Route::put('/update', [ProfilController::class, 'update'])->name('update');
+        Route::get('/password', [ProfilController::class, 'editPassword'])->name('password');
+        Route::put('/password/update', [ProfilController::class, 'updatePassword'])->name('password.update');
+    });
 });

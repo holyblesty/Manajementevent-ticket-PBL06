@@ -15,7 +15,6 @@ return new class extends Migration
 
             // KOLOM UNTUK MENYIMPAN PATH GAMBAR
             $table->string('gambar')->nullable();
-
         });
     }
 
@@ -28,7 +27,6 @@ return new class extends Migration
 
             // HAPUS KOLOM GAMBAR
             $table->dropColumn('gambar');
-
         });
     }
 };

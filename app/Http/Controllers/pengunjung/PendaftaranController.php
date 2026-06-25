@@ -12,7 +12,7 @@ class PendaftaranController extends Controller
 
 
     // Menampilkan halaman form pendaftaran
-    public function create($id_event)
+    public function create(int $id_event)
     {
         $event = Event::findOrFail($id_event);
 

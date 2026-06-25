@@ -20,7 +20,7 @@ class Menghadiri extends Model
     // Definisikan relasi ke User
     public function user()
     {
-        return $this->belongsTo(User::class, 'id_user');
+        return $this->belongsTo(Pengunjung::class, 'id_user');
     }
 
     // Definisikan relasi ke Event

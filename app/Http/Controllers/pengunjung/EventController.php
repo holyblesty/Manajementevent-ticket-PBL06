@@ -7,7 +7,7 @@ use App\Models\Event;
 
 class EventController extends Controller
 {
-    public function show($id)
+    public function show(int $id)
     {
         $event = Event::findOrFail($id);
 

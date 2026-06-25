@@ -27,7 +27,11 @@ class Pemesanan extends Model
     ];
 
     protected $casts = [
+<<<<<<< HEAD
         'total_harga' => 'decimal:2'
+=======
+        'total_harga' => 'decimal:2',
+>>>>>>> 6d738c7514dad7274b3aaf49b3390360e03c3b6f
     ];
 
     public static function generateKode(): string
@@ -35,6 +39,18 @@ class Pemesanan extends Model
         return 'EVT-' . strtoupper(Str::random(8));
     }
 
+<<<<<<< HEAD
+=======
+    public function user()
+    {
+        return $this->belongsTo(
+            Pengunjung::class,
+            'id_pengunjung',
+            'id_pengunjung'
+        );
+    }
+
+>>>>>>> 6d738c7514dad7274b3aaf49b3390360e03c3b6f
     public function event()
     {
         return $this->belongsTo(
@@ -42,6 +58,7 @@ class Pemesanan extends Model
             'id_event',
             'id_event'
         );
+<<<<<<< HEAD
     }
 
     public function tiket()
@@ -59,6 +76,17 @@ class Pemesanan extends Model
             User::class,
             'id_pengunjung',
             'id_pengunjung'
+        );
+=======
+>>>>>>> 6d738c7514dad7274b3aaf49b3390360e03c3b6f
+    }
+
+    public function tiket()
+    {
+        return $this->belongsTo(
+            Tiket::class,
+            'id_tiket',
+            'id_tiket'
         );
     }
 }

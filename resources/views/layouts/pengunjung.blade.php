@@ -179,6 +179,7 @@
 
                 <a href="{{ route('pengunjung.profil') }}"
                    class="flex items-center gap-2 px-2 py-3 rounded-xl text-gray-600 hover:bg-[#f9f5fc] hover:text-[#7a4988] no-underline">
+                </a>
 
                     👤 Profil
 

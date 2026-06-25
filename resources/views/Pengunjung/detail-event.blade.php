@@ -101,8 +101,7 @@
 
                     </div>
                      {{-- CTA --}}
-                <div class="mt-8">
-
+          <div class="mt-8">
                     @if($event->kuota_aktual > 0)
                     <div class="mt-6">
 
@@ -138,20 +137,24 @@
                             Beli Tiket
                         </a>
                     @else
+    @if($event->kuota_aktual > 0)
 
-                        <button
-                            disabled
-                            class="w-full lg:w-auto px-8 py-4 rounded-xl bg-gray-300 text-white">
+        <a href="{{ route('pengunjung.pembelian', $event->id_event) }}"
+           class="px-4 py-2 bg-[#7a4988] text-white rounded-xl text-sm font-semibold hover:bg-[#693b76]">
+            Beli Sekarang
+        </a>
 
-                            Kuota Penuh
+    @else
 
-                        </button>
+        <button
+            disabled
+            class="w-full lg:w-auto px-8 py-4 rounded-xl bg-gray-300 text-white">
+            Kuota Penuh
+        </button>
 
-                </div>
+    @endif
 
-                    @endif
-
-                </div>
+</div>
 
             </div>
 
