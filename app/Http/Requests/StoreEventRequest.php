@@ -8,7 +8,6 @@ class StoreEventRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        // Pastikan Anda mengembalikan true agar request diizinkan
         return true;
     }
 

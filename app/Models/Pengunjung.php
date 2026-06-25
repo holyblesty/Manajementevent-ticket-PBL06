@@ -10,20 +10,29 @@ class Pengunjung extends Authenticatable // <--- Class diubah
 {
     use HasFactory, Notifiable;
 
-    // PENTING: Memberitahu Laravel nama tabelnya sekarang
+    /*
+    |--------------------------------------------------------------------------
+    | CONFIG TABLE
+    |--------------------------------------------------------------------------
+    */
+
+    // Menentukan nama tabel yang digunakan oleh model ini
     protected $table = 'pengunjung';
 
-    // PENTING: Memberitahu Laravel bahwa primary key tabel ini adalah id_pengunjung
+    // Menentukan primary key tabel
     protected $primaryKey = 'id_pengunjung';
 
+    // Primary key bertipe integer dan auto increment
     public $incrementing = true;
     protected $keyType = 'int';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
+    /*
+    |--------------------------------------------------------------------------
+    | MASS ASSIGNMENT
+    |--------------------------------------------------------------------------
+    */
+
+    // Field yang boleh diisi secara mass assignment (create / update)
     protected $fillable = [
         'name',
         'username',
@@ -34,20 +43,27 @@ class Pengunjung extends Authenticatable // <--- Class diubah
         'role',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
+    /*
+    |--------------------------------------------------------------------------
+    | HIDDEN ATTRIBUTES
+    |--------------------------------------------------------------------------
+    */
+
+    // Field yang disembunyikan saat data di-convert ke array / JSON
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
+    /*
+    |--------------------------------------------------------------------------
+    | ATTRIBUTE CASTING
+    |--------------------------------------------------------------------------
+    */
+
     /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
+     * Konversi otomatis tipe data atribut
+     * Contoh: password akan otomatis di-hash
      */
     protected function casts(): array
     {
@@ -57,13 +73,25 @@ class Pengunjung extends Authenticatable // <--- Class diubah
         ];
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | RELATIONSHIPS
+    |--------------------------------------------------------------------------
+    */
+
     /**
-     * Relasi: Pengunjung bisa memiliki banyak pesanan
-     * Sesuaikan foreign key dengan kolom di tabel 'pemesanan'
+     * Relasi: satu pengunjung bisa memiliki banyak pemesanan
+     *
+     * Artinya:
+     * 1 pengunjung → banyak data di tabel pemesanan
      */
     public function pesanans()
     {
-        // Parameter: (ModelTujuan, 'foreign_key_di_tabel_pemesanan', 'local_key_di_tabel_users')
-        return $this->hasMany(Pemesanan::class, 'id_pengunjung', 'id_pengunjung');
+        // hasMany(ModelTujuan, foreign_key_di_tabel_pemesanan, primary_key_di_tabel_pengunjung)
+        return $this->hasMany(
+            Pemesanan::class,
+            'id_pengunjung',
+            'id_pengunjung'
+        );
     }
 }

@@ -9,13 +9,28 @@ class Pendaftaran extends Model
 {
     use HasFactory;
 
+    /*
+    |--------------------------------------------------------------------------
+    | TABLE CONFIGURATION
+    |--------------------------------------------------------------------------
+    */
+
+    // Nama tabel yang digunakan oleh model ini
     protected $table = 'pendaftaran';
 
+    // Primary key tabel
     protected $primaryKey = 'id_pendaftaran';
 
+    // Nonaktifkan timestamps (created_at & updated_at tidak digunakan)
     public $timestamps = false;
 
+    /*
+    |--------------------------------------------------------------------------
+    | MASS ASSIGNMENT
+    |--------------------------------------------------------------------------
+    */
 
+    // Field yang boleh diisi secara mass assignment
     protected $fillable = [
         'id_event',
         'nama_pendaftar',
@@ -27,10 +42,24 @@ class Pendaftaran extends Model
         'status'
     ];
 
+    /*
+    |--------------------------------------------------------------------------
+    | RELATIONSHIPS
+    |--------------------------------------------------------------------------
+    */
 
-    // Relasi ke Event
+    /**
+     * Relasi: Pendaftaran terhubung ke satu Event
+     *
+     * Artinya:
+     * 1 pendaftaran hanya milik 1 event
+     */
     public function event()
     {
-        return $this->belongsTo(Event::class, 'id_event');
+        return $this->belongsTo(
+            Event::class,
+            'id_event',
+            'id_event'
+        );
     }
 }

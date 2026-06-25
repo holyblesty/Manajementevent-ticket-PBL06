@@ -132,7 +132,17 @@ class AcaraController extends Controller
         DB::transaction(function () use ($request, $event) {
 
             // Ambil semua data kecuali poster
-            $data = $request->except('poster');
+            $data = $request->only([
+                'judul',
+                'deskripsi',
+                'tgl_mulai',
+                'tgl_selesai',
+                'jam_mulai',
+                'jam_selesai',
+                'lokasi',
+                'id_kategori',
+                'status_event',
+            ]);
 
             // Jika ada poster baru diupload
             if ($request->hasFile('poster')) {
