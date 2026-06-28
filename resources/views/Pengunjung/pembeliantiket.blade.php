@@ -30,7 +30,7 @@
 </div>
 @endif
 
-<form action="{{ route('pengunjung.pembelian.store') }}" method="POST">
+<form action="{{ route('pengunjung.pembelian.store') }}" method="GET">
 
     @csrf
 
@@ -108,7 +108,7 @@
                         <input
                             type="text"
                             name="name"
-                            value="{{ $user->name }}"
+                            value="{{ $pengunjung->name }}"
                             class="w-full mt-2 border rounded-xl p-3">
                     </div>
 
@@ -120,7 +120,7 @@
                         <input
                             type="email"
                             name="email"
-                            value="{{ $user->email }}"
+                            value="{{ $pengunjung->email }}"
                             class="w-full mt-2 border rounded-xl p-3">
                     </div>
 
@@ -132,7 +132,7 @@
                         <input
                             type="text"
                             name="no_hp"
-                            value="{{ $user->no_hp }}"
+                            value="{{ $pengunjung->no_hp }}"
                             class="w-full mt-2 border rounded-xl p-3">
                     </div>
 
@@ -144,7 +144,7 @@
                         <input
                             type="text"
                             name="alamat"
-                            value="{{ $user->alamat }}"
+                            value="{{ $pengunjung->alamat }}"
                             class="w-full mt-2 border rounded-xl p-3">
                     </div>
 

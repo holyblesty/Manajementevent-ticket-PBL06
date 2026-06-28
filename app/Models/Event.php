@@ -10,12 +10,25 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Event extends Model
 {
-    use HasFactory;
+    /*
+    |--------------------------------------------------------------------------
+    | TABLE CONFIGURATION
+    |--------------------------------------------------------------------------
+    */
 
+    // Nama tabel yang digunakan model ini
     protected $table = 'events';
+
+    // Primary key tabel events
     protected $primaryKey = 'id_event';
 
+    /*
+    |--------------------------------------------------------------------------
+    | MASS ASSIGNMENT
+    |--------------------------------------------------------------------------
+    */
 
+    // Field yang boleh diisi secara mass assignment
     protected $fillable = [
         'judul',
         'deskripsi',
@@ -32,53 +45,99 @@ class Event extends Model
         'kuota_tersedia',
     ];
 
+    /*
+    |--------------------------------------------------------------------------
+    | CASTING ATTRIBUTE
+    |--------------------------------------------------------------------------
+    */
+
+    // Konversi otomatis tipe data dari database
     protected $casts = [
         'tgl_mulai'   => 'date',
         'tgl_selesai' => 'date',
-        // 'jam_mulai' dan 'jam_selesai' tidak perlu di-cast jika formatnya H:i:s di DB
     ];
 
+    /*
+    |--------------------------------------------------------------------------
+    | DEFAULT ATTRIBUTE VALUE
+    |--------------------------------------------------------------------------
+    */
+
+    // Nilai default jika status_event tidak diisi
     protected $attributes = [
-        'kapasitas' => 0,
         'status_event' => 'open',
     ];
+
+    /*
+    |--------------------------------------------------------------------------
+    | MODEL BOOTING (EVENT MODEL LIFECYCLE)
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Event lifecycle hook saat data akan dibuat
+     * Digunakan untuk sinkronisasi data otomatis sebelum insert ke database
+     */
+    protected static function booted()
+    {
+        static::creating(function ($event) {
+
+            // Jika kuota tersedia belum diisi, otomatis disamakan dengan kapasitas
+            if (is_null($event->kuota_tersedia)) {
+                $event->kuota_tersedia = $event->kapasitas;
+            }
+        });
+    }
+
     /*
     |--------------------------------------------------------------------------
     | RELATIONSHIPS
     |--------------------------------------------------------------------------
     */
 
+    /**
+     * Relasi: Event dimiliki oleh satu kategori
+     */
     public function kategori(): BelongsTo
     {
         return $this->belongsTo(KategoriEvent::class, 'id_kategori', 'id_kategori');
     }
 
+    /**
+     * Relasi: Event memiliki banyak tiket
+     */
     public function tiket(): HasMany
     {
         return $this->hasMany(Tiket::class, 'id_event', 'id_event');
     }
 
-    public function pemesanan(): HasManyThrough
+    /**
+     * Relasi: Event memiliki banyak pemesanan (booking/registrasi)
+     */
+    public function pemesanan(): HasMany
     {
-        return $this->hasManyThrough(Pemesanan::class, Tiket::class, 'id_event', 'id_tiket', 'id_event', 'id_tiket');
-    }
-
-    public function participants(): HasMany
-    {
-        return $this->hasMany(Menghadiri::class, 'id_event', 'id_event');
-    }
-
-    public function pendaftaran(): HasMany
-    {
-        return $this->hasMany(Pendaftaran::class, 'id_event', 'id_event');
+        return $this->hasMany(Pemesanan::class, 'id_event', 'id_event');
     }
 
     /*
     |--------------------------------------------------------------------------
-    | ACCESSORS
+    | ACCESSORS (DATA TURUNAN / VIRTUAL ATTRIBUTE)
     |--------------------------------------------------------------------------
     */
 
+    /**
+     * Menghitung total sisa kuota event secara real-time
+     * diambil dari total kuota pada tabel tiket
+     */
+    public function getSisaKuotaAttribute(): int
+    {
+        return $this->tiket()->sum('kuota_tersedia');
+    }
+
+    /**
+     * Menghasilkan URL lengkap untuk poster event
+     * jika tidak ada poster, gunakan default image
+     */
     public function getPosterUrlAttribute(): string
     {
         return $this->poster

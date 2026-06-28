@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Admin\AcaraController;
+use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\PesertaController;
 use App\Http\Controllers\Admin\StatistikController;
 use App\Http\Controllers\Pengunjung\DashboardController as PengunjungDashboardController;
@@ -49,14 +50,14 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
     Route::put('/acara/{id_event}/tiket/update', [AcaraController::class, 'updateTiket'])->name('acara.tiket.update');
 
     // Profil Admin
-    Route::get('/profile', [AdminDashboard::class, 'profile'])->name('profile');
-    Route::put('/profile/update', [AdminDashboard::class, 'updateProfile'])->name('profile.update');
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
     // Manajemen Peserta & Check-In
     Route::prefix('peserta')->name('peserta.')->group(function () {
         Route::get('/', [PesertaController::class, 'index'])->name('index');
         Route::get('/detail/{id}', [PesertaController::class, 'detail'])->name('detail');
-        Route::post('/checkin-individu/{eventId}/{regId}', [PesertaController::class, 'checkInIndividu'])->name('checkin_individu');
+        Route::put('/checkin-individu/{eventId}/{regId}', [PesertaController::class, 'checkInIndividu'])->name('checkin_individu');
     });
 });
 
@@ -92,6 +93,11 @@ Route::middleware(['auth:web'])->prefix('pengunjung')->name('pengunjung.')->grou
     Route::get('/profil/password', [ProfilController::class, 'passwordForm'])->name('profil.password');
 
     Route::put('/profil/password/update', [ProfilController::class, 'updatePassword'])->name('profil.password.update');
+    // 1. RUTE UNTUK BUKA HALAMAN (GET)
+    Route::get('/event/{id_event}/daftar', [PendaftaranController::class, 'create'])->name('pendaftaran.create');
+
+    // 2. RUTE UNTUK PROSES DATA (POST)
+    Route::post('/pendaftaran/store', [PendaftaranController::class, 'store'])->name('pendaftaran.store');
 
     // Riwayat
     //Route::get('/riwayat', function () {

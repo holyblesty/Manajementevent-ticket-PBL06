@@ -8,7 +8,6 @@ class StoreEventRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        // Pastikan Anda mengembalikan true agar request diizinkan
         return true;
     }
 
@@ -24,6 +23,8 @@ class StoreEventRequest extends FormRequest
             'jam_mulai' => 'required',
             'jam_selesai' => 'required|after:jam_mulai',
             'status_event' => 'required|in:draft,open',
+
+            'lokasi' => 'required|string|max:255',
         ];
     }
 }
