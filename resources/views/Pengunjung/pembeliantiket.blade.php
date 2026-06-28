@@ -222,17 +222,23 @@
                     </div>
 
                     <div>
+                        <label class="block mb-2 font-semibold">
+                         Metode Pembayaran
+                     </label>
 
-                        <label class="font-semibold">
-                            Metode Pembayaran
-                        </label>
+                     <select
+                         name="metode_pembayaran"
+                         class="w-full border rounded-xl p-3">
 
-                        <input
-                            type="text"
-                            value="Cash"
-                            readonly
-                            class="w-full mt-2 border rounded-xl p-3 bg-gray-100">
+                    <option value="Cash">
+                        Cash
+                    </option>
 
+                    <option value="Transfer">
+                        Transfer
+                    </option>
+
+                    </select>
                     </div>
 
                     <div>

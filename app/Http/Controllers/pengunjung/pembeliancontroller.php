@@ -31,14 +31,15 @@ class pembeliancontroller extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required',
-            'email' => 'required|email',
-            'no_hp' => 'required',
-            'alamat' => 'required',
-            'id_event' => 'required',
-            'id_tiket' => 'required',
-            'jumlah_tiket' => 'required|integer|min:1'
-        ]);
+    'name' => 'required',
+    'email' => 'required|email',
+    'no_hp' => 'required',
+    'alamat' => 'required',
+    'id_event' => 'required',
+    'id_tiket' => 'required',
+    'jumlah_tiket' => 'required|integer|min:1',
+    'metode_pembayaran' => 'required'
+]);
 
         /** @var \App\Models\User $user */
         $user = Auth::user();
@@ -69,7 +70,7 @@ class pembeliancontroller extends Controller
             'id_tiket' => $request->id_tiket,
             'tgl_pesan' => now(),
             'tgl_bayar' => null,
-            'metode_pembayaran' => 'Cash',
+            'metode_pembayaran' => $request->metode_pembayaran,
             'total_harga' =>
                 $tiket->harga *
                 $request->jumlah_tiket,
