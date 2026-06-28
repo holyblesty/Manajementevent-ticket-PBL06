@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreEventRequest;
 use App\Models\Event;
-use App\Models\Tiket;
 use App\Models\KategoriEvent;
+use App\Models\Tiket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -20,78 +20,68 @@ class AcaraController extends Controller
      */
 
     /**
-     * Menampilkan daftar event di dashboard admin
-     * Bisa difilter berdasarkan status: draft, open, closed
+     * Menampilkan daftar event.
      */
     public function index(Request $request)
     {
         $query = Event::with('kategori');
 
-        // Filter status event jika ada request
         if ($request->filled('status')) {
 
-            // Draft event (belum dipublikasi / masih konsep)
             if ($request->status == 'draft') {
-                $query->where('status_event', 'draft');
-            }
 
-            // Event yang masih berjalan (belum melewati tanggal selesai)
-            elseif ($request->status == 'open') {
+                $query->where('status_event', 'draft');
+            } elseif ($request->status == 'open') {
+
                 $query->where('status_event', 'open')
                     ->whereDate('tgl_selesai', '>=', now());
-            }
+            } elseif ($request->status == 'closed') {
 
-            // Event yang sudah berakhir
-            elseif ($request->status == 'closed') {
                 $query->where('status_event', 'open')
                     ->whereDate('tgl_selesai', '<', now());
             }
         }
 
-        // Pagination untuk daftar event
-        $events = $query->paginate(5)->withQueryString();
+        $events = $query
+            ->paginate(5)
+            ->withQueryString();
 
         return view('admin.dashboard', compact('events'));
     }
 
     /**
-     * Menampilkan form tambah event
+     * Form tambah event.
      */
     public function create()
     {
-        // Ambil semua kategori untuk dropdown
         $kategoris = KategoriEvent::all();
 
         return view('admin.tambah', compact('kategoris'));
     }
 
     /**
-     * Menyimpan event baru ke database
+     * Simpan event baru.
      */
     public function store(StoreEventRequest $request)
     {
         try {
-            // Validasi file poster wajib ada
+
             if (!$request->hasFile('poster')) {
                 throw new \Exception('File poster tidak ditemukan.');
             }
 
-            // Upload gambar poster
             $image = $request->file('poster');
             $imageName = time() . '_' . $image->getClientOriginalName();
             $image->move(public_path('images'), $imageName);
 
-            // Ambil data hasil validasi form request
             $data = $request->validated();
 
-            // Tambahkan data tambahan sistem
             $data['poster'] = $imageName;
             $data['id_admin'] = Auth::id();
             $data['kapasitas'] = 0;
             $data['kuota_tersedia'] = 0;
             $data['status_event'] = 'open';
 
-            // Simpan event
             Event::create($data);
 
             return redirect()
@@ -106,24 +96,23 @@ class AcaraController extends Controller
     }
 
     /**
-     * Menampilkan form edit event berdasarkan ID
+     * Form edit event.
      */
     public function edit(int $id_event)
     {
-        $event = Event::where('id_event', $id_event)->firstOrFail();
+        $event = Event::findOrFail($id_event);
         $kategoris = KategoriEvent::all();
 
         return view('admin.edit', compact('event', 'kategoris'));
     }
 
     /**
-     * Update data event (termasuk poster jika diganti)
+     * Update event.
      */
     public function update(Request $request, int $id_event)
     {
-        $event = Event::where('id_event', $id_event)->firstOrFail();
+        $event = Event::findOrFail($id_event);
 
-        // Validasi input dasar
         $request->validate([
             'judul'  => 'required|string|max:255',
             'poster' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
@@ -131,7 +120,6 @@ class AcaraController extends Controller
 
         DB::transaction(function () use ($request, $event) {
 
-            // Ambil semua data kecuali poster
             $data = $request->only([
                 'judul',
                 'deskripsi',
@@ -144,22 +132,25 @@ class AcaraController extends Controller
                 'status_event',
             ]);
 
-            // Jika ada poster baru diupload
             if ($request->hasFile('poster')) {
 
-                // Hapus poster lama jika ada
-                if ($event->poster && File::exists(public_path('images/' . $event->poster))) {
+                if (
+                    $event->poster &&
+                    File::exists(public_path('images/' . $event->poster))
+                ) {
                     File::delete(public_path('images/' . $event->poster));
                 }
 
-                // Upload poster baru
                 $imageName = time() . '_' . $request->poster->hashName();
-                $request->poster->move(public_path('images'), $imageName);
+
+                $request->poster->move(
+                    public_path('images'),
+                    $imageName
+                );
 
                 $data['poster'] = $imageName;
             }
 
-            // Update data event
             $event->update($data);
         });
 
@@ -169,18 +160,19 @@ class AcaraController extends Controller
     }
 
     /**
-     * Menghapus event beserta file poster
+     * Hapus event.
      */
     public function destroy(int $id_event)
     {
-        $event = Event::where('id_event', $id_event)->firstOrFail();
+        $event = Event::findOrFail($id_event);
 
-        // Hapus file poster jika ada
-        if ($event->poster && File::exists(public_path('images/' . $event->poster))) {
+        if (
+            $event->poster &&
+            File::exists(public_path('images/' . $event->poster))
+        ) {
             File::delete(public_path('images/' . $event->poster));
         }
 
-        // Hapus data event
         $event->delete();
 
         return redirect()
@@ -194,7 +186,7 @@ class AcaraController extends Controller
      */
 
     /**
-     * Menampilkan halaman pengaturan tiket per event
+     * Halaman tiket.
      */
     public function tiket(int $id_event)
     {
@@ -204,32 +196,29 @@ class AcaraController extends Controller
     }
 
     /**
-     * Menambah atau update tiket untuk event
+     * Update tiket.
      */
     public function updateTiket(Request $request, int $id_event)
     {
-        // Validasi data tiket
         $request->validate([
             'tiket.*.harga' => 'required|numeric|min:0',
             'tiket.*.kuota' => 'required|integer|min:0',
         ]);
 
-        // Simpan/update tiap jenis tiket
         foreach ($request->tiket as $data) {
 
             Tiket::updateOrCreate(
                 [
-                    'id_event' => $id_event,
-                    'jenis_tiket' => $data['nama'],
+                    'id_event'     => $id_event,
+                    'jenis_tiket'  => $data['nama'],
                 ],
                 [
-                    'harga' => $data['harga'],
-                    'kuota_total' => $data['kuota'],
+                    'harga'         => $data['harga'],
+                    'kuota_total'   => $data['kuota'],
                 ]
             );
         }
 
-        // Update kapasitas event
         Event::where('id_event', $id_event)->update([
             'kapasitas' => $request->kapasitas,
         ]);

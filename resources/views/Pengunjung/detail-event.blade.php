@@ -47,10 +47,35 @@
                             <div class="text-xs text-gray-500">Total Sisa Kuota</div>
                             {{-- Menghitung total sisa kuota dari relasi tiket --}}
                             <div class="font-semibold">
+                                {{ $event->kuota_tersedia }} Peserta
                                 {{ $event->tiket->sum('kuota_tersedia') }} Peserta
                             </div>
                         </div>
                     </div>
+
+                    {{-- CTA --}}
+                    <div class="mt-8">
+
+                        @if($event->kuota_tersedia > 0)
+
+                            <a href="{{ route('pengunjung.pembelian.index', $event->id_event) }}"
+                               class="inline-block px-5 py-2 bg-[#7a4988] text-white rounded-xl text-sm font-semibold hover:bg-[#693b76]">
+                                Beli Sekarang
+                            </a>
+
+                        @else
+
+                            <button
+                                disabled
+                                class="px-5 py-2 rounded-xl bg-gray-300 text-white text-sm font-semibold cursor-not-allowed">
+                                Kuota Penuh
+                            </button>
+
+                        @endif
+
+                    </div>
+
+                </div>
 
                     {{-- CTA --}}
                     <div class="mt-8">
@@ -69,6 +94,46 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    {{-- INFORMASI TAMBAHAN --}}
+    <div class="grid md:grid-cols-3 gap-6">
+
+        <div class="bg-white p-6 rounded-2xl border">
+
+            <h3 class="font-bold mb-3">
+                Status Event
+            </h3>
+
+            <span
+                class="px-3 py-1 rounded-full text-sm bg-green-100 text-green-700">
+
+                {{ ucfirst($event->status_event) }}
+
+            </span>
+
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border">
+
+            <h3 class="font-bold mb-3">
+                Kapasitas
+            </h3>
+
+            <p>{{ $event->kapasitas }} Peserta</p>
+
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border">
+
+            <h3 class="font-bold mb-3">
+                Sisa Kuota
+            </h3>
+
+            <p>{{ $event->kuota_tersedia }} Peserta</p>
+
+        </div>
+
     </div>
 
     {{-- INFORMASI TIKET DETAIL --}}
