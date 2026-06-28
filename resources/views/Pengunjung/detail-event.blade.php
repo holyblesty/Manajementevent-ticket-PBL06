@@ -94,84 +94,40 @@
                             </div>
 
                             <div class="font-semibold">
-                                {{ $event->kuota_aktual }} Peserta
+                                {{ $event->kuota_tersedia }} Peserta
                             </div>
 
                         </div>
 
                     </div>
-                     {{-- CTA --}}
-          <div class="mt-8">
-                    @if($event->kuota_aktual > 0)
-                    <div class="mt-6">
 
-                            <h3 class="font-bold mb-3">
-                                Jenis Tiket Tersedia
-                            </h3>
+                    {{-- CTA --}}
+                    <div class="mt-8">
 
-                            @foreach($event->tiket as $tiket)
+                        @if($event->kuota_tersedia > 0)
 
-                                <div class="flex justify-between border rounded-xl p-3 mb-2">
+                            <a href="{{ route('pengunjung.pembelian.index', $event->id_event) }}"
+                               class="inline-block px-5 py-2 bg-[#7a4988] text-white rounded-xl text-sm font-semibold hover:bg-[#693b76]">
+                                Beli Sekarang
+                            </a>
 
-                                    <div>
+                        @else
 
-                                        <span class="font-semibold">
-                                            {{ $tiket->jenis_tiket }}
-                                        </span>
+                            <button
+                                disabled
+                                class="px-5 py-2 rounded-xl bg-gray-300 text-white text-sm font-semibold cursor-not-allowed">
+                                Kuota Penuh
+                            </button>
 
-                                    </div>
+                        @endif
 
-                                    <div>
+                    </div>
 
-                                        Rp {{ number_format($tiket->harga,0,',','.') }}
-
-                                    </div>
-
-                                </div>
-
-                            @endforeach
-
-                        </div>
-                        <a href="{{ route('pengunjung.pembelian.index', $event->id_event) }}"
-                            class="px-4 py-2 bg-[#7a4988] text-white px-5 py-2 rounded-r-xl text-sm font-semibold hover:bg-[#693b76]">
-                            Beli Tiket
-                        </a>
-                    @else
-    @if($event->kuota_aktual > 0)
-
-        <a href="{{ route('pengunjung.pembelian', $event->id_event) }}"
-           class="px-4 py-2 bg-[#7a4988] text-white rounded-xl text-sm font-semibold hover:bg-[#693b76]">
-            Beli Sekarang
-        </a>
-
-    @else
-
-        <button
-            disabled
-            class="w-full lg:w-auto px-8 py-4 rounded-xl bg-gray-300 text-white">
-            Kuota Penuh
-        </button>
-
-    @endif
-
-</div>
+                </div>
 
             </div>
 
         </div>
-
-    </div>
-
-    {{-- DESKRIPSI EVENT --}}
-    <div class="bg-white rounded-3xl border shadow-sm p-8">
-
-        <h2 class="text-2xl font-bold mb-5">
-            Tentang Event
-        </h2>
-
-        <p class="text-gray-600 leading-loose whitespace-pre-line">
-            {{ $event->deskripsi }}
-        </p>
 
     </div>
 

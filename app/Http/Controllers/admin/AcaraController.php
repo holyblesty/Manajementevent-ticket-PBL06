@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\{DB, File, Auth};
 
 class AcaraController extends Controller
 {
-<<<<<<< HEAD
 
     public function index()
     {
@@ -20,7 +19,6 @@ class AcaraController extends Controller
         // Kembalikan ke view (pastikan nama view-nya sesuai dengan file-mu)
         return view('admin.acara.index', compact('events'));
     }
-=======
     // 1. READ: Menampilkan daftar acara
     public function index()
     {
@@ -29,7 +27,6 @@ class AcaraController extends Controller
     }
 
     // 2. CREATE: Menampilkan form tambah
->>>>>>> 6d738c7514dad7274b3aaf49b3390360e03c3b6f
     public function create()
     {
         $kategoris = KategoriEvent::all();

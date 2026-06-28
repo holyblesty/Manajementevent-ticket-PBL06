@@ -11,7 +11,7 @@ class Pengunjung extends Authenticatable // <--- Class diubah
     use HasFactory, Notifiable;
 
     // PENTING: Memberitahu Laravel nama tabelnya sekarang
-    protected $table = 'pengunjung';
+    protected $table = 'users';
 
     // PENTING: Memberitahu Laravel bahwa primary key tabel ini adalah id_pengunjung
     protected $primaryKey = 'id_pengunjung';

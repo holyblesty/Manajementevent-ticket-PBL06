@@ -94,16 +94,16 @@ Route::middleware(['auth:web'])->prefix('pengunjung')->name('pengunjung.')->grou
     Route::put('/profil/password/update', [ProfilController::class, 'updatePassword'])->name('profil.password.update');
 
     // Riwayat
-    Route::get('/riwayat', function () {
-        return view('Pengunjung.riwayat');
-    })->name('riwayat');
+    //Route::get('/riwayat', function () {
+      //  return view('Pengunjung.riwayat');
+    //})->name('riwayat');
 
     // Profil (Hanya satu kali pembungkusan)
-    Route::prefix('profil')->name('profil.')->group(function () {
-        Route::get('/', [ProfilController::class, 'index'])->name('index');
-        Route::get('/edit', [ProfilController::class, 'edit'])->name('edit');
-        Route::put('/update', [ProfilController::class, 'update'])->name('update');
-        Route::get('/password', [ProfilController::class, 'editPassword'])->name('password');
-        Route::put('/password/update', [ProfilController::class, 'updatePassword'])->name('password.update');
-    });
+    //Route::prefix('profil')->name('profil.')->group(function () {
+        //Route::get('/', [ProfilController::class, 'index'])->name('index');
+        //Route::get('/edit', [ProfilController::class, 'edit'])->name('edit');
+        //Route::put('/update', [ProfilController::class, 'update'])->name('update');
+        //Route::get('/password', [ProfilController::class, 'editPassword'])->name('password');
+        //Route::put('/password/update', [ProfilController::class, 'updatePassword'])->name('password.update');//
+    //});
 });
