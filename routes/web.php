@@ -19,46 +19,66 @@ use App\Http\Controllers\Pengunjung\RiwayatController;
 
 /*
 |--------------------------------------------------------------------------
-| Web Routes
+| WEB ROUTES
 |--------------------------------------------------------------------------
 */
 
-// =====================================================
-// HALAMAN PUBLIK
-// =====================================================
+/*
+|--------------------------------------------------------------------------
+| HALAMAN PUBLIK
+|--------------------------------------------------------------------------
+*/
 
 Route::get('/', [PageController::class, 'index'])->name('home');
-Route::get('/about', [PageController::class, 'tentang'])->name('pengunjung.tentang');
-Route::get('/contact', [PageController::class, 'kontak'])->name('pengunjung.kontak');
-Route::get('/search', [PageController::class, 'search'])->name('pengunjung.search');
+
+Route::get('/about', [PageController::class, 'tentang'])
+    ->name('pengunjung.tentang');
+
+Route::get('/contact', [PageController::class, 'kontak'])
+    ->name('pengunjung.kontak');
+
+Route::get('/search', [PageController::class, 'search'])
+    ->name('pengunjung.search');
 
 
-// =====================================================
-// AUTH
-// =====================================================
+/*
+|--------------------------------------------------------------------------
+| AUTH
+|--------------------------------------------------------------------------
+*/
 
 Route::middleware('guest')->group(function () {
 
-    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login.view');
-    Route::post('/login', [AuthController::class, 'login'])->name('login');
-    Route::post('/register', [AuthController::class, 'register'])->name('register');
+    Route::get('/login', [AuthController::class, 'showLoginForm'])
+        ->name('login.view');
+
+    Route::post('/login', [AuthController::class, 'login'])
+        ->name('login');
+
+    Route::post('/register', [AuthController::class, 'register'])
+        ->name('register');
 });
 
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/logout', [AuthController::class, 'logout'])
+    ->name('logout');
 
 
-// =====================================================
-// ADMIN
-// =====================================================
+/*
+|--------------------------------------------------------------------------
+| ADMIN
+|--------------------------------------------------------------------------
+*/
 
 Route::middleware('auth:admin')
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
 
-        Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('dashboard');
+        Route::get('/dashboard', [AdminDashboard::class, 'index'])
+            ->name('dashboard');
 
-        Route::get('/statistik', [StatistikController::class, 'index'])->name('statistik');
+        Route::get('/statistik', [StatistikController::class, 'index'])
+            ->name('statistik');
 
         Route::resource('acara', AcaraController::class);
 
@@ -90,29 +110,40 @@ Route::middleware('auth:admin')
     });
 
 
-// =====================================================
-// PENGUNJUNG
-// =====================================================
+/*
+|--------------------------------------------------------------------------
+| PENGUNJUNG
+|--------------------------------------------------------------------------
+*/
 
 Route::middleware('auth:web')
     ->prefix('pengunjung')
     ->name('pengunjung.')
     ->group(function () {
 
-        // Dashboard
+        /*
+        |--------------------------------------------------------------------------
+        | DASHBOARD
+        |--------------------------------------------------------------------------
+        */
+
         Route::get('/dashboard', [PengunjungDashboardController::class, 'index'])
             ->name('dashboard');
 
-        Route::get('/tiket', [PengunjungDashboardController::class, 'tiket'])
-            ->name('tiket');
+        /*
+        |--------------------------------------------------------------------------
+        | DETAIL EVENT
+        |--------------------------------------------------------------------------
+        */
 
-        // Detail Event
         Route::get('/event/{id}', [EventController::class, 'show'])
             ->name('event.show');
 
-        // ==========================
-        // PEMBELIAN TIKET
-        // ==========================
+        /*
+        |--------------------------------------------------------------------------
+        | PEMBELIAN TIKET
+        |--------------------------------------------------------------------------
+        */
 
         Route::get('/pembelian/{id_event}', [PembelianController::class, 'index'])
             ->name('pembelian');
@@ -123,34 +154,45 @@ Route::middleware('auth:web')
         Route::get('/pembelian/sukses/{id}', [PembelianController::class, 'sukses'])
             ->name('pembelian.sukses');
 
-        Route::get('/tiket-saya', [PembelianController::class, 'tiketSaya'])
-            ->name('tiket.saya');
+        /*
+        |--------------------------------------------------------------------------
+        | TIKET SAYA
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get('/tiket', [PembelianController::class, 'tiketSaya'])
+            ->name('tiket');
 
         Route::get('/tiket/{id}', [PembelianController::class, 'detailTiket'])
             ->name('tiket.detail');
 
-        // Riwayat
+        /*
+        |--------------------------------------------------------------------------
+        | RIWAYAT
+        |--------------------------------------------------------------------------
+        */
+
         Route::get('/riwayat', [RiwayatController::class, 'index'])
             ->name('riwayat');
 
-        // Profil
-        Route::prefix('profil')
-            ->name('profil.')
-            ->group(function () {
+        /*
+        |--------------------------------------------------------------------------
+        | PROFIL
+        |--------------------------------------------------------------------------
+        */
 
-                Route::get('/', [ProfilController::class, 'index'])
-                    ->name('index');
+        Route::get('/profil', [ProfilController::class, 'index'])
+            ->name('profil');
 
-                Route::get('/edit', [ProfilController::class, 'edit'])
-                    ->name('edit');
+        Route::get('/profil/edit', [ProfilController::class, 'edit'])
+            ->name('profil.edit');
 
-                Route::put('/update', [ProfilController::class, 'update'])
-                    ->name('update');
+        Route::put('/profil/update', [ProfilController::class, 'update'])
+            ->name('profil.update');
 
-                Route::get('/password', [ProfilController::class, 'editPassword'])
-                    ->name('password');
+        Route::get('/profil/password', [ProfilController::class, 'editPassword'])
+            ->name('profil.password');
 
-                Route::put('/password/update', [ProfilController::class, 'updatePassword'])
-                    ->name('password.update');
-            });
+        Route::put('/profil/password/update', [ProfilController::class, 'updatePassword'])
+            ->name('profil.password.update');
     });
