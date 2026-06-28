@@ -10,7 +10,7 @@
     <span class="font-semibold text-[#7a4988]">Detail Event</span>
 </div>
 
-<div class="grid grid-cols-1 gap-8">
+<div class="grid grid-cols-1 gap-8"> 
     {{-- HERO SECTION --}}
     <div class="bg-white rounded-3xl shadow-sm border p-6">
         <div class="grid lg:grid-cols-2 gap-8">
@@ -56,10 +56,10 @@
                     <div class="mt-8">
                         {{-- Cek apakah ada tiket yang tersedia --}}
                         @if($event->tiket->sum('kuota_tersedia') > 0)
-                            <a href="{{ route('pengunjung.pendaftaran.create', $event->id_event) }}"
-                                class="px-6 py-3 bg-[#7a4988] text-white rounded-xl text-sm font-semibold hover:bg-[#693b76]">
-                                Beli Sekarang
-                            </a>
+                   <a href="/pengunjung/event/{{ $event->id_event }}/pembelian"
+                     class="px-6 py-3 bg-[#7a4988] text-white rounded-xl text-sm font-semibold hover:bg-[#693b76]">
+                    Beli Sekarang
+                    </a>
                         @else
                             <button disabled class="px-8 py-3 rounded-xl bg-gray-300 text-white">
                                 Kuota Penuh

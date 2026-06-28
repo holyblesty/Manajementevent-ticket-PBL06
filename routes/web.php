@@ -10,7 +10,6 @@ use App\Http\Controllers\Admin\PesertaController;
 use App\Http\Controllers\Admin\StatistikController;
 use App\Http\Controllers\Pengunjung\DashboardController as PengunjungDashboardController;
 use App\Http\Controllers\Pengunjung\EventController;
-use App\Http\Controllers\Pengunjung\PendaftaranController;
 use App\Http\Controllers\Pengunjung\ProfilController;
 use App\Http\Controllers\pengunjung\pembeliancontroller;
 
@@ -78,12 +77,6 @@ Route::prefix('pengunjung')->name('pengunjung.')->middleware('auth:web')->group(
     Route::get('/event/{id}', [EventController::class, 'show'])->name('event.show');
     Route::post('/daftar-event', [EventController::class, 'daftarEvent'])->name('daftar-event');
 
-    // 1. RUTE UNTUK BUKA HALAMAN (GET)
-    Route::get('/event/{id_event}/daftar', [PendaftaranController::class, 'create'])->name('pendaftaran.create');
-
-    // 2. RUTE UNTUK PROSES DATA (POST)
-    Route::post('/pendaftaran/store', [PendaftaranController::class, 'store'])->name('pendaftaran.store');
-
     // Riwayat
     Route::get('/riwayat', function () {
         return view('Pengunjung.riwayat');
@@ -98,4 +91,30 @@ Route::prefix('pengunjung')->name('pengunjung.')->middleware('auth:web')->group(
         Route::get('/password', [ProfilController::class, 'editPassword'])->name('password');
         Route::put('/password/update', [ProfilController::class, 'updatePassword'])->name('password.update');
     });
+
+    // Halaman Pembelian Tiket
+    Route::get(
+        '/event/{id_event}/pembelian',
+        [pembeliancontroller::class, 'index']
+    )->name('pembelian');
+
+    Route::post(
+        '/pembelian/store',
+        [pembeliancontroller::class, 'store']
+    )->name('pembelian.store');
+
+    Route::get(
+        '/pembelian/sukses/{id}',
+        [pembeliancontroller::class, 'sukses']
+    )->name('pembelian.sukses');
+    
+    Route::get(
+        '/tiket',
+        [pembeliancontroller::class, 'tiketSaya']
+    )->name('tiket');
+
+    Route::get(
+        '/detail-tiket/{id}',
+        [pembeliancontroller::class, 'detailTiket']
+    )->name('detail-tiket');
 });

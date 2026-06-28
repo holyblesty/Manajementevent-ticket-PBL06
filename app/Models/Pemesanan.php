@@ -77,7 +77,7 @@ class Pemesanan extends Model
     /**
      * Relasi: Pemesanan dimiliki oleh satu pengunjung
      */
-    public function user()
+    public function pengunjung()
     {
         return $this->belongsTo(
             Pengunjung::class,
