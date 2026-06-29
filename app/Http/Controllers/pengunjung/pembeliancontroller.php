@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Auth;
 
 class PembelianController extends Controller
 {
-<<<<<<< HEAD
     public function index($id)
     {
         $event = Event::with('tiket')
@@ -91,7 +90,7 @@ class PembelianController extends Controller
                 'success',
                 'Pemesanan berhasil dibuat. Silakan melakukan pembayaran tunai kepada admin.'
             );
-=======
+
     public function index(int $id_event)
     {
         $event = Event::findOrFail($id_event);
@@ -107,7 +106,6 @@ class PembelianController extends Controller
             'pengunjung.pembeliantiket',
             compact('event', 'tiket', 'user')
         );
->>>>>>> 6d738c7514dad7274b3aaf49b3390360e03c3b6f
     }
 
     // Memproses data pendaftaran & transaksi pembelian tiket
