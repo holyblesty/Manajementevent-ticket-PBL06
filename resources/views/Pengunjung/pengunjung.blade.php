@@ -210,7 +210,7 @@
                             <i class="fa-solid fa-ticket w-5 text-center"></i>
                             <span>Tiket Saya</span>
                         </a>
-                        <a href="{{ route('pengunjung.riwayat') }}"
+                        <a href="{{ route('pengunjung.riwayat-pendaftaran') }}"
                             class="sidebar-link {{ request()->routeIs('pengunjung.riwayat') ? 'active' : '' }}">
                             <i class="fa-regular fa-clock w-5 text-center"></i>
                             <span>Riwayat Pendaftaran</span>

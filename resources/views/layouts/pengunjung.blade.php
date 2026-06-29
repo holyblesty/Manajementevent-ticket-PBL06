@@ -61,9 +61,6 @@
                     Beranda
                 </a>
 
-                <a href="{{ route('pengunjung.dashboard') }}"
-                class="text-sm font-bold text-blue hover:text-[#7a4988] no-underline">
-                    Acara
                 </a>
 
                 <a href="{{ route('pengunjung.tentang') }}"

@@ -40,6 +40,7 @@ class Pengunjung extends Authenticatable
         'password',
         'no_hp',
         'alamat',
+        'foto',
         'role',
     ];
 
