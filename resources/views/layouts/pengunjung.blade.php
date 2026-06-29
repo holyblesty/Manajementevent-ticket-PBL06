@@ -39,14 +39,12 @@
             <div class="flex items-center gap-8">
 
                 <a href="{{ route('home') }}"
-                class="text-sm font-bold text-blue hover:text-[#7a4988] no-underline">
+                class="text-sm font-bold text-black hover:text-[#7a4988]no-underline">
                     Beranda
                 </a>
 
-                </a>
-
                 <a href="{{ route('pengunjung.tentang') }}"
-                class="text-sm font-bold text-blue hover:text-[#7a4988] no-underline">
+                class="text-sm font-bold text-black hover:text-[#7a4988]no-underline">
                     Tentang Kami
                 </a>
 
@@ -134,36 +132,28 @@
                 </p>
 
                 @endauth
-            {{-- MENU --}}
-            <nav class="mt-4 px-3 flex-col gap-1 font-bold">
+{{-- MENU --}}
+<nav class="mt-4 flex flex-col gap-2">
 
-                <a href="{{ route('pengunjung.dashboard') }}"
-                   class="flex items-center gap-3 px-2 py-3 rounded-xl bg-[#f3ebf8] text-[#7a4988] font-semibold no-underline">
+    <a href="{{ route('pengunjung.dashboard') }}"
+       class="flex items-center gap-3 px-4 py-3 rounded-xl bg-[#f3ebf8] text-black font-semibold no-underline transition-all duration-200 hover:text-[#7a4988]">
+        🏠 <span>Beranda</span>
+    </a>
 
-                    🏠 Beranda
+    <a href="{{ route('pengunjung.riwayat') }}"
+       class="flex items-center gap-3 px-4 py-3 rounded-xl text-black font-medium no-underline transition-all duration-200 hover:bg-[#f9f5fc] hover:text-[#7a4988]">
+        🎫 <span>Ticket Saya</span>
+    </a>
 
-                </a>
+    <a href="{{ route('pengunjung.riwayat') }}"
+       class="flex items-center gap-3 px-4 py-3 rounded-xl text-black font-medium no-underline transition-all duration-200 hover:bg-[#f9f5fc] hover:text-[#7a4988]">
+        🕒 <span>Riwayat Pendaftaran</span>
+    </a>
 
-                <a href="{{ route('pengunjung.riwayat') }}"
-                   class="flex items-center gap-4 px-2 py-3 rounded-xl text-gray-600 hover:bg-[#f9f5fc] hover:text-[#7a4988] no-underline">
-
-                    🎫 Ticket Saya
-
-                </a>
-
-                <a href="{{ route('pengunjung.riwayat') }}"
-                    class="flex items-center gap-2 px-2 py-3 rounded-xl">
-                    🕒 Riwayat Pendaftaran
-                </a>
-
-                <a href="{{ route('pengunjung.profil') }}"
-                   class="flex items-center gap-2 px-2 py-3 rounded-xl text-gray-600 hover:bg-[#f9f5fc] hover:text-[#7a4988] no-underline">
-                </a>
-
-                    👤 Profil
-
-                </a>
-
+    <a href="{{ route('pengunjung.profil') }}"
+       class="flex items-center gap-3 px-4 py-3 rounded-xl text-black font-medium no-underline transition-all duration-200 hover:bg-[#f9f5fc] hover:text-[#7a4988]">
+        👤 <span>Profil</span>
+    </a>
 
             </nav>
 
