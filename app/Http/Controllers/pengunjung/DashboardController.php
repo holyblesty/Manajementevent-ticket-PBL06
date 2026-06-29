@@ -37,5 +37,5 @@ class DashboardController extends Controller
             'riwayatPendaftaran',
             'eventMendatang'
         ));
-    } // Penutup method index
-} // Penutup class DashboardController
+    }
+} 
