@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id" class="h-full bg-gray-50">
+<html lang="id" class="h-full bg-gradient-to-br from-[#faf7fd] via-white to-[#f3ebf8]">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,13 +7,13 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-<body class="bg-gray-50 font-sans antialiased text-gray-900 h-full">
+<body class="min-h-screen bg-gradient-to-br from-[#faf7fd] via-white to-[#f3ebf8] font-sans antialiased text-gray-900">
 
     <div class="flex min-h-screen w-full !overflow-visible">
 
         {{-- TOP NAVIGATION HEADER --}}
         <header class="fixed top-0 z-50 w-full shadow-sm">
-            <nav class="w-full bg-white h-16 flex items-center justify-between px-6">
+            <nav class="w-full bg-white/90 backdrop-blur-xl border-r border-purple-100 shadow-lg  h-16 flex items-center justify-between px-6">
                 <div class="flex items-center">
                     <img src="{{ asset('images/logo.jpeg') }}" alt="Logo" class="h-12 w-auto">
                 </div>
@@ -21,8 +21,6 @@
                {{-- NAVIGASI KANAN --}}
 <div class="flex items-center space-x-6 text-sm font-semibold">
     <a href="{{ route('home') }}" class="transition-colors text-gray-600 hover:text-[#7a4988]" style="text-decoration: none !important;">Beranda</a>
-    
-    <a href="#" class="transition-colors text-gray-600 hover:text-[#7a4988] cursor-not-allowed opacity-50" style="text-decoration: none !important;">Acara</a>
 
     <div class="flex items-center space-x-3 border-l border-gray-200 pl-6">
                         @auth('admin')
@@ -43,7 +41,7 @@
         </header>
 
         {{-- SIDEBAR KIRI --}}
-        <aside class="fixed top-16 left-0 z-40 w-64 h-[calc(100vh-64px)] bg-white border-r border-gray-200 flex flex-col justify-between py-6">
+        <aside class="fixed top-16 left-0 z-40 w-64 h-[calc(100vh-64px)] bg-white/90 backdrop-blur-xl border-r border-gray-200 flex flex-col justify-between py-6">
             <div class="w-full">
                 @php $admin = Auth::guard('admin')->user(); @endphp
                 <a href="{{ route('admin.profile') }}" class="flex flex-col items-center mb-6 no-underline group">
@@ -80,7 +78,7 @@
         </aside>
 
         {{-- AREA KANAN --}}
-        <div class="flex-1 min-w-0 ml-64 mt-16 p-8 bg-gray-50 flex flex-col justify-between min-h-[calc(100vh-64px)] !overflow-visible">
+        <div class="flex-1 min-w-0 ml-64 mt-16 p-8 bg-gradient-to-br from-[#faf7fd] via-white to-[#f3ebf8] flex flex-col justify-between min-h-[calc(100vh-64px)] !overflow-visible">
             @if(session('success'))
             <div id="alert-success" class="flex items-center p-4 mb-6 text-green-800 rounded-2xl bg-green-50 border border-green-100 shadow-sm transition-opacity duration-500" role="alert">
                 <div class="ms-3 text-xs font-black uppercase tracking-wider">{{ session('success') }}</div>
@@ -91,9 +89,9 @@
                 @yield('content')
             </main>
 
-            <footer class="mt-12 bg-[#1E0F30] rounded-3xl p-8 text-white shadow-xl flex-shrink-0">
-                {{-- ... (Footer tetap sama) ... --}}
-            </footer>
+          
+            @include('components.footer')
+
         </div>
     </div>
 

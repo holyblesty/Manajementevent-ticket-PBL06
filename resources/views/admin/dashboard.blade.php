@@ -13,8 +13,10 @@
     </div>
 </div>
 
-<div class="w-full bg-gradient-to-r from-[#24112e] to-[#7a4988] rounded-2xl p-10 mb-10 text-white shadow-lg flex justify-between items-center">
+<div class="relative overflow-hidden w-full bg-gradient-to-r from-[#24112e] via-[#4d2b5f] to-[#7a4988] rounded-3xl p-10 mb-10 text-white shadow-2xl flex justify-between items-center">
     <div>
+        <div class="absolute -top-16 -right-16 w-52 h-52 bg-white/10 rounded-full"></div>
+        <div class="absolute -bottom-10 left-32 w-32 h-32 bg-pink-300/10 rounded-full"></div>
         <h1 class="text-5xl font-black mb-3 uppercase tracking-tighter">DASHBOARD ADMIN</h1>
         <p class="bg-white/20 inline-block px-5 py-2 rounded text-sm font-bold uppercase tracking-widest text-white">Kelola Acara</p>
     </div>
@@ -30,7 +32,7 @@
 </div>
 
 <div class="mb-8">
-    <a href="{{ route('admin.acara.create') }}" class="inline-flex items-center bg-[#7a4988] hover:bg-[#633a6e] text-white px-8 py-4 rounded-xl font-bold text-lg transition shadow-md no-underline">
+    <a href="{{ route('admin.acara.create') }}" class="inline-flex items-center bg-gradient-to-r from-[#7a4988] to-[#9d6bb2] hover:scale-105 hover:shadow-xl text-white px-8 py-4 rounded-2xl font-bold text-lg transition-all duration-300 no-underline">
         <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
         </svg>
@@ -38,7 +40,7 @@
     </a>
 </div>
 
-<div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+<div class="bg-white/95 backdrop-blur-md rounded-3xl border border-purple-100 shadow-xl overflow-hidden">
     <div class="p-6 border-b border-gray-50 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div class="relative w-full md:w-96 text-[#7a4988]">
             <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400">
@@ -46,15 +48,14 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>
             </span>
-            <input type="text" id="searchInput" placeholder="Cari event atau lokasi..." class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-base focus:ring-1 focus:ring-[#7a4988] outline-none transition">
+            <input type="text" id="searchInput" placeholder="Cari event atau lokasi..." class="w-full pl-12 pr-4 py-3 bg-white border border-purple-200 rounded-xl shadow-sm focus:ring-2 focus:ring-[#7a4988] outline-none transition">
         </div>
         
       <form method="GET" action="{{ route('admin.dashboard') }}">
     <select
         name="status"
         onchange="this.form.submit()"
-        class="bg-gray-50 border border-gray-200 text-gray-500 text-base rounded-lg px-5 py-3 outline-none focus:ring-1 focus:ring-[#7a4988] cursor-pointer font-bold"
-    >
+        class="bg-white border border-purple-200 rounded-xl px-5 py-3 shadow-sm text-gray-700 font-semibold focus:ring-2 focus:ring-[#7a4988]">
         <option value="">Semua Event</option>
 
         <option value="open" {{ request('status') == 'open' ? 'selected' : '' }}>
@@ -70,7 +71,7 @@
         </option>
     </select>
 </form>
-        <select id="filterKategori" class="bg-gray-50 border border-gray-200 text-gray-500 text-base rounded-lg px-5 py-3 outline-none focus:ring-1 focus:ring-[#7a4988] cursor-pointer font-bold">
+        <select id="filterKategori"class="bg-white border border-purple-200 rounded-xl px-5 py-3 shadow-sm text-gray-700 font-semibold focus:ring-2 focus:ring-[#7a4988]">
             <option value="" {{ (isset($selectedCategory) && $selectedCategory == '') ? 'selected' : '' }}>Semua Kategori</option>
             <option value="Olahraga" {{ (isset($selectedCategory) && $selectedCategory == 'Olahraga') ? 'selected' : '' }}>Olahraga</option>
             <option value="Seminar" {{ (isset($selectedCategory) && $selectedCategory == 'Seminar') ? 'selected' : '' }}>Seminar</option>
@@ -78,9 +79,9 @@
         </select>
     </div>
 
-    <div class="overflow-x-auto">
+    <div class="overflow-hidden">
         <table class="w-full text-left border-collapse">
-            <thead class="bg-[#7a4988] text-white text-base uppercase tracking-wider font-bold">
+            <thead class="bg-gradient-to-r from-[#24112e] via-[#7a4988] to-[#9d6bb2] text-white text-base uppercase tracking-wider font-bold">
                 <tr>
                     <th class="px-6 py-5 text-center">Poster</th>
                     <th class="px-6 py-5">Judul Acara</th>
@@ -94,9 +95,9 @@
             </thead>
             <tbody class="divide-y divide-gray-100">
                 @foreach ($events as $event)
-                <tr class="hover:bg-gray-50/50 transition duration-300">
+               <tr class="hover:bg-purple-50 transition-all duration-300 hover:scale-[1.003]">
                     <td class="px-6 py-5">
-                        <div onclick="openModal('{{ $event->poster ? asset('images/' . $event->poster) : asset('images/default.jpg') }}', 'Poster: {{ $event->judul }}')" class="w-28 h-20 bg-gray-100 rounded-lg overflow-hidden mx-auto shadow-inner border border-gray-50 cursor-pointer hover:ring-2 hover:ring-[#7a4988] transition-all">
+                        <div onclick="openModal('{{ $event->poster ? asset('images/' . $event->poster) : asset('images/default.jpg') }}', 'Poster: {{ $event->judul }}')"class="w-28 h-20 bg-white rounded-xl overflow-hidden mx-auto shadow-md border border-purple-100 cursor-pointer hover:scale-105 hover:shadow-xl hover:ring-2 hover:ring-[#7a4988] transition-all duration-300">
                             <img src="{{ $event->poster ? asset('images/' . $event->poster) : asset('images/default.jpg') }}" class="w-full h-full object-cover">
                         </div>
                     </td>
@@ -142,7 +143,7 @@
                         </div>
                     </td>
                     <td class="px-6 py-5 text-center">
-                        <span class="kategori-label font-bold text-gray-700">
+                       <span class="inline-flex items-center bg-purple-100 text-[#7a4988] px-3 py-1 rounded-full text-sm font-bold">
                             @if(is_array($event->kategori) || is_object($event->kategori))
                                 {{ $event->kategori['nama_kategori'] ?? ($event->kategori->nama_kategori ?? '-') }}
                             @else
@@ -151,20 +152,42 @@
                         </span>
                     </td>
                     <td class="px-6 py-5 text-center">
-                        <div class="inline-flex items-center justify-center bg-gray-100 px-5 py-3 rounded-md border border-gray-200">
-                            <span class="text-lg font-bold text-gray-700">{{ $event->kapasitas ?? 0 }} <span class="text-sm text-gray-400 font-bold uppercase ml-1">Org</span></span>
+                        <div class="inline-flex items-center justify-center bg-gradient-to-r from-purple-50 to-pink-50 px-5 py-3 rounded-xl border border-purple-200 shadow-sm">
+                            <span class="text-lg font-bold text-gray-700">{{ $event->kapasitas ?? 0 }} <span class="text-sm text-gray-400 font-bold uppercase ml-1">Peserta</span></span>
                         </div>
                     </td>
-                    <td class="px-6 py-5">
-                        <div class="flex justify-center items-center gap-3"> 
-                            <a href="{{ route('admin.acara.tiket', $event->id_event) }}" style="width: 90px; height: 42px; background-color: #be93d4; color: #24112e; border-radius: 8px; font-size: 13px; font-weight: 900; display: flex; align-items: center; justify-content: center; text-transform: uppercase; text-decoration: none;">TIKET</a>
-                            <a href="{{ route('admin.acara.edit', $event->id_event) }}" style="width: 90px; height: 42px; background-color: #24112e; color: white; border-radius: 8px; font-size: 13px; font-weight: 900; display: flex; align-items: center; justify-content: center; text-transform: uppercase; text-decoration: none;">UBAH</a>
-                            <form action="{{ route('admin.acara.destroy', $event->id_event) }}" method="POST" class="form-delete" style="margin: 0; padding: 0;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="button" onclick="confirmDelete(this)" style="width: 90px; height: 42px; background-color: #e11d1d; color: white; border-radius: 8px; font-size: 13px; font-weight: 900; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; text-transform: uppercase;">HAPUS</button>
-                            </form>
-                        </div>
+              <td class="px-6 py-5">
+    <div class="flex justify-center items-center gap-3">
+
+        {{-- Tombol Tiket --}}
+        <a href="{{ route('admin.acara.tiket', $event->id_event) }}"
+           class="w-24 h-11 flex items-center justify-center rounded-full bg-gradient-to-r from-[#d8b4fe] to-[#be93d4] text-[#24112e] text-xs font-black uppercase shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300 no-underline">
+            🎫 Tiket
+        </a>
+
+        {{-- Tombol Ubah --}}
+        <a href="{{ route('admin.acara.edit', $event->id_event) }}"
+           class="w-24 h-11 flex items-center justify-center rounded-full bg-gradient-to-r from-[#24112e] to-[#4b2c5e] text-white text-xs font-black uppercase shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300 no-underline">
+            ✏️ Ubah
+        </a>
+
+        {{-- Tombol Hapus --}}
+        <form action="{{ route('admin.acara.destroy', $event->id_event) }}"
+              method="POST"
+              class="form-delete">
+            @csrf
+            @method('DELETE')
+
+            <button
+                type="button"
+                onclick="confirmDelete(this)"
+                class="w-24 h-11 flex items-center justify-center rounded-full bg-gradient-to-r from-red-500 to-red-700 text-white text-xs font-black uppercase shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300">
+                🗑️ Hapus
+            </button>
+        </form>
+
+    </div>
+</td>
                     </td>
                 </tr>
                 @endforeach
@@ -174,7 +197,6 @@
 </div>
 
 <x-pagination :paginator="$events" />
-
 <script>
     function openModal(imgSrc, caption) {
         document.getElementById('modalImg').src = imgSrc;
