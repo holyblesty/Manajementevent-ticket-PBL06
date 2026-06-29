@@ -132,9 +132,11 @@
                     <i class="fa-regular fa-calendar me-2"></i>{{ $event->tgl_mulai ? $event->tgl_mulai->format('d-m-y') : '-' }} | 
                     <i class="fa-solid fa-location-dot me-2"></i>{{ $event->lokasi }}
                 </p>
-                <a href="#" class="bg-purpleAccent hover:bg-purplePrimary text-white text-xs font-bold px-5 py-2.5 rounded shadow-sm transition-colors inline-block">
-                    Detail Acara <i class="fa-solid fa-arrow-right ms-1"></i>
-                </a>
+              <a href="{{ route('pengunjung.event.show', $event->id_event) }}"
+                class="bg-purpleAccent hover:bg-purplePrimary text-white text-xs font-bold px-5 py-2.5 rounded shadow-sm transition-colors inline-block">
+              Detail Acara
+              <i class="fa-solid fa-arrow-right ms-1"></i>
+            </a>
             </div>
         </div>
         @endforeach
@@ -220,16 +222,31 @@
             @endforelse
         </div>
 
-        <div class="text-center mt-12">
-            <a href="#" class="bg-purplePrimary text-white text-sm font-bold px-8 py-2.5 
-            rounded-lg shadow hover:bg-purpleAccent transition-colors inline-block mb-4">Lihat Semua Acara</a>
-            <div class="text-sm text-gray-600 max-w-lg mx-auto leading-relaxed mb-3 mt-2">
-                Ingin membuat acara atau kegiatan baru? hubungi admin untuk informasi lebih lanjut melalui kontak kami
-            </div>
-            <a href="{{ route('pengunjung.kontak') }}" 
-             class="bg-purplePrimary text-white text-sm font-bold px-6 py-2.5 rounded-lg shadow hover:bg-purpleAccent transition-colors inline-block">
-             Kontak kami
-            </a>
+ <div class="text-center mt-12">
+    {{-- Tombol Toggle --}}
+    @if(request()->has('view_all'))
+        <a href="{{ route('home') }}" 
+           class="bg-red-500 text-white text-sm font-bold px-8 py-2.5 rounded-lg shadow hover:bg-red-600 transition-colors inline-block mb-4">
+           Tutup Daftar
+        </a>
+    @else
+        <a href="{{ route('home') }}?view_all=true" 
+           class="bg-purplePrimary text-white text-sm font-bold px-8 py-2.5 rounded-lg shadow hover:bg-purpleAccent transition-colors inline-block mb-4">
+           Lihat Semua Acara
+        </a>
+    @endif
+
+    {{-- Teks informasi ini muncul selamanya --}}
+    <div class="text-sm text-gray-600 max-w-lg mx-auto leading-relaxed mb-3 mt-2">
+        Ingin membuat acara atau kegiatan baru? hubungi admin untuk informasi lebih lanjut melalui kontak kami
+    </div>
+
+    {{-- Tombol Kontak --}}
+    <a href="{{ route('pengunjung.kontak') }}" 
+       class="bg-purplePrimary text-white text-sm font-bold px-6 py-2.5 rounded-lg shadow hover:bg-purpleAccent transition-colors inline-block">
+       Kontak kami
+    </a>
+</div>
         </div>
     </section>
 

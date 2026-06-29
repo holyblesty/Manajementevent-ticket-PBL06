@@ -23,7 +23,7 @@ class RiwayatController extends Controller
             ->get();
 
         return view(
-            'pengunjung.riwayat',
+            'pengunjung.riwayat-pendaftaran',
             compact('riwayat')
         );
     }

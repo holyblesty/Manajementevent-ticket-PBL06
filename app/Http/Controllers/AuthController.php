@@ -6,7 +6,6 @@ use App\Models\Pengunjung;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User; // Pastikan model User sudah ada
 
 class AuthController extends Controller
 {
@@ -54,8 +53,8 @@ class AuthController extends Controller
     {
         $request->validate([
             'name'     => 'required|string|max:255',
-            'username' => 'required|string|unique:users,username|max:255',
-            'email'    => 'required|string|email|max:255|unique:users,email', // Tambahkan validasi email
+            'username' => 'required|string|unique:pengunjung,username|max:255',
+            'email'    => 'required|string|email|max:255|unique:pengunjung,email', // Tambahkan validasi email
             'password' => 'required|string|min:6|confirmed',
         ]);
 

@@ -13,9 +13,9 @@ return [
     |
     */
 
-  'defaults' => [
-    'guard' => env('AUTH_GUARD', 'web'),
-    'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
+    'defaults' => [
+        'guard' => env('AUTH_GUARD', 'web'),
+        'passwords' => env('AUTH_PASSWORD_BROKER', 'pengunjung'),
     ],
 
     /*
@@ -36,10 +36,10 @@ return [
     */
 
     'guards' => [
-        // Guard default untuk pengunjung (melihat tabel users)
+        // Guard default untuk pengunjung (melihat tabel pengunjung)
         'web' => [
             'driver' => 'session',
-            'provider' => 'users',
+            'provider' => 'pengunjung',
         ],
 
         // 👈 AKUN ADMIN: Guard baru untuk mendeteksi login admin
@@ -68,7 +68,7 @@ return [
 
     'providers' => [
         // Provider default untuk mengambil data dari model User (pengunjung)
-        'users' => [
+        'pengunjung' => [
             'driver' => 'eloquent',
             'model' => App\Models\Pengunjung::class,
         ],
@@ -100,8 +100,8 @@ return [
     */
 
     'passwords' => [
-        'users' => [
-            'provider' => 'users',
+        'pengunjung' => [
+            'provider' => 'pengunjung',
             'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
             'expire' => 60,
             'throttle' => 60,

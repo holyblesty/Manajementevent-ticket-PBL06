@@ -6,18 +6,29 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class Pengunjung extends Authenticatable // <--- Class diubah
+class Pengunjung extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+<<<<<<< HEAD
     // Menentukan nama tabel yang digunakan oleh model ini
+=======
+    /*
+    |--------------------------------------------------------------------------
+    | CONFIG TABLE
+    |--------------------------------------------------------------------------
+    */
+
+    // Nama tabel
+>>>>>>> 0b98d7c3b4995202cf577c4b8a1d1121395af65b
     protected $table = 'pengunjung';
 
-    // Menentukan primary key tabel
+    // Primary Key
     protected $primaryKey = 'id_pengunjung';
 
-    // Primary key bertipe integer dan auto increment
+    // Auto Increment
     public $incrementing = true;
+
     protected $keyType = 'int';
 
     /*
@@ -26,7 +37,6 @@ class Pengunjung extends Authenticatable // <--- Class diubah
     |--------------------------------------------------------------------------
     */
 
-    // Field yang boleh diisi secara mass assignment (create / update)
     protected $fillable = [
         'name',
         'username',
@@ -34,16 +44,16 @@ class Pengunjung extends Authenticatable // <--- Class diubah
         'password',
         'no_hp',
         'alamat',
+        'foto',
         'role',
     ];
 
     /*
     |--------------------------------------------------------------------------
-    | HIDDEN ATTRIBUTES
+    | HIDDEN ATTRIBUTE
     |--------------------------------------------------------------------------
     */
 
-    // Field yang disembunyikan saat data di-convert ke array / JSON
     protected $hidden = [
         'password',
         'remember_token',
@@ -51,14 +61,10 @@ class Pengunjung extends Authenticatable // <--- Class diubah
 
     /*
     |--------------------------------------------------------------------------
-    | ATTRIBUTE CASTING
+    | CAST
     |--------------------------------------------------------------------------
     */
 
-    /**
-     * Konversi otomatis tipe data atribut
-     * Contoh: password akan otomatis di-hash
-     */
     protected function casts(): array
     {
         return [
@@ -69,19 +75,13 @@ class Pengunjung extends Authenticatable // <--- Class diubah
 
     /*
     |--------------------------------------------------------------------------
-    | RELATIONSHIPS
+    | RELATIONSHIP
     |--------------------------------------------------------------------------
     */
 
-    /**
-     * Relasi: satu pengunjung bisa memiliki banyak pemesanan
-     *
-     * Artinya:
-     * 1 pengunjung → banyak data di tabel pemesanan
-     */
+    // Satu pengunjung memiliki banyak pemesanan
     public function pesanans()
     {
-        // hasMany(ModelTujuan, foreign_key_di_tabel_pemesanan, primary_key_di_tabel_pengunjung)
         return $this->hasMany(
             Pemesanan::class,
             'id_pengunjung',

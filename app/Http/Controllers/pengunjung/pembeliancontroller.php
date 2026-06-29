@@ -5,46 +5,80 @@ namespace App\Http\Controllers\Pengunjung;
 use App\Http\Controllers\Controller;
 use App\Models\Event;
 use App\Models\Pemesanan;
+use App\Models\Pengunjung;
 use App\Models\Tiket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PembelianController extends Controller
 {
+<<<<<<< HEAD
     public function index($id)
+=======
+    public function index(int $id_event)
+>>>>>>> 0b98d7c3b4995202cf577c4b8a1d1121395af65b
     {
-        $event = Event::with('tiket')
-            ->findOrFail($id);
+        $event = Event::findOrFail($id_event);
+        $tiket = Tiket::where('id_event', $id_event)->get();
+        $pengunjung = Auth::guard('web')->user();
 
-        return view(
-            'pengunjung.pembelian-tiket',
-            compact('event')
-        );
+        return view('pengunjung.pembeliantiket', compact('event', 'tiket', 'pengunjung'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'id_event' => 'required',
-            'id_tiket' => 'required',
-            'jumlah_tiket' => 'required|integer|min:1'
+            'name'         => 'required|string|max:255',
+            'email'        => 'required|email',
+            'no_hp'        => 'required',
+            'alamat'       => 'required',
+            'id_event'     => 'required|exists:events,id_event',
+            'id_tiket'     => 'required|exists:tiket,id_tiket',
+            'jumlah_tiket' => 'required|integer|min:1',
         ]);
 
-        $tiket = Tiket::findOrFail(
-            $request->id_tiket
-        );
+        try {
+            $pemesanan = DB::transaction(function () use ($request) {
+                $pengunjung = Pengunjung::findOrFail(Auth::guard('web')->id());
+                $tiket = Tiket::lockForUpdate()->findOrFail($request->id_tiket);
 
-        if (
-            $request->jumlah_tiket >
-            $tiket->kuota_tersedia
-        ) {
-            return back()
-                ->withInput()
-                ->with(
-                    'error',
-                    'Kuota tiket tidak mencukupi'
-                );
+                if ($tiket->kuota_tersedia < $request->jumlah_tiket) {
+                    throw new \Exception('Kuota tiket tidak mencukupi.');
+                }
+
+                // Update profil
+                $pengunjung->update([
+                    'name'   => $request->name,
+                    'email'  => $request->email,
+                    'no_hp'  => $request->no_hp,
+                    'alamat' => $request->alamat,
+                ]);
+
+                // Simpan pemesanan
+                $pesanan = Pemesanan::create([
+                    'id_event'          => $request->id_event,
+                    'id_pengunjung'     => $pengunjung->id_pengunjung,
+                    'id_tiket'          => $request->id_tiket,
+                    'jumlah_tiket'      => $request->jumlah_tiket,
+                    'total_harga'       => $tiket->harga * $request->jumlah_tiket,
+                    'kode_registrasi'   => 'EVT' . strtoupper(substr(uniqid(), -8)),
+                    'sts_transaksi'     => 'Belum Bayar',
+                    'metode_pembayaran' => 'Cash',
+                    'tgl_pesan'         => now(),
+                ]);
+
+                // Kurangi kuota
+                $tiket->decrement('kuota_tersedia', $request->jumlah_tiket);
+
+                return $pesanan;
+            });
+
+            return redirect()->route('pengunjung.pembelian.sukses', $pemesanan->id_pesanan);
+        } catch (\Exception $e) {
+            return back()->withInput()->with('error', $e->getMessage());
         }
+<<<<<<< HEAD
 
         $total =
             $tiket->harga *
@@ -171,54 +205,30 @@ class PembelianController extends Controller
             'pengunjung.pembelian.sukses',
             $pemesanan->id_pesanan
         );
+=======
+>>>>>>> 0b98d7c3b4995202cf577c4b8a1d1121395af65b
     }
 
     public function sukses(int $id)
     {
-        $pemesanan = Pemesanan::with([
-            'event',
-            'tiket',
-            'user'
-        ])->findOrFail($id);
-
-        return view(
-            'pengunjung.pembelian-sukses',
-            compact('pemesanan')
-        );
+        $pemesanan = Pemesanan::with(['event', 'tiket', 'pengunjung'])->findOrFail($id);
+        return view('pengunjung.pembelian-sukses', compact('pemesanan'));
     }
 
     public function tiketSaya()
     {
-        $user = Auth::user();
-
-        $pemesanan = Pemesanan::with([
-            'event',
-            'tiket'
-        ])
-            ->where(
-                'id_pengunjung',
-                $user->id_pengunjung
-            )
+        $pengunjung = Auth::guard('web')->user();
+        $pemesanan = Pemesanan::with(['event', 'tiket'])
+            ->where('id_pengunjung', $pengunjung->id_pengunjung)
             ->latest('id_pesanan')
             ->get();
 
-        return view(
-            'pengunjung.tiket-saya',
-            compact('pemesanan')
-        );
+        return view('pengunjung.tiket-saya', compact('pemesanan'));
     }
 
     public function detailTiket(int $id)
     {
-        $pemesanan = Pemesanan::with([
-            'event',
-            'tiket',
-            'pengunjung'
-        ])->findOrFail($id);
-
-        return view(
-            'pengunjung.detail-tiket',
-            compact('pemesanan')
-        );
+        $pemesanan = Pemesanan::with(['event', 'tiket', 'pengunjung'])->findOrFail($id);
+        return view('pengunjung.detail-tiket', compact('pemesanan'));
     }
 }

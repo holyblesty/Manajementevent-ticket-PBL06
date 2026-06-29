@@ -67,7 +67,7 @@
 {{-- FILTER --}}
 <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-8">
 
-    <form method="GET">
+    <form action="{{ route('pengunjung.dashboard') }}" method="GET">
 
         <div class="grid md:grid-cols-3 gap-4">
 
@@ -80,23 +80,13 @@
 
             <select
                 name="kategori"
+                onchange="this.form.submit()"
                 class="border border-gray-200 rounded-xl px-4 py-3">
 
-                <option value="">
-                    Semua Kategori
-                </option>
-
-                <option value="Olahraga">
-                    Olahraga
-                </option>
-
-                <option value="Seminar">
-                    Seminar
-                </option>
-
-                <option value="Hiburan">
-                    Hiburan
-                </option>
+                <option value="">Semua Kategori</option>
+                <option value="1" {{ request('kategori') == '1' ? 'selected' : '' }}>Olahraga</option>
+                <option value="2" {{ request('kategori') == '2' ? 'selected' : '' }}>Seminar</option>
+                <option value="3" {{ request('kategori') == '3' ? 'selected' : '' }}>Hiburan</option>
 
             </select>
 
@@ -111,7 +101,6 @@
     </form>
 
 </div>
-
 {{-- EVENT --}}
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
@@ -126,7 +115,7 @@
             <div class="p-5">
 
                 <span class="bg-[#7a4988] text-white text-xs px-3 py-1 rounded-full">
-                    {{ $event->kategoriEvent }}
+                   {{ $event->kategori->nama_kategori ?? 'Umum' }}
                 </span>
 
                 <h3 class="text-xl font-bold mt-4 text-[#24112e]">
@@ -137,8 +126,8 @@
                     📍 {{ $event->lokasi }}
                 </p>
 
-                <p class="text-sm text-gray-500">
-                    📅 {{ date('d M Y', strtotime($event->tanggal)) }}
+                 <p class="text-sm text-gray-500">
+                 📅 {{ $event->tgl_mulai ? \Carbon\Carbon::parse($event->tgl_mulai)->format('d-m-y') : 'Tanggal belum diatur' }}
                 </p>
 
                 <p class="text-sm text-gray-500">

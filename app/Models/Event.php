@@ -43,6 +43,7 @@ class Event extends Model
         'id_admin',
         'kapasitas',
         'kuota_tersedia',
+        'harga_tiket',
     ];
 
     /*
