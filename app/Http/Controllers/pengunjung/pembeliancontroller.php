@@ -24,15 +24,15 @@ class PembelianController extends Controller
 
     public function store(Request $request)
     {
-       $request->validate([
-    'name' => 'required|string|max:255',
-    'email' => 'required|email',
-    'no_hp' => 'required',
-    'alamat' => 'required',
-    'id_event' => 'required|exists:events,id_event',
-    'id_tiket' => 'required|exists:tikets,id_tiket',
-    'jumlah_tiket' => 'required|integer|min:1',
-]);
+        $request->validate([
+            'name'         => 'required|string|max:255',
+            'email'        => 'required|email',
+            'no_hp'        => 'required',
+            'alamat'       => 'required',
+            'id_event'     => 'required|exists:events,id_event',
+            'id_tiket'     => 'required|exists:tikets,id_tiket',
+            'jumlah_tiket' => 'required|integer|min:1',
+        ]);
 
         try {
             $pemesanan = DB::transaction(function () use ($request) {

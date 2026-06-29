@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class PageController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         // 1. Mengambil data acara untuk list bawah
         $events = Event::where('status_event', 'open')
@@ -16,13 +16,21 @@ class PageController extends Controller
             ->take(4)
             ->get();
 
-        // 2. Mengambil 3 acara terbaru khusus untuk slider
+        // 1. Mengambil 3 acara terbaru untuk Slider (Carousel)
         $latestEvents = Event::where('status_event', 'open')
             ->latest()
             ->take(3)
             ->get();
 
-        return view('welcome', compact('events', 'latestEvents'));
+        // 2. Logika yang lebih ketat:
+        // Jika tombol ditekan, tampilkan semua. JIKA TIDAK, ambil 8 saja.
+        if ($request->has('view_all') && $request->view_all == 'true') {
+            $events = Event::where('status_event', 'open')->latest()->get();
+        } else {
+            $events = Event::where('status_event', 'open')->latest()->take(4)->get();
+        }
+
+        return view('welcome', compact('latestEvents', 'events'));
     }
 
     // FUNGSI PENCARIAN (Sudah diperbarui dengan JOIN)

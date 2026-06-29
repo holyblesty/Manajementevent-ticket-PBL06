@@ -137,8 +137,8 @@
                     📍 {{ $event->lokasi }}
                 </p>
 
-                <p class="text-sm text-gray-500">
-                    📅 {{ date('d M Y', strtotime($event->tanggal)) }}
+                 <p class="text-sm text-gray-500">
+                 📅 {{ $event->tgl_mulai ? \Carbon\Carbon::parse($event->tgl_mulai)->format('d-m-y') : 'Tanggal belum diatur' }}
                 </p>
 
                 <p class="text-sm text-gray-500">
