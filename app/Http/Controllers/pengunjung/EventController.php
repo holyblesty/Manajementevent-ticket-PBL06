@@ -9,11 +9,8 @@ class EventController extends Controller
 {
     public function show(int $id)
     {
-        $event = Event::findOrFail($id);
+        $event = Event::with('tiket')->findOrFail($id);
 
-        return view(
-            'pengunjung.detail-event',
-            compact('event')
-        );
+        return view('pengunjung.detail-event', compact('event'));
     }
 }
