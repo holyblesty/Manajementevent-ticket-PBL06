@@ -13,11 +13,7 @@ use Illuminate\Support\Facades\DB;
 
 class PembelianController extends Controller
 {
-<<<<<<< HEAD
-    public function index($id)
-=======
     public function index(int $id_event)
->>>>>>> 0b98d7c3b4995202cf577c4b8a1d1121395af65b
     {
         $event = Event::findOrFail($id_event);
         $tiket = Tiket::where('id_event', $id_event)->get();
@@ -78,135 +74,6 @@ class PembelianController extends Controller
         } catch (\Exception $e) {
             return back()->withInput()->with('error', $e->getMessage());
         }
-<<<<<<< HEAD
-
-        $total =
-            $tiket->harga *
-            $request->jumlah_tiket;
-
-        Pemesanan::create([
-            'id_event' =>
-                $request->id_event,
-
-            'id_pengunjung' =>
-                Auth::user()->id_pengunjung,
-
-            'id_tiket' =>
-                $request->id_tiket,
-
-            'tgl_pesan' =>
-                now(),
-
-            'metode_pembayaran' =>
-                'Cash',
-
-            'jumlah_tiket' =>
-                $request->jumlah_tiket,
-
-            'total_harga' =>
-                $total,
-
-            'kode_registrasi' =>
-                'EVT'.rand(100000,999999),
-
-            'sts_transaksi' =>
-                'Belum Bayar'
-        ]);
-
-        $tiket->decrement(
-            'kuota_tersedia',
-            $request->jumlah_tiket
-        );
-
-        return redirect()
-            ->route('pengunjung.riwayat')
-            ->with(
-                'success',
-                'Pemesanan berhasil dibuat. Silakan melakukan pembayaran tunai kepada admin.'
-            );
-
-    public function index(int $id_event)
-    {
-        $event = Event::findOrFail($id_event);
-
-        $tiket = Tiket::where(
-            'id_event',
-            $id_event
-        )->get();
-
-        $user = Auth::user();
-
-        return view(
-            'pengunjung.pembeliantiket',
-            compact('event', 'tiket', 'user')
-        );
-    }
-
-    // Memproses data pendaftaran & transaksi pembelian tiket
-    public function store(Request $request, $id)
-    {
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email',
-            'no_hp' => 'required',
-            'alamat' => 'required',
-            'id_event' => 'required',
-            'id_tiket' => 'required',
-            'jumlah_tiket' => 'required|integer|min:1'
-        ]);
-
-        /** @var \App\Models\Pengunjung  */
-        $pengunjung = Auth::user();
-
-        $pengunjung->name = $request->name;
-        $pengunjung->email = $request->email;
-        $pengunjung->no_hp = $request->no_hp;
-        $pengunjung->alamat = $request->alamat;
-        $pengunjung->save();
-
-        $tiket = Tiket::findOrFail(
-            $request->id_tiket
-        );
-
-        if (
-            $request->jumlah_tiket >
-            $tiket->kuota_tersedia
-        ) {
-            return back()->with(
-                'error',
-                'Kuota tiket tidak mencukupi.'
-            );
-        }
-
-        $pemesanan = Pemesanan::create([
-            'id_event' => $request->id_event,
-            'id_pengunjung' => $pengunjung->id_pengunjung,
-            'id_tiket' => $request->id_tiket,
-            'tgl_pesan' => now(),
-            'tgl_bayar' => null,
-            'metode_pembayaran' => 'Cash',
-            'total_harga' =>
-            $tiket->harga *
-                $request->jumlah_tiket,
-            'jumlah_tiket' =>
-            $request->jumlah_tiket,
-            'kode_registrasi' =>
-            Pemesanan::generateKode(),
-            'sts_transaksi' => 'Belum Bayar'
-        ]);
-
-        $tiket->kuota_tersedia =
-            $tiket->kuota_tersedia -
-            $request->jumlah_tiket;
-
-        $tiket->save();
-
-        return redirect()->route(
-            'pengunjung.pembelian.sukses',
-            $pemesanan->id_pesanan
-        );
-=======
->>>>>>> 0b98d7c3b4995202cf577c4b8a1d1121395af65b
     }
 
     public function sukses(int $id)
