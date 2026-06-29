@@ -132,7 +132,7 @@
                     <i class="fa-regular fa-calendar me-2"></i>{{ $event->tgl_mulai ? $event->tgl_mulai->format('d-m-y') : '-' }} | 
                     <i class="fa-solid fa-location-dot me-2"></i>{{ $event->lokasi }}
                 </p>
-              <a href="{{ route('pengunjung.event.show', $event->id_event) }}"
+              <a href="{{ route('event.show', $event->id_event) }}"
                 class="bg-purpleAccent hover:bg-purplePrimary text-white text-xs font-bold px-5 py-2.5 rounded shadow-sm transition-colors inline-block">
               Detail Acara
               <i class="fa-solid fa-arrow-right ms-1"></i>
@@ -215,6 +215,12 @@
                         <i class="fa-solid fa-location-dot me-2 text-purplePrimary"></i>
                         <span class="truncate">{{ $event->lokasi }}</span>
                     </div>
+
+                <a href="{{ route('event.show', $event->id_event) }}"
+                 class="mt-4 inline-flex items-center justify-center gap-2 w-full bg-purplePrimary text-white py-2.5 rounded-xl font-bold hover:bg-purpleAccent transition">
+                 Detail Event
+                <i class="fa-solid fa-arrow-right"></i>
+                </a>
                 </div>
             </div>
             @empty
