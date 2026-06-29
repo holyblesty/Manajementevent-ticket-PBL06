@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Pengunjung;
 
 use App\Http\Controllers\Controller;
 use App\Models\Event;
+use Illuminate\Http\Request;
 
 class EventController extends Controller
 {

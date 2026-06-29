@@ -10,6 +10,9 @@ class Pengunjung extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+<<<<<<< HEAD
+    // Menentukan nama tabel yang digunakan oleh model ini
+=======
     /*
     |--------------------------------------------------------------------------
     | CONFIG TABLE
@@ -17,6 +20,7 @@ class Pengunjung extends Authenticatable
     */
 
     // Nama tabel
+>>>>>>> 0b98d7c3b4995202cf577c4b8a1d1121395af65b
     protected $table = 'pengunjung';
 
     // Primary Key

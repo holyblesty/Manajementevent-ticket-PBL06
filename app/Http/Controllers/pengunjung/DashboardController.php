@@ -39,6 +39,19 @@ class DashboardController extends Controller
         $riwayatPendaftaran = $user ? Pemesanan::where('id_pengunjung', $user->id_pengunjung)->count() : 0;
         $eventMendatang = Event::whereDate('tgl_mulai', '>=', now())->where('status_event', 'open')->count();
 
+<<<<<<< HEAD
+        $eventMendatang = Event::whereDate('tgl_mulai', '>=', now())->count();
+
+        return view('pengunjung.dashboard', compact(
+            'events',
+            'jumlahTiket',
+            'riwayatPendaftaran',
+            'eventMendatang'
+        ));
+    }
+} 
+=======
         return view('pengunjung.dashboard', compact('events', 'jumlahTiket', 'riwayatPendaftaran', 'eventMendatang'));
     }
 }
+>>>>>>> 0b98d7c3b4995202cf577c4b8a1d1121395af65b

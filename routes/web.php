@@ -124,6 +124,8 @@ Route::middleware('auth:web')
     ->name('pengunjung.')
     ->group(function () {
 
+    // Simpan transaksi pembelian
+    Route::post('/pembelian-tiket', [PembelianController::class, 'store'])->name('pembelian.store');
         /*
         |--------------------------------------------------------------------------
         | DASHBOARD
@@ -146,6 +148,8 @@ Route::middleware('auth:web')
 
         Route::post('/pembelian', [PembelianController::class, 'store'])
             ->name('pembelian.store');
+
+        Route::put('/profil/password/update', [ProfilController::class, 'updatePassword'])->name('profil.password.update');
 
         Route::get('/pembelian/sukses/{id}', [PembelianController::class, 'sukses'])
             ->name('pembelian.sukses');
@@ -192,3 +196,4 @@ Route::middleware('auth:web')
         Route::put('/profil/password/update', [ProfilController::class, 'updatePassword'])
             ->name('profil.password.update');
     });
+

@@ -82,31 +82,28 @@
 
                         @if($totalKuota > 0)
 
-                            @auth('web')
-                                <a href="{{ route('pengunjung.pembelian', $event->id_event) }}"
-                                   class="inline-block px-6 py-3 bg-[#7a4988] text-white rounded-xl font-semibold hover:bg-[#693b76] transition">
-                                    Beli Sekarang
-                                </a>
-                            @else
-                                <button onclick="openModal('loginModal')"
-                                        class="inline-block px-6 py-3 bg-[#7a4988] text-white rounded-xl font-semibold hover:bg-[#693b76] transition">
-                                    Login untuk Beli
-                                </button>
-                            @endauth
+                            <a
+                                href="{{ route('pengunjung.pembelian', $event->id_event) }}"
+                                class="inline-block px-6 py-3 bg-[#7a4988] text-white rounded-xl text-sm font-semibold hover:bg-[#693b76]">
+
+                                Beli Sekarang
+
+                            </a>
 
                         @else
 
-                            <button disabled
-                                class="px-6 py-3 rounded-xl bg-gray-300 text-white font-semibold cursor-not-allowed">
+                            <button
+                                disabled
+                                class="px-6 py-3 rounded-xl bg-gray-300 text-white text-sm font-semibold cursor-not-allowed">
+
                                 Kuota Penuh
                             </button>
 
                         @endif
 
                     </div>
-
                 </div>
-
+                </div>
             </div>
 
         </div>
@@ -167,5 +164,4 @@
     </div>
 
 </div>
-
 @endsection
