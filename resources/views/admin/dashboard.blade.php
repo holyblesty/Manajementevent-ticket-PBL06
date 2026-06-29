@@ -162,13 +162,13 @@
         {{-- Tombol Tiket --}}
         <a href="{{ route('admin.acara.tiket', $event->id_event) }}"
            class="w-24 h-11 flex items-center justify-center rounded-full bg-gradient-to-r from-[#d8b4fe] to-[#be93d4] text-[#24112e] text-xs font-black uppercase shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300 no-underline">
-            🎫 Tiket
+            Tiket
         </a>
 
         {{-- Tombol Ubah --}}
         <a href="{{ route('admin.acara.edit', $event->id_event) }}"
            class="w-24 h-11 flex items-center justify-center rounded-full bg-gradient-to-r from-[#24112e] to-[#4b2c5e] text-white text-xs font-black uppercase shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300 no-underline">
-            ✏️ Ubah
+            Ubah
         </a>
 
         {{-- Tombol Hapus --}}
@@ -182,7 +182,7 @@
                 type="button"
                 onclick="confirmDelete(this)"
                 class="w-24 h-11 flex items-center justify-center rounded-full bg-gradient-to-r from-red-500 to-red-700 text-white text-xs font-black uppercase shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300">
-                🗑️ Hapus
+                Hapus
             </button>
         </form>
 
