@@ -17,7 +17,7 @@ class StoreEventRequest extends FormRequest
             'judul' => 'required|string|max:255',
             'deskripsi' => 'required|string',
             'id_kategori' => 'required|exists:kategori_events,id_kategori',
-            'poster' => 'required|image|mimes:jpeg,png,jpg|max:5120',
+            'poster' => 'required|image|mimes:jpeg,png,jpg,webp|max:5120',
             'tgl_mulai' => 'required|date',
             'tgl_selesai' => 'required|date|after_or_equal:tgl_mulai',
             'jam_mulai' => 'required',

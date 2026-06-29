@@ -43,6 +43,7 @@ class AcaraController extends Controller
         }
 
         $events = $query
+            ->latest('created_at')
             ->paginate(5)
             ->withQueryString();
 
