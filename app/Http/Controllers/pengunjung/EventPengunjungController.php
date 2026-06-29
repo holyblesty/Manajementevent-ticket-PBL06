@@ -25,7 +25,7 @@ class EventPengunjungController extends Controller
         return view('events.index', compact('events'));
     }
 
-    public function show($id)
+    public function show(int $id)
     {
         $event = Event::with('tikets')->findOrFail($id);
 

@@ -8,9 +8,7 @@ use Illuminate\Support\Str;
 class Pemesanan extends Model
 {
     protected $table = 'pemesanan';
-
     protected $primaryKey = 'id_pesanan';
-
     public $timestamps = false;
 
     protected $fillable = [
@@ -27,7 +25,7 @@ class Pemesanan extends Model
     ];
 
     protected $casts = [
-        'total_harga' => 'decimal:2',
+        'total_harga' => 'decimal:2'
     ];
 
     public static function generateKode(): string
@@ -35,10 +33,10 @@ class Pemesanan extends Model
         return 'EVT-' . strtoupper(Str::random(8));
     }
 
-    public function user()
+    public function pengunjung()
     {
         return $this->belongsTo(
-            User::class,
+            Pengunjung::class,
             'id_pengunjung',
             'id_pengunjung'
         );

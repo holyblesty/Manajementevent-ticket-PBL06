@@ -31,7 +31,6 @@
 @endif
 
 <form action="{{ route('pengunjung.pembelian.store') }}" method="POST">
-
     @csrf
 
     <input type="hidden"
@@ -108,7 +107,7 @@
                         <input
                             type="text"
                             name="name"
-                            value="{{ $user->name }}"
+                            value="{{ $pengunjung->name }}"
                             class="w-full mt-2 border rounded-xl p-3">
                     </div>
 
@@ -120,7 +119,7 @@
                         <input
                             type="email"
                             name="email"
-                            value="{{ $user->email }}"
+                            value="{{ $pengunjung->email }}"
                             class="w-full mt-2 border rounded-xl p-3">
                     </div>
 
@@ -132,7 +131,7 @@
                         <input
                             type="text"
                             name="no_hp"
-                            value="{{ $user->no_hp }}"
+                            value="{{ $pengunjung->no_hp }}"
                             class="w-full mt-2 border rounded-xl p-3">
                     </div>
 
@@ -144,7 +143,7 @@
                         <input
                             type="text"
                             name="alamat"
-                            value="{{ $user->alamat }}"
+                            value="{{ $pengunjung->alamat }}"
                             class="w-full mt-2 border rounded-xl p-3">
                     </div>
 
@@ -268,7 +267,10 @@
             </div>
 
         </div>
-
+<<<<<<< HEAD
+=======
+        </div>
+>>>>>>> 1f4122ef3935aa3335b294cf6c8a5a43b2316de8
     </div>
 
 </form>

@@ -112,7 +112,7 @@
             </div>
 
             <div class="mt-10 flex justify-end gap-3 pt-8 border-t-2 border-gray-50">
-                <a href="{{ route('admin.acara.index') }}" class="px-8 py-4 bg-white text-gray-400 rounded-2xl font-black text-[10px] uppercase tracking-widest border-2 border-gray-100">Batal</a>
+                <a href="{{ route('admin.dashboard') }}" class="px-8 py-4 bg-white text-gray-400 rounded-2xl font-black text-[10px] uppercase tracking-widest border-2 border-gray-100">Batal</a>
                 <button type="submit" class="px-12 py-4 bg-[#24112e] text-white rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl">Simpan Acara</button>
             </div>
         </form>

@@ -4,19 +4,20 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Event;
-use App\Models\Menghadiri; 
+use App\Models\Menghadiri;
 use Illuminate\Http\Request;
 
 class PesertaController extends Controller
 {
-    public function index() {
+    public function index()
+    {
         // Mengambil event dengan relasi kategori
-        $events = Event::with('kategori')->paginate(10);
+        $events = Event::with('kategori')->paginate(5);
 
         foreach ($events as $event) {
             // Asumsi total pendaftar dihitung dari relasi, sesuaikan dengan logic aplikasi Anda
             // Jika Anda punya relasi, bisa gunakan $event->pemesanan_count
-            $total = $event->total_pendaftar ?? 0; 
+            $total = $event->total_pendaftar ?? 0;
             $kapasitas = $event->kapasitas ?? 0;
 
             // --- LOGIKA STATUS KUOTA ---
@@ -38,10 +39,13 @@ class PesertaController extends Controller
         return view('admin.peserta', compact('events'));
     }
 
-    public function detail(int $id) { 
+    public function detail(int $id)
+    {
         $selectedEvent = Event::with(['pemesanan.participants'])->findOrFail($id);
-        
-        $total = 0; $hadir = 0; $belumHadir = 0;
+
+        $total = 0;
+        $hadir = 0;
+        $belumHadir = 0;
 
         foreach ($selectedEvent->pemesanan ?? [] as $pesanan) {
             foreach ($pesanan->participants ?? [] as $p) {
@@ -52,7 +56,7 @@ class PesertaController extends Controller
 
         // --- LOGIKA STATUS KUOTA (DETAIL) ---
         $kapasitas = $selectedEvent->kapasitas ?? 0;
-        
+
         if ($kapasitas == 0) {
             $statusKuota = 'Kosong';       // Kuning
         } elseif ($total >= $kapasitas) {
@@ -60,22 +64,23 @@ class PesertaController extends Controller
         } else {
             $statusKuota = 'Tersedia';     // Biru
         }
-        
+
         return view('admin.peserta-detail', compact(
-            'selectedEvent', 
-            'total', 
-            'hadir', 
-            'belumHadir', 
+            'selectedEvent',
+            'total',
+            'hadir',
+            'belumHadir',
             'statusKuota'
         ));
     }
 
-    public function checkInIndividu(int $eventId, int $id_partisipan) {
-        $participant = Menghadiri::findOrFail($id_partisipan); 
-        
+    public function checkInIndividu(int $eventId, int $id_partisipan)
+    {
+        $participant = Menghadiri::findOrFail($id_partisipan);
+
         $participant->sts_checkin = ($participant->sts_checkin === 'sudah') ? 'belum' : 'sudah';
         $participant->save();
-        
+
         return redirect()->back()->with('success', 'Status check-in berhasil diubah!');
     }
 }

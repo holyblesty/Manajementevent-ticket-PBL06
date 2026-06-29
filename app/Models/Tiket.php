@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class Tiket extends Model
 {
@@ -27,6 +28,20 @@ class Tiket extends Model
         'kuota_tersedia',
     ];
 
+    protected $attributes = [
+        'kuota_tersedia' => 0,
+        'harga' => 0,
+    ];
+
+    /**
+     * Scope untuk mengambil tiket yang masih tersedia
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeAvailable($query)
+    {
+        return $query->where('kuota_tersedia', '>', 0);
+    }
     /**
      * Relasi tiket ke event
      * Satu tiket dimiliki satu event

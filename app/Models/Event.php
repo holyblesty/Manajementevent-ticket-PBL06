@@ -4,18 +4,31 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Event extends Model
 {
-    use HasFactory;
+    /*
+    |--------------------------------------------------------------------------
+    | TABLE CONFIGURATION
+    |--------------------------------------------------------------------------
+    */
 
+    // Nama tabel yang digunakan model ini
     protected $table = 'events';
 
+    // Primary key tabel events
     protected $primaryKey = 'id_event';
 
-    public $timestamps = true;
+    /*
+    |--------------------------------------------------------------------------
+    | MASS ASSIGNMENT
+    |--------------------------------------------------------------------------
+    */
 
+    // Field yang boleh diisi secara mass assignment
     protected $fillable = [
         'judul',
         'deskripsi',
@@ -29,130 +42,106 @@ class Event extends Model
         'poster',
         'id_admin',
         'kapasitas',
+        'kuota_tersedia',
     ];
 
+    /*
+    |--------------------------------------------------------------------------
+    | CASTING ATTRIBUTE
+    |--------------------------------------------------------------------------
+    */
+
+    // Konversi otomatis tipe data dari database
     protected $casts = [
-        'tgl_mulai' => 'date',
+        'tgl_mulai'   => 'date',
         'tgl_selesai' => 'date',
     ];
 
+    /*
+    |--------------------------------------------------------------------------
+    | DEFAULT ATTRIBUTE VALUE
+    |--------------------------------------------------------------------------
+    */
+
+    // Nilai default jika status_event tidak diisi
+    protected $attributes = [
+        'status_event' => 'open',
+    ];
+
+    /*
+    |--------------------------------------------------------------------------
+    | MODEL BOOTING (EVENT MODEL LIFECYCLE)
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Event lifecycle hook saat data akan dibuat
+     * Digunakan untuk sinkronisasi data otomatis sebelum insert ke database
+     */
     protected static function booted()
     {
-        static::addGlobalScope('order_by_date', function ($builder) {
-            $builder->orderBy('tgl_mulai', 'asc');
+        static::creating(function ($event) {
+
+            // Jika kuota tersedia belum diisi, otomatis disamakan dengan kapasitas
+            if (is_null($event->kuota_tersedia)) {
+                $event->kuota_tersedia = $event->kapasitas;
+            }
         });
     }
 
     /*
     |--------------------------------------------------------------------------
-    | RELATIONSHIP
+    | RELATIONSHIPS
     |--------------------------------------------------------------------------
     */
 
-    public function kategori()
+    /**
+     * Relasi: Event dimiliki oleh satu kategori
+     */
+    public function kategori(): BelongsTo
     {
-        return $this->belongsTo(
-            KategoriEvent::class,
-            'id_kategori',
-            'id_kategori'
-        );
+        return $this->belongsTo(KategoriEvent::class, 'id_kategori', 'id_kategori');
     }
 
-    public function tiket()
+    /**
+     * Relasi: Event memiliki banyak tiket
+     */
+    public function tiket(): HasMany
     {
-        return $this->hasMany(
-            Tiket::class,
-            'id_event',
-            'id_event'
-        );
+        return $this->hasMany(Tiket::class, 'id_event', 'id_event');
     }
 
-    public function pemesanan()
+    /**
+     * Relasi: Event memiliki banyak pemesanan (booking/registrasi)
+     */
+    public function pemesanan(): HasMany
     {
-        return $this->hasManyThrough(
-            Pemesanan::class,
-            Tiket::class,
-            'id_event',
-            'id_tiket',
-            'id_event',
-            'id_tiket'
-        );
-    }
-
-    public function participants()
-    {
-        return $this->hasMany(
-            Menghadiri::class,
-            'id_event',
-            'id_event'
-        );
+        return $this->hasMany(Pemesanan::class, 'id_event', 'id_event');
     }
 
     /*
     |--------------------------------------------------------------------------
-    | ACCESSOR
+    | ACCESSORS (DATA TURUNAN / VIRTUAL ATTRIBUTE)
     |--------------------------------------------------------------------------
     */
 
-    // Total tiket yang masih tersedia
-    public function getKuotaAktualAttribute(): int
+    /**
+     * Menghitung total sisa kuota event secara real-time
+     * diambil dari total kuota pada tabel tiket
+     */
+    public function getSisaKuotaAttribute(): int
     {
-        return (int) $this->tiket()->sum('kuota_tersedia');
+        return $this->tiket()->sum('kuota_tersedia');
     }
 
-    // Total tiket terjual
-    public function getTotalTerjualAttribute(): int
-    {
-        return (int) $this->tiket()->sum('terjual');
-    }
-
-    // Sisa kapasitas event
-    public function getSisaKapasitasAttribute(): int
-    {
-        return $this->kuota_aktual;
-    }
-
-    // URL Poster
+    /**
+     * Menghasilkan URL lengkap untuk poster event
+     * jika tidak ada poster, gunakan default image
+     */
     public function getPosterUrlAttribute(): string
     {
         return $this->poster
             ? asset('images/' . $this->poster)
             : asset('images/default-event.jpg');
-    }
-
-    //pendaftaran
-     public function pendaftaran()
-    {
-        return $this->hasMany(
-            Pendaftaran::class,
-            'id_event',
-            'id_event'
-        );
-    }
-    /*
-    |--------------------------------------------------------------------------
-    | STATUS EVENT OTOMATIS
-    |--------------------------------------------------------------------------
-    */
-
-    public function getStatusEventAttribute(?string $value): string
-    {
-        $tanggalSelesai = $this->tgl_selesai
-            ? $this->tgl_selesai->format('Y-m-d')
-            : null;
-
-        $jamSelesai = $this->jam_selesai;
-
-        if ($tanggalSelesai && $jamSelesai) {
-            $waktuAkhirEvent = Carbon::parse(
-                $tanggalSelesai . ' ' . $jamSelesai
-            );
-
-            if (Carbon::now()->greaterThan($waktuAkhirEvent)) {
-                return 'closed';
-            }
-        }
-
-        return $value;
     }
 }
