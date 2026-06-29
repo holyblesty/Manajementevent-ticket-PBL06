@@ -58,14 +58,14 @@
 
                         @if($event->kuota_tersedia > 0)
 
-                            <a href="{{ route('pengunjung.pembelian.index', $event->id_event) }}"
+                            <a href="{{ route('pengunjung.pembelian.store', $event->id_event) }}"
                                class="inline-block px-5 py-2 bg-[#7a4988] text-white rounded-xl text-sm font-semibold hover:bg-[#693b76]">
                                 Beli Sekarang
                             </a>
 
                         @else
 
-                            <button
+                            <button>
                                 disabled
                                 class="px-5 py-2 rounded-xl bg-gray-300 text-white text-sm font-semibold cursor-not-allowed">
                                 Kuota Penuh
@@ -74,23 +74,7 @@
                         @endif
 
                     </div>
-
                 </div>
-
-                    {{-- CTA --}}
-                    <div class="mt-8">
-                        {{-- Cek apakah ada tiket yang tersedia --}}
-                        @if($event->tiket->sum('kuota_tersedia') > 0)
-                            <a href="{{ route('pengunjung.pendaftaran.create', $event->id_event) }}"
-                                class="px-6 py-3 bg-[#7a4988] text-white rounded-xl text-sm font-semibold hover:bg-[#693b76]">
-                                Beli Sekarang
-                            </a>
-                        @else
-                            <button disabled class="px-8 py-3 rounded-xl bg-gray-300 text-white">
-                                Kuota Penuh
-                            </button>
-                        @endif
-                    </div>
                 </div>
             </div>
         </div>
@@ -135,22 +119,5 @@
         </div>
 
     </div>
-
-    {{-- INFORMASI TIKET DETAIL --}}
-    <div class="bg-white rounded-3xl border shadow-sm p-8">
-        <h2 class="text-2xl font-bold mb-5">Daftar Tiket</h2>
-        <div class="grid md:grid-cols-3 gap-6">
-            @foreach($event->tiket as $t)
-                <div class="p-4 border rounded-xl {{ $t->kuota_tersedia <= 0 ? 'bg-red-50' : 'bg-gray-50' }}">
-                    <h3 class="font-bold text-lg">{{ $t->jenis_tiket }}</h3>
-                    <p class="text-sm text-gray-500">Harga: Rp{{ number_format($t->harga) }}</p>
-                    <p class="font-semibold mt-2">
-                        Sisa: {{ $t->kuota_tersedia > 0 ? $t->kuota_tersedia : 'Habis' }}
-                    </p>
-                </div>
-            @endforeach
-        </div>
-    </div>
-</div>
 
 @endsection
