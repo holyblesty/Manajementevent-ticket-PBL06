@@ -30,7 +30,7 @@ class PembelianController extends Controller
             'no_hp'        => 'required',
             'alamat'       => 'required',
             'id_event'     => 'required|exists:events,id_event',
-            'id_tiket'     => 'required|exists:tikets,id_tiket',
+            'id_tiket'     => 'required|exists:tiket,id_tiket',
             'jumlah_tiket' => 'required|integer|min:1',
         ]);
 

@@ -32,24 +32,6 @@
                 method="GET"
                 class="hidden lg:flex items-center w-[420px]">
 
-                <div class="relative w-full">
-
-                    <input
-                        type="text"
-                        name="search"
-                        value="{{ request('search') }}"
-                        placeholder="Cari event..."
-                        class="w-full border border-gray-200 rounded-l-xl py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-[#7a4988] focus:outline-none">
-
-                </div>
-
-                <button
-                    type="submit"
-                    class="bg-[#7a4988] text-white px-5 py-2 rounded-r-xl text-sm font-semibold hover:bg-[#693b76]">
-
-                    Cari
-
-                </button>
 
             </form>
 
