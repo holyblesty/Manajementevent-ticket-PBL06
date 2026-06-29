@@ -36,6 +36,17 @@ class PembelianController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+<<<<<<< HEAD
+    'name' => 'required',
+    'email' => 'required|email',
+    'no_hp' => 'required',
+    'alamat' => 'required',
+    'id_event' => 'required',
+    'id_tiket' => 'required',
+    'jumlah_tiket' => 'required|integer|min:1',
+    'metode_pembayaran' => 'required'
+]);
+=======
             'name'          => 'required|string|max:255',
             'email'         => 'required|email',
             'no_hp'         => 'required',
@@ -44,6 +55,7 @@ class PembelianController extends Controller
             'id_tiket'      => 'required|exists:tikets,id_tiket',
             'jumlah_tiket'  => 'required|integer|min:1',
         ]);
+>>>>>>> f89f1ddd374bd7174c120b8bb226a28158ed863d
 
         try {
 
@@ -107,6 +119,24 @@ class PembelianController extends Controller
         }
     }
 
+<<<<<<< HEAD
+        $pemesanan = Pemesanan::create([
+            'id_event' => $request->id_event,
+            'id_pengunjung' => $user->id_pengunjung,
+            'id_tiket' => $request->id_tiket,
+            'tgl_pesan' => now(),
+            'tgl_bayar' => null,
+            'metode_pembayaran' => $request->metode_pembayaran,
+            'total_harga' =>
+                $tiket->harga *
+                $request->jumlah_tiket,
+            'jumlah_tiket' =>
+                $request->jumlah_tiket,
+            'kode_registrasi' =>
+                Pemesanan::generateKode(),
+            'sts_transaksi' => 'Belum Bayar'
+        ]);
+=======
     /**
      * Halaman sukses pembelian.
      */
@@ -117,6 +147,7 @@ class PembelianController extends Controller
             'tiket',
             'pengunjung'
         ])->findOrFail($id);
+>>>>>>> f89f1ddd374bd7174c120b8bb226a28158ed863d
 
         return view(
             'pengunjung.pembelian-sukses',
