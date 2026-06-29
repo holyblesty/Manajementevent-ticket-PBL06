@@ -10,14 +10,6 @@ class Pengunjung extends Authenticatable // <--- Class diubah
 {
     use HasFactory, Notifiable;
 
-    // PENTING: Memberitahu Laravel nama tabelnya sekarang
-    protected $table = 'pengunjung';
-    /*
-    |--------------------------------------------------------------------------
-    | CONFIG TABLE
-    |--------------------------------------------------------------------------
-    */
-
     // Menentukan nama tabel yang digunakan oleh model ini
     protected $table = 'pengunjung';
 
