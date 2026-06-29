@@ -41,6 +41,9 @@ Route::get('/search', [PageController::class, 'search'])
     ->name('pengunjung.search');
 
 
+Route::get('/event/{id}', [EventController::class, 'show'])
+    ->name('event.show');
+
 /*
 |--------------------------------------------------------------------------
 | AUTH
@@ -131,14 +134,7 @@ Route::middleware('auth:web')
             ->name('dashboard');
 
         /*
-        |--------------------------------------------------------------------------
-        | DETAIL EVENT
-        |--------------------------------------------------------------------------
-        */
-
-        Route::get('/event/{id}', [EventController::class, 'show'])
-            ->name('event.show');
-
+        
         /*
         |--------------------------------------------------------------------------
         | PEMBELIAN TIKET
