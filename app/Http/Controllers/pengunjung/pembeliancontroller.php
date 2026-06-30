@@ -13,11 +13,7 @@ use Illuminate\Support\Facades\DB;
 
 class PembelianController extends Controller
 {
-<<<<<<< HEAD
-    public function index($id)
-=======
     public function index(int $id_event)
->>>>>>> 0b98d7c3b4995202cf577c4b8a1d1121395af65b
     {
         $event = Event::findOrFail($id_event);
         $tiket = Tiket::where('id_event', $id_event)->get();
@@ -78,7 +74,6 @@ class PembelianController extends Controller
         } catch (\Exception $e) {
             return back()->withInput()->with('error', $e->getMessage());
         }
-<<<<<<< HEAD
 
         $total =
             $tiket->harga *
@@ -205,8 +200,6 @@ class PembelianController extends Controller
             'pengunjung.pembelian.sukses',
             $pemesanan->id_pesanan
         );
-=======
->>>>>>> 0b98d7c3b4995202cf577c4b8a1d1121395af65b
     }
 
     public function sukses(int $id)
@@ -230,5 +223,5 @@ class PembelianController extends Controller
     {
         $pemesanan = Pemesanan::with(['event', 'tiket', 'pengunjung'])->findOrFail($id);
         return view('pengunjung.detail-tiket', compact('pemesanan'));
-    }
+    }}
 }
