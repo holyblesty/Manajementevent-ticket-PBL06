@@ -136,26 +136,30 @@
 <nav class="mt-4 flex flex-col gap-2">
 
     <a href="{{ route('pengunjung.dashboard') }}"
-       class="flex items-center gap-3 px-4 py-3 rounded-xl bg-[#f3ebf8] text-black font-semibold no-underline transition-all duration-200 hover:text-[#7a4988]">
+       class="flex items-center gap-3 px-4 py-3 rounded-xl no-underline transition-all duration-200
+       {{ request()->routeIs('pengunjung.dashboard') ? 'bg-[#f3ebf8] text-[#7a4988] font-semibold' : 'text-black font-medium hover:bg-[#f9f5fc] hover:text-[#7a4988]' }}">
         🏠 <span>Beranda</span>
     </a>
 
-    <a href="{{ route('pengunjung.riwayat') }}"
-       class="flex items-center gap-3 px-4 py-3 rounded-xl text-black font-medium no-underline transition-all duration-200 hover:bg-[#f9f5fc] hover:text-[#7a4988]">
+    <a href="{{ route('pengunjung.tiket') }}"
+       class="flex items-center gap-3 px-4 py-3 rounded-xl no-underline transition-all duration-200
+       {{ request()->routeIs('pengunjung.tiket') || request()->routeIs('pengunjung.tiket.detail') ? 'bg-[#f3ebf8] text-[#7a4988] font-semibold' : 'text-black font-medium hover:bg-[#f9f5fc] hover:text-[#7a4988]' }}">
         🎫 <span>Ticket Saya</span>
     </a>
 
     <a href="{{ route('pengunjung.riwayat') }}"
-       class="flex items-center gap-3 px-4 py-3 rounded-xl text-black font-medium no-underline transition-all duration-200 hover:bg-[#f9f5fc] hover:text-[#7a4988]">
+       class="flex items-center gap-3 px-4 py-3 rounded-xl no-underline transition-all duration-200
+       {{ request()->routeIs('pengunjung.riwayat') ? 'bg-[#f3ebf8] text-[#7a4988] font-semibold' : 'text-black font-medium hover:bg-[#f9f5fc] hover:text-[#7a4988]' }}">
         🕒 <span>Riwayat Pendaftaran</span>
     </a>
 
     <a href="{{ route('pengunjung.profil') }}"
-       class="flex items-center gap-3 px-4 py-3 rounded-xl text-black font-medium no-underline transition-all duration-200 hover:bg-[#f9f5fc] hover:text-[#7a4988]">
+       class="flex items-center gap-3 px-4 py-3 rounded-xl no-underline transition-all duration-200
+       {{ request()->routeIs('pengunjung.profil*') ? 'bg-[#f3ebf8] text-[#7a4988] font-semibold' : 'text-black font-medium hover:bg-[#f9f5fc] hover:text-[#7a4988]' }}">
         👤 <span>Profil</span>
     </a>
 
-            </nav>
+</nav>
 
         </aside>
 
