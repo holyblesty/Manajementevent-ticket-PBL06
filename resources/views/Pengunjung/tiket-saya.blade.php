@@ -65,7 +65,7 @@
 
                 <div>
 
-                    <a href="{{ route('pengunjung.detail-tiket', $item->id_pesanan) }}"
+                    <a href="{{ route('pengunjung.tiket.detail', $item->id_pesanan) }}"
                        class="bg-[#7a4988] text-white px-5 py-2 rounded-xl hover:bg-[#693b76]">
 
                         Detail Tiket
