@@ -30,7 +30,10 @@
 </div>
 @endif
 
-<form action="{{ route('pengunjung.pembelian.store') }}" method="POST">
+<form
+    action="{{ route('pengunjung.pembelian.store') }}"
+    method="POST"
+    enctype="multipart/form-data">
     @csrf
 
     <input type="hidden"
