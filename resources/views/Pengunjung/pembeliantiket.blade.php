@@ -387,6 +387,59 @@
         hitungTotal
     );
 
+    // ============================
+    // METODE PEMBAYARAN
+    // ============================
+
+    const metode = document.getElementById('metode_pembayaran');
+    const bank = document.getElementById('bank_tujuan');
+
+    const bankSection = document.getElementById('bankSection');
+    const vaSection = document.getElementById('vaSection');
+    const uploadSection = document.getElementById('uploadSection');
+    const cashSection = document.getElementById('cashSection');
+
+    metode.addEventListener('change', function () {
+
+        if (this.value == 'Transfer') {
+
+            bankSection.style.display = 'block';
+            uploadSection.style.display = 'block';
+            cashSection.style.display = 'none';
+
+        } else {
+
+            bankSection.style.display = 'none';
+            uploadSection.style.display = 'none';
+            vaSection.style.display = 'none';
+            cashSection.style.display = 'block';
+
+        }
+
+    });
+
+    bank.addEventListener('change', function () {
+
+        let nomor = '';
+
+        if (this.value == 'BCA')
+            nomor = '88001122334455';
+
+        if (this.value == 'BRI')
+            nomor = '99001122334455';
+
+        if (this.value == 'BNI')
+            nomor = '77001122334455';
+
+        if (this.value == 'Mandiri')
+            nomor = '66001122334455';
+
+        document.getElementById('nomorVA').value = nomor;
+
+        vaSection.style.display = 'block';
+
+    });
+
 </script>
 
 @endsection
