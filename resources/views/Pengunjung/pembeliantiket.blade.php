@@ -302,6 +302,25 @@
         class="w-full border rounded-xl p-3">
 
 </div>
+<div
+    id="cashSection"
+    class="mt-4 bg-yellow-100 rounded-xl p-4">
+
+    <p class="font-semibold">
+
+        Pembayaran Cash
+
+    </p>
+
+    <p>
+
+        Silakan melakukan pembayaran
+        langsung kepada panitia sebelum
+        batas pembayaran.
+
+    </p>
+
+</div>
                     <div>
 
                         <label class="font-semibold">
