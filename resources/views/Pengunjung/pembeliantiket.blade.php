@@ -285,6 +285,23 @@
         class="w-full border rounded-xl p-3 bg-gray-100">
 
 </div>
+<div
+    id="uploadSection"
+    style="display:none;"
+    class="mt-4">
+
+    <label class="block mb-2 font-semibold">
+
+        Upload Bukti Transfer
+
+    </label>
+
+    <input
+        type="file"
+        name="bukti_transfer"
+        class="w-full border rounded-xl p-3">
+
+</div>
                     <div>
 
                         <label class="font-semibold">
