@@ -235,6 +235,38 @@
 
     </select>
 </div>
+<div id="bankSection" style="display:none;">
+
+    <label class="block mb-2 font-semibold">
+        Pilih Bank
+    </label>
+
+    <select
+        name="bank_tujuan"
+        id="bank_tujuan"
+        class="w-full border rounded-xl p-3">
+
+        <option value="">Pilih Bank</option>
+
+        <option value="BCA">
+            BCA
+        </option>
+
+        <option value="BRI">
+            BRI
+        </option>
+
+        <option value="BNI">
+            BNI
+        </option>
+
+        <option value="Mandiri">
+            Mandiri
+        </option>
+
+    </select>
+
+</div>
                     <div>
 
                         <label class="font-semibold">
