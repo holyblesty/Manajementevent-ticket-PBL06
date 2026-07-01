@@ -267,6 +267,24 @@
     </select>
 
 </div>
+<div
+    id="vaSection"
+    style="display:none;"
+    class="mt-4">
+
+    <label class="block mb-2 font-semibold">
+
+        Nomor Virtual Account
+
+    </label>
+
+    <input
+        type="text"
+        id="nomorVA"
+        readonly
+        class="w-full border rounded-xl p-3 bg-gray-100">
+
+</div>
                     <div>
 
                         <label class="font-semibold">
