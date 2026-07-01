@@ -10,6 +10,8 @@ class Pengunjung extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    // Menentukan nama tabel yang digunakan oleh model ini
+
     /*
     |--------------------------------------------------------------------------
     | CONFIG TABLE

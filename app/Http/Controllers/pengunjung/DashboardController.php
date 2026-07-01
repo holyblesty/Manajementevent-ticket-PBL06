@@ -36,6 +36,12 @@ class DashboardController extends Controller
             ->paginate(6)
             ->appends($request->query());
 
+        // 5. Statistik
+        $jumlahTiket = $user ? Pemesanan::where('id_pengunjung', $user->id_pengunjung)->where('sts_transaksi', 'Lunas')->count() : 0;
+        $riwayatPendaftaran = $user ? Pemesanan::where('id_pengunjung', $user->id_pengunjung)->count() : 0;
+        $eventMendatang = Event::whereDate('tgl_mulai', '>=', now())->where('status_event', 'open')->count();
+        $eventMendatang = Event::whereDate('tgl_mulai', '>=', now())->count();
+
         // Statistik
         $jumlahTiket = $user
             ? Pemesanan::where('id_pengunjung', $user->id_pengunjung)
@@ -59,4 +65,6 @@ class DashboardController extends Controller
             'eventMendatang'
         ));
     }
-}
+
+} 
+      
