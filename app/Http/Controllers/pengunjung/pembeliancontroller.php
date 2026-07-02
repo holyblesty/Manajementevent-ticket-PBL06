@@ -21,11 +21,11 @@ class PembelianController extends Controller
 
         $pengunjung = Auth::guard('web')->user();
 
-        return view('pengunjung.pembeliantiket', compact(
-            'event',
-            'tiket',
-            'pengunjung'
-        ));
+       return view('pengunjung.pemesanan', compact(
+    'event',
+    'tiket',
+    'pengunjung'
+));
     }
 
     public function store(Request $request)
