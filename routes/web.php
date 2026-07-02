@@ -10,18 +10,13 @@ use App\Http\Controllers\Admin\AcaraController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\PesertaController;
 use App\Http\Controllers\Admin\StatistikController;
+use App\Http\Controllers\Admin\VerifikasiController;
 
 use App\Http\Controllers\Pengunjung\DashboardController as PengunjungDashboardController;
 use App\Http\Controllers\Pengunjung\EventController;
 use App\Http\Controllers\Pengunjung\PembelianController;
 use App\Http\Controllers\Pengunjung\ProfilController;
 use App\Http\Controllers\Pengunjung\RiwayatController;
-
-/*
-|--------------------------------------------------------------------------
-| WEB ROUTES
-|--------------------------------------------------------------------------
-*/
 
 /*
 |--------------------------------------------------------------------------
@@ -39,7 +34,6 @@ Route::get('/contact', [PageController::class, 'kontak'])
 
 Route::get('/search', [PageController::class, 'search'])
     ->name('pengunjung.search');
-
 
 Route::get('/event/{id}', [EventController::class, 'show'])
     ->name('event.show');
@@ -65,7 +59,6 @@ Route::middleware('guest')->group(function () {
 Route::post('/logout', [AuthController::class, 'logout'])
     ->name('logout');
 
-
 /*
 |--------------------------------------------------------------------------
 | ADMIN
@@ -77,12 +70,15 @@ Route::middleware('auth:admin')
     ->name('admin.')
     ->group(function () {
 
+        // Dashboard
         Route::get('/dashboard', [AdminDashboard::class, 'index'])
             ->name('dashboard');
 
+        // Statistik
         Route::get('/statistik', [StatistikController::class, 'index'])
             ->name('statistik');
 
+        // Acara
         Route::resource('acara', AcaraController::class);
 
         Route::get('/acara/{id_event}/tiket', [AcaraController::class, 'tiket'])
@@ -91,11 +87,29 @@ Route::middleware('auth:admin')
         Route::put('/acara/{id_event}/tiket/update', [AcaraController::class, 'updateTiket'])
             ->name('acara.tiket.update');
 
+        // Profile
         Route::get('/profile', [ProfileController::class, 'index'])
             ->name('profile');
 
         Route::put('/profile/update', [ProfileController::class, 'update'])
             ->name('profile.update');
+
+        // =========================
+        // VERIFIKASI
+        // =========================
+
+        Route::get('/verifikasi', [VerifikasiController::class, 'index'])
+            ->name('verifikasi');
+
+        Route::put('/verifikasi/{id}/acc', [VerifikasiController::class, 'acc'])
+            ->name('verifikasi.acc');
+
+        Route::put('/verifikasi/{id}/tolak', [VerifikasiController::class, 'tolak'])
+            ->name('verifikasi.tolak');
+
+        // =========================
+        // PESERTA
+        // =========================
 
         Route::prefix('peserta')
             ->name('peserta.')
@@ -110,8 +124,8 @@ Route::middleware('auth:admin')
                 Route::put('/checkin-individu/{eventId}/{regId}', [PesertaController::class, 'checkInIndividu'])
                     ->name('checkin_individu');
             });
-    });
 
+    });
 
 /*
 |--------------------------------------------------------------------------
@@ -124,24 +138,11 @@ Route::middleware('auth:web')
     ->name('pengunjung.')
     ->group(function () {
 
-    // Simpan transaksi pembelian
-    Route::post('/pembelian-tiket', [PembelianController::class, 'store'])->name('pembelian.store');
-        /*
-        |--------------------------------------------------------------------------
-        | DASHBOARD
-        |--------------------------------------------------------------------------
-        */
+        Route::post('/pembelian-tiket', [PembelianController::class, 'store'])
+            ->name('pembelian.store');
 
         Route::get('/dashboard', [PengunjungDashboardController::class, 'index'])
             ->name('dashboard');
-
-        /*
-        
-        /*
-        |--------------------------------------------------------------------------
-        | PEMBELIAN TIKET
-        |--------------------------------------------------------------------------
-        */
 
         Route::get('/pembelian/{id_event}', [PembelianController::class, 'index'])
             ->name('pembelian');
@@ -149,16 +150,8 @@ Route::middleware('auth:web')
         Route::post('/pembelian', [PembelianController::class, 'store'])
             ->name('pembelian.store');
 
-        Route::put('/profil/password/update', [ProfilController::class, 'updatePassword'])->name('profil.password.update');
-
         Route::get('/pembelian/sukses/{id}', [PembelianController::class, 'sukses'])
             ->name('pembelian.sukses');
-
-        /*
-        |--------------------------------------------------------------------------
-        | TIKET SAYA
-        |--------------------------------------------------------------------------
-        */
 
         Route::get('/tiket', [PembelianController::class, 'tiketSaya'])
             ->name('tiket');
@@ -166,20 +159,8 @@ Route::middleware('auth:web')
         Route::get('/tiket/{id}', [PembelianController::class, 'detailTiket'])
             ->name('tiket.detail');
 
-        /*
-        |--------------------------------------------------------------------------
-        | RIWAYAT
-        |--------------------------------------------------------------------------
-        */
-
         Route::get('/riwayat', [RiwayatController::class, 'index'])
             ->name('riwayat');
-
-        /*
-        |--------------------------------------------------------------------------
-        | PROFIL
-        |--------------------------------------------------------------------------
-        */
 
         Route::get('/profil', [ProfilController::class, 'index'])
             ->name('profil');
@@ -196,4 +177,3 @@ Route::middleware('auth:web')
         Route::put('/profil/password/update', [ProfilController::class, 'updatePassword'])
             ->name('profil.password.update');
     });
-
