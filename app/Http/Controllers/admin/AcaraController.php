@@ -79,9 +79,7 @@ class AcaraController extends Controller
 
             $data['poster'] = $imageName;
             $data['id_admin'] = Auth::id();
-            $data['kapasitas'] = 0;
-            $data['kuota_tersedia'] = 0;
-            $data['status_event'] = 'open';
+           $data['status_event'] = 'open';
 
             Event::create($data);
 
@@ -220,9 +218,15 @@ class AcaraController extends Controller
             );
         }
 
-        Event::where('id_event', $id_event)->update([
-            'kapasitas' => $request->kapasitas,
-        ]);
+       $event = Event::findOrFail($id_event);
+
+$event->kapasitas = $request->kapasitas;
+
+if ($event->pemesanan()->count() == 0) {
+    $event->kuota_tersedia = $request->kapasitas;
+}
+
+$event->save();
 
         return redirect()
             ->route('admin.dashboard')
