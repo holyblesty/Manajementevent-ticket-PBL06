@@ -91,13 +91,20 @@ class PembelianController extends Controller
                 // =========================
                 // STATUS LOGIC
                 // =========================
-                if ($request->metode_pembayaran == 'Transfer') {
-                    $status = 'Menunggu Verifikasi';
-                    $batas = null;
-                } else {
-                    $status = 'Belum Bayar';
-                    $batas = now()->addDays(1);
-                }
+               if ($request->metode_pembayaran == 'Transfer') {
+
+    $status = 'Menunggu Verifikasi';
+
+    $batas = null;
+
+} else {
+
+    $status = 'Belum Bayar';
+
+    // Cash harus dibayar maksimal 1 hari
+    $batas = now()->addDay();
+
+}
 
                 // =========================
                 // SIMPAN PEMESANAN
