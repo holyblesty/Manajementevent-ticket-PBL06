@@ -75,23 +75,27 @@ class AcaraController extends Controller
             $imageName = time() . '_' . $image->getClientOriginalName();
             $image->move(public_path('images'), $imageName);
 
-            $data = $request->validated();
+           $data = $request->validated();
 
-            $data['poster'] = $imageName;
-            $data['id_admin'] = Auth::id();
-           $data['status_event'] = 'open';
+$data['poster'] = $imageName;
+$data['id_admin'] = Auth::id();
+$data['status_event'] = 'open';
 
-            Event::create($data);
+// Tambahkan ini
+$data['kapasitas'] = 0;
+$data['kuota_tersedia'] = 0;
+
+Event::create($data);
 
             return redirect()
                 ->route('admin.dashboard')
                 ->with('success', 'Event berhasil dibuat.');
         } catch (\Exception $e) {
 
-            return back()
-                ->withInput()
-                ->with('error', $e->getMessage());
-        }
+    return back()
+        ->withInput()
+        ->with('error', $e->getMessage());
+}
     }
 
     /**
@@ -204,19 +208,20 @@ class AcaraController extends Controller
             'tiket.*.kuota' => 'required|integer|min:0',
         ]);
 
-        foreach ($request->tiket as $data) {
+       foreach ($request->tiket as $data) {
 
-            Tiket::updateOrCreate(
-                [
-                    'id_event'     => $id_event,
-                    'jenis_tiket'  => $data['nama'],
-                ],
-                [
-                    'harga'         => $data['harga'],
-                    'kuota_total'   => $data['kuota'],
-                ]
-            );
-        }
+    Tiket::updateOrCreate(
+        [
+            'id_event'     => $id_event,
+            'jenis_tiket'  => $data['nama'],
+        ],
+        [
+            'harga'            => $data['harga'],
+            'kuota_total'      => $data['kuota'],
+            'kuota_tersedia'   => $data['kuota'],
+        ]
+    );
+}
 
        $event = Event::findOrFail($id_event);
 
