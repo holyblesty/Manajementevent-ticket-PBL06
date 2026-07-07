@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pemesanan;
+use Illuminate\Support\Facades\DB;
 
 class VerifikasiController extends Controller
 {
@@ -25,19 +26,33 @@ class VerifikasiController extends Controller
     }
 
     public function acc(int $id)
-    {
-        $pemesanan = Pemesanan::findOrFail($id);
+{
+    DB::transaction(function () use ($id) {
+
+        $pemesanan = Pemesanan::with('tiket')->findOrFail($id);
+
+        $tiket = $pemesanan->tiket;
+
+        if ($tiket->kuota_tersedia < $pemesanan->jumlah_tiket) {
+            throw new \Exception('Kuota tiket sudah tidak mencukupi.');
+        }
+
+        $tiket->decrement(
+            'kuota_tersedia',
+            $pemesanan->jumlah_tiket
+        );
 
         $pemesanan->update([
             'sts_transaksi' => 'Lunas',
-            'tgl_bayar' => now()
+            'tgl_bayar'     => now(),
         ]);
+    });
 
-        return back()->with(
-            'success',
-            'Pembayaran berhasil diverifikasi.'
-        );
-    }
+    return back()->with(
+        'success',
+        'Pembayaran berhasil diverifikasi.'
+    );
+}
 
     public function tolak(int $id)
     {
