@@ -43,6 +43,9 @@
                     <th class="px-6 py-4 text-left">
                         Total
                     </th>
+                    <th class="px-6 py-4 text-left">
+                        Batas Bayar
+                    </th>
 
                     <th class="px-6 py-4 text-center">
                         Bukti
