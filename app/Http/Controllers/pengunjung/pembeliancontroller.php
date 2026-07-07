@@ -124,9 +124,24 @@ class PembelianController extends Controller
                 // =========================
                 // KURANGI KUOTA
                 // =========================
-                $tiket->decrement('kuota_tersedia', $request->jumlah_tiket);
+  $pemesanan = Pemesanan::create([
+    'id_event'          => $request->id_event,
+    'id_pengunjung'     => $pengunjung->id_pengunjung,
+    'id_tiket'          => $request->id_tiket,
+    'tgl_pesan'         => now(),
+    'tgl_bayar'         => null,
+    'metode_pembayaran' => $request->metode_pembayaran,
+    'bank_tujuan'       => $request->bank_tujuan,
+    'bukti_transfer'    => $buktiPath,
+    'batas_pembayaran'  => $batas,
+    'jumlah_tiket'      => $request->jumlah_tiket,
+    'total_harga'       => $tiket->harga * $request->jumlah_tiket,
+    'kode_registrasi'   => Pemesanan::generateKode(),
+    'sts_transaksi'     => $status
+]);
 
-                return $pemesanan;
+return $pemesanan;
+
             });
 
             return redirect()->route(
