@@ -18,10 +18,10 @@ class VerifikasiController extends Controller
         ->latest('id_pesanan')
         ->get();
 
-        return view(
-            'admin.verifikasi.index',
-            compact('pemesanan')
-        );
+      return view(
+    'admin.verifikasi',
+    compact('pemesanan')
+);
     }
 
     public function acc(int $id)
