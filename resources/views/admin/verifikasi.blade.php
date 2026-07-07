@@ -86,6 +86,19 @@
                         Rp {{ number_format($item->total_harga,0,',','.') }}
 
                     </td>
+                    <td class="px-6 py-4">
+
+    @if($item->batas_pembayaran)
+
+        {{ \Carbon\Carbon::parse($item->batas_pembayaran)->format('d-m-Y H:i') }}
+
+    @else
+
+        -
+
+    @endif
+
+</td>
 
                     <td class="px-6 py-4 text-center">
 
