@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pemesanan;
+use App\Models\Menghadiri;
 use Illuminate\Support\Facades\DB;
-
 class VerifikasiController extends Controller
 {
     public function index()
@@ -46,6 +46,13 @@ class VerifikasiController extends Controller
             'sts_transaksi' => 'Lunas',
             'tgl_bayar'     => now(),
         ]);
+        Menghadiri::create([
+    'id_pengunjung'  => $pemesanan->id_pengunjung,
+    'id_event'       => $pemesanan->id_event,
+    'id_tiket'       => $pemesanan->id_tiket,
+    'kode_registrasi'=> $pemesanan->kode_registrasi,
+    'sts_checkin'    => 'belum',
+]);
     });
 
     return back()->with(
