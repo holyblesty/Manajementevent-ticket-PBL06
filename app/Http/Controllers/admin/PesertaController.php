@@ -14,27 +14,32 @@ class PesertaController extends Controller
         // Mengambil event dengan relasi kategori
         $events = Event::with('kategori')->paginate(5);
 
-        foreach ($events as $event) {
-            // Asumsi total pendaftar dihitung dari relasi, sesuaikan dengan logic aplikasi Anda
-            // Jika Anda punya relasi, bisa gunakan $event->pemesanan_count
-            $total = $event->total_pendaftar ?? 0;
-            $kapasitas = $event->kapasitas ?? 0;
+       foreach ($events as $event) {
 
-            // --- LOGIKA STATUS KUOTA ---
-            if ($kapasitas == 0) {
-                // Kuning: Kapasitas belum disetting / 0
-                $event->status_kuota = 'KOSONG';
-                $event->warna_badge = 'bg-yellow-50 text-yellow-700 border-yellow-200';
-            } elseif ($total >= $kapasitas) {
-                // Merah: Sudah penuh
-                $event->status_kuota = 'PENUH';
-                $event->warna_badge = 'bg-red-50 text-red-700 border-red-200';
-            } else {
-                // Biru: Tersedia (termasuk 0/20 karena kapasitas > 0)
-                $event->status_kuota = 'TERSEDIA';
-                $event->warna_badge = 'bg-blue-50 text-blue-700 border-blue-200';
-            }
-        }
+    $total = $event->pemesanan()
+        ->where('sts_transaksi', 'Lunas')
+        ->sum('jumlah_tiket');
+
+    $event->total_pendaftar = $total;
+
+    $kapasitas = $event->kapasitas;
+
+    if ($kapasitas == 0) {
+
+        $event->status_kuota = 'KOSONG';
+        $event->warna_badge = 'bg-yellow-50 text-yellow-700 border-yellow-200';
+
+    } elseif ($total >= $kapasitas) {
+
+        $event->status_kuota = 'PENUH';
+        $event->warna_badge = 'bg-red-50 text-red-700 border-red-200';
+
+    } else {
+
+        $event->status_kuota = 'TERSEDIA';
+        $event->warna_badge = 'bg-blue-50 text-blue-700 border-blue-200';
+    }
+}
 
         return view('admin.peserta', compact('events'));
     }
