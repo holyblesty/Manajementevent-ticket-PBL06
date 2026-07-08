@@ -6,28 +6,44 @@ use Illuminate\Database\Eloquent\Model;
 
 class Menghadiri extends Model
 {
-    // Tentukan nama tabel jika tidak mengikuti konvensi jamak (opsional)
     protected $table = 'menghadiri';
 
-    // Tentukan kolom yang boleh diisi (mass assignable)
+    protected $primaryKey = 'id_menghadiri';
+
+    public $timestamps = false;
+
     protected $fillable = [
         'id_pengunjung',
         'id_event',
         'id_tiket',
         'kode_registrasi',
-        'sts_kehadiran', // misal: 'hadir', 'tidak hadir'
-
+        'sts_checkin'
     ];
 
-    // Definisikan relasi ke User
-    public function user()
+    public function pengunjung()
     {
-        return $this->belongsTo(Pengunjung::class, 'id_pengunjung');
+        return $this->belongsTo(
+            Pengunjung::class,
+            'id_pengunjung',
+            'id_pengunjung'
+        );
     }
 
-    // Definisikan relasi ke Event
     public function event()
     {
-        return $this->belongsTo(Event::class, 'id_event');
+        return $this->belongsTo(
+            Event::class,
+            'id_event',
+            'id_event'
+        );
+    }
+
+    public function tiket()
+    {
+        return $this->belongsTo(
+            Tiket::class,
+            'id_tiket',
+            'id_tiket'
+        );
     }
 }
