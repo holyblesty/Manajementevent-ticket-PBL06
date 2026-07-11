@@ -46,6 +46,7 @@ class VerifikasiController extends Controller
             'sts_transaksi' => 'Lunas',
             'tgl_bayar'     => now(),
         ]);
+        
         Menghadiri::create([
     'id_pengunjung'  => $pemesanan->id_pengunjung,
     'id_event'       => $pemesanan->id_event,
