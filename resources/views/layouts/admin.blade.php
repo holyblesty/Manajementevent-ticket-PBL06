@@ -48,7 +48,7 @@
                     <div class="w-36 h-36 rounded-full border-4 border-[#7a4988] overflow-hidden shadow-md transition-all duration-300 group-hover:scale-105">
                         <img src="{{ ($admin && $admin->foto) ? asset('images/' . $admin->foto) : asset('images/profile_default.jpg') }}" 
                              alt="Admin"
-                             onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($admin->username ?? 'Admin') }}&color=ffffff&background=7a4988';"
+                             onerror="this.src='https:'//ui-avatars.com/api/?name={{ urlencode($admin->username ?? 'Admin') }}&color=ffffff&background=7a4988';"
                              class="w-full h-full object-cover">
                     </div>
                     <h3 class="mt-3 text-[#24112e] font-black text-xs uppercase tracking-wider text-center group-hover:text-[#7a4988] transition-colors">
@@ -70,6 +70,19 @@
                         <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"></path></svg>
                         STATISTIK
                     </a>
+                    <a href="{{ route('admin.verifikasi') }}"
+   class="flex items-center px-4 py-3.5 rounded-xl font-bold text-sm transition {{ request()->routeIs('admin.verifikasi') ? 'bg-[#7a4988] text-white shadow-md' : 'text-gray-600 hover:bg-gray-50' }}"
+   style="text-decoration: none !important;">
+
+    <svg class="w-5 h-5 mr-3"
+         fill="currentColor"
+         viewBox="0 0 20 20">
+        <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+    </svg>
+
+    VERIFIKASI PEMBAYARAN
+
+</a>
                 </nav>
             </div>
             <div class="w-full flex justify-center px-4">

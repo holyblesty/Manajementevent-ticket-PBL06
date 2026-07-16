@@ -18,6 +18,9 @@ class Pemesanan extends Model
         'tgl_pesan',
         'tgl_bayar',
         'metode_pembayaran',
+        'bank_tujuan',        // ✅ FIX
+        'bukti_transfer',     // ✅ FIX
+        'batas_pembayaran',   // ✅ FIX
         'total_harga',
         'jumlah_tiket',
         'kode_registrasi',
