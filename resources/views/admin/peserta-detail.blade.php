@@ -15,7 +15,7 @@
         {{-- Header Event --}}
         <div class="bg-[#4a2e58] p-6 text-white border-b-4 border-[#7a4988]">
             <h1 class="text-xl font-black uppercase">{{ $selectedEvent->judul }}</h1>
-            <p class="text-xs text-purple-200 mt-1 uppercase tracking-widest">{{ \Carbon\Carbon::parse($selectedEvent->tanggal)->format('d M Y') }} · {{ $selectedEvent->lokasi }}</p>
+            <p class="text-xs text-purple-200 mt-1 uppercase tracking-widest">{{ \Carbon\Carbon::parse($selectedEvent->tgl_mulai)->format('d M Y') }}</p>
         </div>
 
         {{-- Stats Bar --}}
@@ -45,42 +45,66 @@
                 <th class="p-4 text-center">Aksi</th>
             </tr>
         </thead>
-        <tbody class="divide-y">
-            {{-- Gunakan 'pemesanan' (sesuai controller) dan null-coalescing --}}
-            @forelse($selectedEvent->pemesanan ?? [] as $pesanan)
-                @forelse($pesanan->participants ?? [] as $p)
-                    <tr class="hover:bg-gray-50">
-                        <td class="p-4">
-                            {{-- Sesuaikan nama kolom dengan tabel 'menghadiri' Anda --}}
-                            <div class="font-bold text-sm">{{ $p->nama }}</div>
-                            <div class="text-[10px] text-gray-500">{{ $p->email }}</div>
-                        </td>
-                        <td class="p-4 font-mono font-bold text-purple-700">{{ $p->kode_hadir ?? '-' }}</td>
-                        <td class="p-4">
-                            {{-- Cek kolom sts_checkin --}}
-                            <span class="{{ ($p->sts_checkin == 'sudah') ? 'text-green-600' : 'text-red-600' }} font-bold">
-                                {{ ($p->sts_checkin == 'sudah') ? 'Hadir' : 'Belum Hadir' }}
-                            </span>
-                        </td>
-                        <td class="p-4 text-center">
-                            {{-- Route menggunakan id_partisipan --}}
-                            <form action="{{ route('admin.peserta.checkin', [$selectedEvent->id_event, $p->id_menghadiri]) }}" method="POST">
-                                @csrf
-                                <button class="{{ ($p->sts_checkin == 'sudah') ? 'bg-gray-500' : 'bg-red-600' }} text-white px-4 py-1 rounded text-[10px] font-bold uppercase hover:opacity-80 transition">
-                                    {{ ($p->sts_checkin == 'sudah') ? 'Batalkan' : 'Tandai Hadir' }}
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                @empty
-                    {{-- Opsional: row kosong jika pesanan ada tapi partisipan kosong --}}
-                @endforelse
-            @empty
-                <tr>
-                    <td colspan="4" class="p-4 text-center text-gray-500 italic">Belum ada data peserta untuk event ini.</td>
-                </tr>
-            @endforelse
-        </tbody>
+       <tbody class="divide-y">
+
+@forelse($selectedEvent->menghadiri as $p)
+
+<tr class="hover:bg-gray-50">
+
+    <td class="p-4">
+        <div class="font-bold text-sm">
+            {{ $p->pengunjung->name }}
+        </div>
+
+        <div class="text-[10px] text-gray-500">
+            {{ $p->pengunjung->email }}
+        </div>
+    </td>
+
+    <td class="p-4 font-mono font-bold text-purple-700">
+        {{ $p->kode_registrasi }}
+    </td>
+
+    <td class="p-4">
+        <span class="{{ $p->sts_checkin == 'sudah'
+                ? 'text-green-600'
+                : 'text-red-600' }} font-bold">
+
+            {{ $p->sts_checkin == 'sudah'
+                ? 'Hadir'
+                : 'Belum Hadir' }}
+
+        </span>
+    </td>
+
+    <td class="p-4 text-center">
+
+        <form action="{{ route('admin.peserta.checkin_individu', [$selectedEvent->id_event, $p->id_menghadiri]) }}" method="POST">
+    @csrf
+    @method('PUT')
+
+    <button
+        class="{{ ($p->sts_checkin == 'sudah') ? 'bg-gray-500' : 'bg-red-600' }} text-white px-4 py-1 rounded text-[10px] font-bold uppercase hover:opacity-80 transition">
+        {{ ($p->sts_checkin == 'sudah') ? 'Batalkan' : 'Tandai Hadir' }}
+    </button>
+</form>
+
+    </td>
+
+</tr>
+
+@empty
+
+<tr>
+    <td colspan="4"
+        class="p-6 text-center text-gray-500">
+        Belum ada peserta.
+    </td>
+</tr>
+
+@endforelse
+
+</tbody>
     </table>
 </div>
     </div>
