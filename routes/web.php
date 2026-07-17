@@ -162,18 +162,14 @@ Route::middleware('auth:web')
         Route::get('/riwayat', [RiwayatController::class, 'index'])
             ->name('riwayat');
 
-        Route::get('/profil', [ProfilController::class, 'index'])
-            ->name('profil');
+        // ======================
+        // PROFILE PENGUNJUNG
+        // ======================
 
-        Route::get('/profil/edit', [ProfilController::class, 'edit'])
-            ->name('profil.edit');
+        Route::get('/profile', [ProfileController::class, 'index'])
+            ->name('profile');
 
-        Route::put('/profil/update', [ProfilController::class, 'update'])
-            ->name('profil.update');
+        Route::put('/profile/update', [ProfileController::class, 'update'])
+            ->name('profile.update');
 
-        Route::get('/profil/password', [ProfilController::class, 'editPassword'])
-            ->name('profil.password');
-
-        Route::put('/profil/password/update', [ProfilController::class, 'updatePassword'])
-            ->name('profil.password.update');
     });
