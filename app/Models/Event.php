@@ -90,36 +90,59 @@ class Event extends Model
         });
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | RELATIONSHIPS
-    |--------------------------------------------------------------------------
-    */
+   /*
+|--------------------------------------------------------------------------
+| RELATIONSHIPS
+|--------------------------------------------------------------------------
+*/
 
-    /**
-     * Relasi: Event dimiliki oleh satu kategori
-     */
-    public function kategori(): BelongsTo
-    {
-        return $this->belongsTo(KategoriEvent::class, 'id_kategori', 'id_kategori');
-    }
+/**
+ * Relasi: Event dimiliki oleh satu kategori
+ */
+public function kategori(): BelongsTo
+{
+    return $this->belongsTo(
+        KategoriEvent::class,
+        'id_kategori',
+        'id_kategori'
+    );
+}
 
-    /**
-     * Relasi: Event memiliki banyak tiket
-     */
-    public function tiket(): HasMany
-    {
-        return $this->hasMany(Tiket::class, 'id_event', 'id_event');
-    }
+/**
+ * Relasi: Event memiliki banyak tiket
+ */
+public function tiket(): HasMany
+{
+    return $this->hasMany(
+        Tiket::class,
+        'id_event',
+        'id_event'
+    );
+}
 
-    /**
-     * Relasi: Event memiliki banyak pemesanan (booking/registrasi)
-     */
-    public function pemesanan(): HasMany
-    {
-        return $this->hasMany(Pemesanan::class, 'id_event', 'id_event');
-    }
+/**
+ * Relasi: Event memiliki banyak pemesanan (booking/registrasi)
+ */
+public function pemesanan(): HasMany
+{
+    return $this->hasMany(
+        Pemesanan::class,
+        'id_event',
+        'id_event'
+    );
+}
 
+/**
+ * Relasi: Event memiliki banyak data kehadiran peserta
+ */
+public function menghadiri(): HasMany
+{
+    return $this->hasMany(
+        Menghadiri::class,
+        'id_event',
+        'id_event'
+    );
+}
     /*
     |--------------------------------------------------------------------------
     | ACCESSORS (DATA TURUNAN / VIRTUAL ATTRIBUTE)
