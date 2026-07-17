@@ -3,125 +3,106 @@
 namespace App\Http\Controllers\Pengunjung;
 
 use App\Http\Controllers\Controller;
+use App\Models\Pengunjung;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
 
-class ProfilController extends Controller
+class ProfileController extends Controller
 {
-    /**
-     * Menampilkan halaman profil.
-     */
     public function index()
     {
-        $pengunjung = Auth::user();
+        /** @var Pengunjung $pengunjung */
+        $pengunjung = Auth::guard('web')->user();
 
-        return view('pengunjung.profil', compact('pengunjung'));
+        return view('pengunjung.profile', compact('pengunjung'));
     }
 
-    /**
-     * Menampilkan halaman edit profil.
-     */
-    public function edit()
-    {
-        $pengunjung = Auth::user();
-
-        $bisaUpdate = !$pengunjung->updated_at
-            || $pengunjung->updated_at->diffInDays(now()) >= 7;
-
-        $sisaHari = $bisaUpdate
-            ? 0
-            : 7 - $pengunjung->updated_at->diffInDays(now());
-
-        return view('pengunjung.profil-edit', compact(
-            'pengunjung',
-            'bisaUpdate',
-            'sisaHari'
-        ));
-    }
-
-    /**
-     * Update data profil.
-     */
     public function update(Request $request)
     {
-        $pengunjung = Auth::user();
+        /** @var Pengunjung $pengunjung */
+        $pengunjung = Auth::guard('web')->user();
 
-        if (
-            $pengunjung->updated_at &&
-            $pengunjung->updated_at->diffInDays(now()) < 7
-        ) {
-            return back()->with(
-                'error',
-                'Anda hanya dapat mengubah profil sekali seminggu.'
-            );
-        }
+        // ============================
+        // VALIDASI
+        // ============================
+        $request->validate([
+            'name' => 'required|string|max:255',
 
-        $validated = $request->validate([
-            'name'   => 'required|string|max:100',
-            'no_hp'  => 'nullable|string|max:20',
-            'alamat' => 'nullable|string|max:500',
+            'username' => 'required|string|max:100|unique:pengunjung,username,' .
+                $pengunjung->id_pengunjung . ',id_pengunjung',
+
+            'email' => 'required|email|unique:pengunjung,email,' .
+                $pengunjung->id_pengunjung . ',id_pengunjung',
+
+            'no_hp' => 'required|max:20',
+
+            'alamat' => 'required|string',
+
+            'password_lama' => 'nullable',
+
+            'password_baru' => 'nullable|min:6',
+
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        $pengunjung->update($validated);
+        // ============================
+        // UPDATE DATA
+        // ============================
+        $pengunjung->name = $request->name;
+        $pengunjung->username = $request->username;
+        $pengunjung->email = $request->email;
+        $pengunjung->no_hp = $request->no_hp;
+        $pengunjung->alamat = $request->alamat;
 
-        $pengunjung->touch();
+        // ============================
+        // PASSWORD
+        // ============================
+        if ($request->filled('password_baru')) {
+
+            if (!$request->filled('password_lama')) {
+                return back()->withErrors([
+                    'password_lama' => 'Masukkan password lama.'
+                ]);
+            }
+
+            if (!Hash::check($request->password_lama, $pengunjung->password)) {
+                return back()->withErrors([
+                    'password_lama' => 'Password lama salah.'
+                ]);
+            }
+
+            $pengunjung->password = Hash::make($request->password_baru);
+        }
+
+        // ============================
+        // FOTO
+        // ============================
+        if ($request->hasFile('foto')) {
+
+            $file = $request->file('foto');
+
+            $namaFile = time() . '.' . $file->getClientOriginalExtension();
+
+            $file->move(public_path('images'), $namaFile);
+
+            if (
+                $pengunjung->foto &&
+                file_exists(public_path('images/' . $pengunjung->foto))
+            ) {
+                unlink(public_path('images/' . $pengunjung->foto));
+            }
+
+            $pengunjung->foto = $namaFile;
+        }
+
+        // ============================
+        // SIMPAN
+        // ============================
+        $pengunjung->save();
 
         return redirect()
-            ->route('pengunjung.profil.index')
-            ->with('success', 'Profil berhasil diperbarui!');
-    }
-
-    /**
-     * Update foto profil.
-     */
-    public function updateFoto(Request $request)
-    {
-        $request->validate([
-            'foto' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
-        ]);
-
-        $pengunjung = Auth::user();
-
-        if (
-            $pengunjung->foto &&
-            !filter_var($pengunjung->foto, FILTER_VALIDATE_URL)
-        ) {
-            Storage::disk('public')->delete($pengunjung->foto);
-        }
-
-        $path = $request->file('foto')->store('foto-profil', 'public');
-
-        $pengunjung->update([
-            'foto' => $path,
-        ]);
-
-        return back()->with('success', 'Foto profil berhasil diperbarui!');
-    }
-
-    /**
-     * Update password.
-     */
-    public function updatePassword(Request $request)
-    {
-        $request->validate([
-            'password_lama' => 'required',
-            'password_baru' => 'required|string|min:8|confirmed',
-        ]);
-
-        $pengunjung = Auth::user();
-
-        if (!Hash::check($request->password_lama, $pengunjung->password)) {
-            return back()->withErrors([
-                'password_lama' => 'Password lama salah.',
-            ]);
-        }
-
-        $pengunjung->update([
-            'password' => Hash::make($request->password_baru),
-        ]);
-
-        return back()->with('success', 'Password berhasil diperbarui!');
+            ->route('pengunjung.profile')
+            ->with('success', 'Profil berhasil diperbarui.');
     }
 }
