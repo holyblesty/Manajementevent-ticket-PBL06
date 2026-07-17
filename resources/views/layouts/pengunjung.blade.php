@@ -153,11 +153,11 @@
         🕒 <span>Riwayat Pendaftaran</span>
     </a>
 
-    <a href="{{ route('pengunjung.profil') }}"
-       class="flex items-center gap-3 px-4 py-3 rounded-xl no-underline transition-all duration-200
-       {{ request()->routeIs('pengunjung.profil*') ? 'bg-[#f3ebf8] text-[#7a4988] font-semibold' : 'text-black font-medium hover:bg-[#f9f5fc] hover:text-[#7a4988]' }}">
-        👤 <span>Profil</span>
-    </a>
+    <a href="{{ route('pengunjung.profile') }}"
+   class="flex items-center gap-3 px-4 py-3 rounded-xl no-underline transition-all duration-200
+   {{ request()->routeIs('pengunjung.profile*') ? 'bg-[#f3ebf8] text-[#7a4988] font-semibold' : 'text-black font-medium hover:bg-[#f9f5fc] hover:text-[#7a4988]' }}">
+    👤 <span>Profil</span>
+</a>
 
 </nav>
 
