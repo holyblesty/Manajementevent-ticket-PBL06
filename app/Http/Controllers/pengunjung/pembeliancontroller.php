@@ -25,7 +25,7 @@ class PembelianController extends Controller
     'event',
     'tiket',
     'pengunjung'
-));
+    ));
     }
 
     public function store(Request $request)
@@ -84,8 +84,7 @@ class PembelianController extends Controller
                     $buktiPath = $file->storeAs(
                         'bukti_transfer',
                         $filename,
-                        'public'
-                    );
+                        'public');
                 }
 
                 // =========================
@@ -162,8 +161,55 @@ return $pemesanan;
                 ->withInput()
                 ->with('error', $e->getMessage());
         }
-    }
 
+        $total =
+            $tiket->harga *
+            $request->jumlah_tiket;
+
+        Pemesanan::create([
+            'id_event' =>
+                $request->id_event,
+
+            'id_pengunjung' =>
+                Auth::user()->id_pengunjung,
+
+            'id_tiket' =>
+                $request->id_tiket,
+
+            'tgl_pesan' =>
+                now(),
+
+            'metode_pembayaran' =>
+                'Cash',
+
+            'jumlah_tiket' =>
+                $request->jumlah_tiket,
+
+            'total_harga' =>
+                $total,
+
+            'kode_registrasi' =>
+                'EVT'.rand(100000,999999),
+
+            'sts_transaksi' =>
+                'Belum Bayar'
+        ]);
+
+        $tiket->decrement(
+            'kuota_tersedia',
+            $request->jumlah_tiket
+        );
+
+        return redirect()
+            ->route('pengunjung.riwayat')
+            ->with(
+                'success',
+                'Pemesanan berhasil dibuat. Silakan melakukan pembayaran tunai kepada admin.'
+            );
+    
+
+    }
+    // Memproses data pendaftaran & transaksi pembelian tiket
     public function sukses(int $id)
     {
         $pemesanan = Pemesanan::with([
