@@ -113,45 +113,53 @@
     </div>
 
     <script>
-        function previewProfile(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    document.getElementById('profile_preview').src = e.target.result;
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
+function previewProfile(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            document.getElementById('profile_preview').src = e.target.result;
         }
 
-        @if(session('success'))
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil!',
-                text: '{{ session('success') }}',
-                confirmButtonColor: '#24112e'
-            });
-        @endif
+        reader.readAsDataURL(input.files[0]);
+    }
+}
 
-        @if($errors->any())
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: '{{ $errors->first() }}',
-                confirmButtonColor: '#24112e'
-            });
-        @endif
+function togglePassword(id, btn) {
 
-        function togglePassword(id, btn) {
     const input = document.getElementById(id);
 
-    if (input.type === "password") {
+    if(input.type === "password"){
         input.type = "text";
         btn.innerHTML = "🙈";
-    } else {
+    }else{
         input.type = "password";
         btn.innerHTML = "👁";
     }
+
 }
-    </script>
+</script>
+
+@if(session('success'))
+<script>
+Swal.fire({
+    icon:'success',
+    title:'Berhasil!',
+    text:"{{ session('success') }}",
+    confirmButtonColor:'#24112e'
+});
+</script>
+@endif
+
+@if($errors->any())
+<script>
+Swal.fire({
+    icon:'error',
+    title:'Oops...',
+    text:"{{ $errors->first() }}",
+    confirmButtonColor:'#24112e'
+});
+</script>
+@endif
 </body>
 </html>
