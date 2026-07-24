@@ -33,6 +33,42 @@
                 <p class="text-[9px] uppercase tracking-widest">SUDAH HADIR</p>
             </div>
         </div>
+<div class="p-5 bg-gray-100 border-b">
+
+    <form method="GET">
+
+        <div class="flex gap-3">
+
+            <input
+                type="text"
+                name="search"
+                value="{{ request('search') }}"
+                placeholder="Cari kode registrasi, nama peserta atau email..."
+                class="flex-1 border rounded-lg px-4 py-2">
+
+            <button
+                class="bg-[#7a4988] text-white px-6 rounded-lg">
+
+                Cari
+
+            </button>
+
+            @if(request('search'))
+
+            <a href="{{ route('admin.peserta.detail',$selectedEvent->id_event) }}"
+               class="bg-gray-500 text-white px-6 rounded-lg flex items-center">
+
+                Reset
+
+            </a>
+
+            @endif
+
+        </div>
+
+    </form>
+
+</div>
 
 {{-- Tabel Peserta Individu --}}
 <div class="overflow-x-auto">
