@@ -43,9 +43,33 @@ class PesertaController extends Controller
         return view('admin.peserta', compact('events'));
     }
 
-    public function detail(int $id)
-    {
-        $selectedEvent = Event::with('menghadiri.pengunjung')->findOrFail($id);
+    public function detail(Request $request, int $id)
+{
+        $selectedEvent = Event::with([
+    'menghadiri' => function ($query) use ($request) {
+
+        if ($request->filled('search')) {
+
+            $query->where(function ($q) use ($request) {
+
+                $q->where('kode_registrasi', 'like', '%' . $request->search . '%')
+
+                  ->orWhereHas('pengunjung', function ($pengunjung) use ($request) {
+
+                      $pengunjung->where('name', 'like', '%' . $request->search . '%')
+                                 ->orWhere('email', 'like', '%' . $request->search . '%');
+
+                  });
+
+            });
+
+        }
+
+    },
+
+    'menghadiri.pengunjung'
+
+])->findOrFail($id);
 
         $total = $selectedEvent->menghadiri->count();
 
