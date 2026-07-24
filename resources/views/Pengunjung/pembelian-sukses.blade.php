@@ -16,21 +16,24 @@
             Pemesanan Berhasil
         </h1>
 
-        <p class="text-gray-600 mb-8">
-            Tiket berhasil dipesan.
+       <p class="text-gray-600 mb-8">
+    Pemesanan tiket berhasil dibuat.
+    Silakan lakukan pembayaran sesuai metode yang dipilih dan tunggu proses verifikasi dari admin.
+</p>
 
-            Silakan lakukan pembayaran secara cash kepada panitia pada hari pelaksanaan event.
-        </p>
+<p class="text-gray-500 mb-8">
+    Status pemesanan dapat dipantau melalui menu
+    <strong>Riwayat Pendaftaran</strong>.
 
-        <p class="text-gray-500 mb-8">
-            Detail tiket dapat dilihat pada menu
-            <strong>Ticket Saya</strong>.
-        </p>
+    Setelah pembayaran diverifikasi dan dinyatakan <strong>Lunas</strong>,
+    tiket akan otomatis muncul pada menu
+    <strong>Tiket Saya</strong>.
+</p>
 
-        <a href="{{ route('pengunjung.tiket') }}"
-           class="bg-[#7a4988] text-white px-8 py-3 rounded-xl">
-            Lihat Tiket Saya
-        </a>
+<a href="{{ route('pengunjung.riwayat') }}"
+   class="bg-[#7a4988] text-white px-8 py-3 rounded-xl">
+    Lihat Riwayat Pendaftaran
+</a>
 
     </div>
 
