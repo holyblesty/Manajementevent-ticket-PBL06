@@ -14,9 +14,10 @@ class DashboardController extends Controller
     {
         $user = Auth::guard('web')->user();
 
-        // Query event
-        $query = Event::with('kategori')
-            ->where('status_event', 'open');
+       // Query event (hanya event yang belum berakhir)
+$query = Event::with('kategori')
+    ->where('status_event', 'open')
+    ->whereDate('tgl_selesai', '>=', now()->toDateString());
 
         // Filter pencarian
         if ($request->filled('search')) {
@@ -39,7 +40,9 @@ class DashboardController extends Controller
         // 5. Statistik
         $jumlahTiket = $user ? Pemesanan::where('id_pengunjung', $user->id_pengunjung)->where('sts_transaksi', 'Lunas')->count() : 0;
         $riwayatPendaftaran = $user ? Pemesanan::where('id_pengunjung', $user->id_pengunjung)->count() : 0;
-        $eventMendatang = Event::whereDate('tgl_mulai', '>=', now())->where('status_event', 'open')->count();
+        $eventMendatang = Event::whereDate('tgl_selesai', '>=', now()->toDateString())
+    ->where('status_event', 'open')
+    ->count();
         $eventMendatang = Event::whereDate('tgl_mulai', '>=', now())->count();
 
         // Statistik
